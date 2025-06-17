@@ -4,7 +4,7 @@ function App() {
     <>
       <h1 class="text-3xl font-bold underline">
 
-        team 22 zidio 
+changed from example branch
   </h1>
     </>
   )
