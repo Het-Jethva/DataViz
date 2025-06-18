@@ -85,11 +85,22 @@ The client will run on `http://localhost:5173`
 
 ### 5. Database Setup
 
-#### Option A: Local MongoDB
+#### Option A: Local MongoDB with Docker (Recommended)
+Run MongoDB using Docker:
+```bash
+docker run -d --name dataviz-mongo -p 27017:27017 -v dataviz-mongo-data:/data/db mongo:latest
+```
+
+This command:
+- Runs MongoDB in a Docker container
+- Maps port 27017 to your local machine
+- Creates a persistent volume for data storage
+
+#### Option B: Local MongoDB Installation
 1. Make sure MongoDB is running locally
 2. The application will automatically connect to `mongodb://localhost:27017/dataviz`
 
-#### Option B: MongoDB Atlas
+#### Option C: MongoDB Atlas
 1. Create a MongoDB Atlas account
 2. Create a new cluster
 3. Update the `MONGO_URI` in your `.env` file with your Atlas connection string
