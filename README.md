@@ -1,186 +1,286 @@
-# Zidio Project
+# DataViz - Excel Data Visualization Platform
 
-A full-stack web application built with React (frontend) and Node.js/Express (backend) using MongoDB as the database.
+A full-stack web application for uploading Excel files and creating interactive 2D/3D data visualizations with user authentication and admin management.
 
 ## 🚀 Tech Stack
 
 ### Frontend
-- **React** 19.1.0 with JavaScript
-- **Vite** for build tooling
-- **TailwindCSS** for styling
-- **Redux Toolkit** for state management
-- **Axios** for API calls
+- **React 19.1.0** - Modern UI library
+- **Redux Toolkit** - State management
+- **Vite** - Fast build tool
+- **TailwindCSS** - Utility-first CSS framework
+- **Chart.js** - 2D charts and graphs
+- **Three.js** - 3D visualizations
+- **React Router** - Client-side routing
 
 ### Backend
-- **Node.js** with Express.js
-- **MongoDB** with Mongoose
-- **JWT** for authentication
-- **bcryptjs** for password hashing
-- **Multer** for file uploads
-- **CORS** enabled
-
-## 📋 Prerequisites
-
-Before you begin, ensure you have the following installed:
-- [Node.js](https://nodejs.org/) (v18 or higher)
-- [MongoDB](https://www.mongodb.com/try/download/community) (local installation) or MongoDB Atlas account
-- [Git](https://git-scm.com/)
-
-## 🛠️ Local Setup Instructions
-
-### 1. Clone the Repository
-```bash
-git clone https://github.com/Het-Jethva/DataViz.git
-cd DataViz
-```
-
-### 2. Environment Setup
-
-Create a `.env` file in the `server` directory:
-```bash
-cd server
-copy .env.example .env
-```
-
-Edit the `.env` file with your configuration:
-```env
-PORT=5000
-MONGO_URI=mongodb://localhost:27017/zidio
-JWT_SECRET=your_jwt_secret_key_here
-```
-
-### 3. Backend Setup
-
-Navigate to the server directory and install dependencies:
-```bash
-cd server
-npm install
-```
-
-Start the backend server:
-```bash
-# For development (with nodemon)
-npm run dev
-
-# For production
-npm start
-```
-
-The server will run on `http://localhost:5000`
-
-### 4. Frontend Setup
-
-Open a new terminal and navigate to the client directory:
-```bash
-cd client
-npm install
-```
-
-Start the frontend development server:
-```bash
-npm run dev
-```
-
-The client will run on `http://localhost:5173`
-
-### 5. Database Setup
-
-#### Option A: Local MongoDB with Docker (Recommended)
-Run MongoDB using Docker:
-```bash
-docker run -d --name dataviz-mongo -p 27017:27017 -v dataviz-mongo-data:/data/db mongo:latest
-```
-
-This command:
-- Runs MongoDB in a Docker container
-- Maps port 27017 to your local machine
-- Creates a persistent volume for data storage
-
-#### Option B: Local MongoDB Installation
-1. Make sure MongoDB is running locally
-2. The application will automatically connect to `mongodb://localhost:27017/dataviz`
-
-#### Option C: MongoDB Atlas
-1. Create a MongoDB Atlas account
-2. Create a new cluster
-3. Update the `MONGO_URI` in your `.env` file with your Atlas connection string
-
-## 🔧 Available Scripts
-
-### Frontend (client directory)
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build
-- `npm run lint` - Run ESLint
-
-### Backend (server directory)
-- `npm run dev` - Start development server with nodemon
-- `npm start` - Start production server
+- **Node.js** - JavaScript runtime
+- **Express.js** - Web framework
+- **MongoDB** - NoSQL database
+- **Mongoose** - MongoDB ODM
+- **JWT** - Authentication
+- **Multer** - File upload handling
+- **SheetJS/xlsx** - Excel file parsing
 
 ## 📁 Project Structure
 
 ```
 DataViz/
-├── client/                 # React frontend
+├── client/                        # Frontend React application
+│   ├── public/
+│   │   ├── favicon.ico
+│   │   └── charts/                # Static chart exports
 │   ├── src/
-│   │   ├── redux/         # Redux store and slices
-│   │   ├── App.jsx        # Main App component
-│   │   ├── main.jsx       # Entry point
-│   │   └── index.css      # Global styles
+│   │   ├── components/
+│   │   │   ├── common/
+│   │   │   │   ├── Header.jsx
+│   │   │   │   ├── Footer.jsx
+│   │   │   │   ├── Sidebar.jsx
+│   │   │   │   ├── LoadingSpinner.jsx
+│   │   │   │   └── ErrorBoundary.jsx
+│   │   │   ├── auth/
+│   │   │   │   ├── LoginForm.jsx
+│   │   │   │   ├── RegisterForm.jsx
+│   │   │   │   └── ProtectedRoute.jsx
+│   │   │   ├── upload/
+│   │   │   │   ├── FileUpload.jsx
+│   │   │   │   ├── FilePreview.jsx
+│   │   │   │   └── UploadProgress.jsx
+│   │   │   ├── charts/
+│   │   │   │   ├── ChartContainer.jsx
+│   │   │   │   ├── Chart2D.jsx
+│   │   │   │   ├── Chart3D.jsx
+│   │   │   │   ├── ChartControls.jsx
+│   │   │   │   └── ChartExport.jsx
+│   │   │   ├── dashboard/
+│   │   │   │   ├── DashboardStats.jsx
+│   │   │   │   ├── RecentUploads.jsx
+│   │   │   │   └── QuickActions.jsx
+│   │   │   └── admin/
+│   │   │       ├── UserManagement.jsx
+│   │   │       ├── UserTable.jsx
+│   │   │       └── AdminStats.jsx
+│   │   ├── pages/
+│   │   │   ├── HomePage.jsx
+│   │   │   ├── LoginPage.jsx
+│   │   │   ├── RegisterPage.jsx
+│   │   │   ├── DashboardPage.jsx
+│   │   │   ├── VisualizePage.jsx
+│   │   │   ├── AdminPage.jsx
+│   │   │   └── NotFoundPage.jsx
+│   │   ├── redux/
+│   │   │   ├── store.js
+│   │   │   ├── slices/
+│   │   │   │   ├── authSlice.js
+│   │   │   │   ├── dataSlice.js
+│   │   │   │   ├── chartSlice.js
+│   │   │   │   ├── uploadSlice.js
+│   │   │   │   └── adminSlice.js
+│   │   │   └── middleware/
+│   │   │       └── authMiddleware.js
+│   │   ├── services/
+│   │   │   ├── api.js              # Axios instance
+│   │   │   ├── auth.service.js
+│   │   │   ├── data.service.js
+│   │   │   ├── chart.service.js
+│   │   │   └── admin.service.js
+│   │   ├── utils/
+│   │   │   ├── constants.js
+│   │   │   ├── helpers.js
+│   │   │   ├── validators.js
+│   │   │   ├── formatters.js
+│   │   │   └── chartConfig.js
+│   │   ├── hooks/
+│   │   │   ├── useAuth.js
+│   │   │   ├── useFileUpload.js
+│   │   │   ├── useChart.js
+│   │   │   └── useLocalStorage.js
+│   │   ├── layouts/
+│   │   │   ├── MainLayout.jsx
+│   │   │   ├── AuthLayout.jsx
+│   │   │   └── AdminLayout.jsx
+│   │   ├── assets/
+│   │   │   ├── images/
+│   │   │   ├── icons/
+│   │   │   └── styles/
+│   │   │       └── components.css
+│   │   ├── App.jsx
+│   │   ├── main.jsx
+│   │   └── index.css
 │   ├── package.json
-│   └── vite.config.js
-├── server/                # Node.js backend
-│   ├── config/           # Configuration files
-│   ├── controllers/      # Route controllers
-│   ├── middleware/       # Custom middleware
-│   ├── models/           # MongoDB models
-│   ├── routes/           # API routes
-│   ├── utils/            # Utility functions
-│   ├── server.js         # Main server file
-│   └── package.json
+│   ├── vite.config.js
+│   └── tailwind.config.js
+├── server/                        # Backend Node.js application
+│   ├── controllers/
+│   │   ├── auth.controller.js
+│   │   ├── data.controller.js
+│   │   ├── user.controller.js
+│   │   └── admin.controller.js
+│   ├── middleware/
+│   │   ├── auth.middleware.js
+│   │   ├── admin.middleware.js
+│   │   ├── upload.middleware.js
+│   │   └── error.middleware.js
+│   ├── models/
+│   │   ├── User.model.js
+│   │   ├── Dataset.model.js
+│   │   └── Chart.model.js
+│   ├── routes/
+│   │   ├── auth.routes.js
+│   │   ├── data.routes.js
+│   │   ├── user.routes.js
+│   │   └── admin.routes.js
+│   ├── services/
+│   │   ├── excel.service.js
+│   │   ├── auth.service.js
+│   │   └── email.service.js
+│   ├── utils/
+│   │   ├── database.js
+│   │   ├── jwt.js
+│   │   ├── validation.js
+│   │   └── constants.js
+│   ├── uploads/                   # File upload directory
+│   ├── config/
+│   │   ├── database.config.js
+│   │   └── app.config.js
+│   ├── package.json
+│   └── server.js
 └── README.md
 ```
 
-## 🌐 API Endpoints
+## ✨ Key Features
 
-The backend server exposes RESTful API endpoints. Once the server is running, you can access:
-- Base URL: `http://localhost:5000`
-- API documentation will be available based on your route definitions
+### 🔐 Authentication & Authorization
+- JWT-based user authentication
+- Role-based access control (User/Admin)
+- Protected routes and API endpoints
+- User registration and login
 
-## 🔒 Authentication
+### 📊 Data Management
+- Excel file upload (.xlsx, .xls)
+- Data parsing and validation
+- Dynamic column mapping
+- Upload history tracking
 
-This project uses JWT (JSON Web Tokens) for authentication. Make sure to:
-1. Set a strong `JWT_SECRET` in your `.env` file
-2. Include the JWT token in the Authorization header for protected routes
+### 📈 Visualization
+- **2D Charts**: Bar, Line, Pie, Scatter, Area charts
+- **3D Visualizations**: Interactive 3D charts with Three.js
+- Real-time chart customization
+- Export charts as images/PDFs
 
-## 🚨 Troubleshooting
+### 👥 User Management
+- User dashboard with upload history
+- Admin panel for user management
+- Usage statistics and analytics
+- Bulk operations support
 
-### Common Issues:
+### 🎨 User Experience
+- Responsive design with TailwindCSS
+- Real-time upload progress
+- Interactive chart controls
+- Modern, clean interface
 
-1. **Port already in use**
-   - Change the port in your `.env` file or kill the process using the port
+## 🛠️ Installation & Setup
 
-2. **MongoDB connection failed**
-   - Ensure MongoDB is running locally or check your Atlas connection string
-   - Verify the `MONGO_URI` in your `.env` file
+### Prerequisites
+- Node.js (v18+)
+- MongoDB (v5+)
+- npm or yarn
 
-3. **Module not found errors**
-   - Delete `node_modules` and `package-lock.json`, then run `npm install` again
+### Backend Setup
+```bash
+cd server
+npm install
+cp .env.example .env
+# Configure your environment variables
+npm run dev
+```
 
-4. **CORS errors**
-   - The backend is configured with CORS enabled for development
+### Frontend Setup
+```bash
+cd client
+npm install
+npm run dev
+```
 
-## 📝 Development Tips
+### Environment Variables
+Create `.env` file in server directory:
+```env
+PORT=5000
+MONGODB_URI=mongodb://localhost:27017/dataviz
+JWT_SECRET=your_jwt_secret_key
+JWT_EXPIRE=7d
+NODE_ENV=development
+```
 
-1. Both frontend and backend support hot reloading during development
-2. Use the browser's developer tools for debugging the frontend
-3. Check the terminal/console for backend logs and errors
-4. Use MongoDB Compass for database visualization and management
+## 🚀 Development Workflow
+
+### Commit Message Convention
+```
+feat: add new feature
+fix: bug fix
+docs: documentation
+style: formatting
+refactor: code restructuring
+test: adding tests
+chore: maintenance
+```
+
+### Branch Strategy
+- `main` - Production-ready code
+- `develop` - Development branch
+- `feature/*` - Feature branches
+- `hotfix/*` - Bug fixes
+
+## 📚 API Documentation
+
+### Authentication Endpoints
+- `POST /api/auth/register` - User registration
+- `POST /api/auth/login` - User login
+- `POST /api/auth/logout` - User logout
+- `GET /api/auth/profile` - Get user profile
+
+### Data Endpoints
+- `POST /api/data/upload` - Upload Excel file
+- `GET /api/data/datasets` - Get user datasets
+- `GET /api/data/dataset/:id` - Get specific dataset
+- `DELETE /api/data/dataset/:id` - Delete dataset
+
+### Chart Endpoints
+- `POST /api/charts/create` - Create chart configuration
+- `GET /api/charts/user` - Get user charts
+- `PUT /api/charts/:id` - Update chart
+- `DELETE /api/charts/:id` - Delete chart
+
+### Admin Endpoints
+- `GET /api/admin/users` - Get all users
+- `PUT /api/admin/users/:id` - Update user
+- `DELETE /api/admin/users/:id` - Delete user
+- `GET /api/admin/stats` - Get platform statistics
+
+## 🔧 Available Scripts
+
+### Frontend
+```bash
+npm run dev          # Start development server
+npm run build        # Build for production
+npm run preview      # Preview production build
+npm run lint         # Run ESLint
+```
+
+### Backend
+```bash
+npm run dev          # Start development server
+npm run start        # Start production server
+npm run test         # Run tests
+npm run seed         # Seed database
+```
 
 ## 🤝 Contributing
 
 1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'feat: add AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
+
