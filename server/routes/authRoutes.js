@@ -7,6 +7,7 @@ import {
   changePassword,
 } from "../controllers/authController.js"
 import { authenticateToken } from "../middleware/auth.js"
+import { getUserDashboard } from "../controllers/dashboardController.js"
 
 const router = express.Router()
 
@@ -18,5 +19,6 @@ router.post("/login", login)
 router.get("/profile", authenticateToken, getProfile)
 router.put("/profile", authenticateToken, updateProfile)
 router.put("/change-password", authenticateToken, changePassword)
+router.get("/dashboard", authenticateToken, getUserDashboard)
 
 export default router
