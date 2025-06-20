@@ -107,7 +107,13 @@ export const getProfile = async (req, res) => {
     res.json({
       success: true,
       data: {
-        user: req.user,
+        id: req.user.id,
+        name: req.user.name,
+        email: req.user.email,
+        role: req.user.role,
+        createdAt: req.user.createdAt,
+        lastLogin: req.user.lastLogin,
+        uploadsCount: req.user.uploadsCount || 0,
       },
     })
   } catch (error) {

@@ -8,6 +8,7 @@ import { Provider } from "react-redux"
 import { store } from "./redux/store"
 import Login from "./components/auth/Login"
 import Signup from "./components/auth/Signup"
+import Dashboard from "./components/dashboard/Dashboard"
 
 function App() {
   return (
@@ -24,6 +25,10 @@ function App() {
               element={<Signup />}
             />
             <Route
+              path="/dashboard"
+              element={<Dashboard />}
+            />
+            <Route
               path="/"
               element={
                 <Navigate
@@ -32,7 +37,6 @@ function App() {
                 />
               }
             />
-            {/* Add more routes here as you build other features */}
           </Routes>
         </div>
       </Router>
