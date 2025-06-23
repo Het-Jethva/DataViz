@@ -3,8 +3,8 @@ import User from "../models/User.js"
 // Get all users with pagination
 export const getAllUsers = async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1
-    const limit = parseInt(req.query.limit) || 10
+    const page = Math.max(1, parseInt(req.query.page) || 1)
+    const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 10))
     const sortBy = req.query.sortBy || "createdAt"
     const sortOrder = req.query.sortOrder === "asc" ? 1 : -1
     const search = req.query.search || ""
@@ -78,7 +78,10 @@ export const updateUser = async (req, res) => {
     const userId = req.params.id
 
     // Prevent admin from deactivating themselves
-    if (userId === req.user._id.toString() && isActive === false) {
+    if (
+      new mongoose.Types.ObjectId(userId).equals(req.user._id) &&
+      isActive === false
+    ) {
       return res.status(400).json({
         success: false,
         message: "Cannot deactivate your own account",

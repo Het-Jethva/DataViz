@@ -19,6 +19,5 @@ router.post("/login", login)
 router.get("/profile", authenticateToken, getProfile)
 router.put("/profile", authenticateToken, updateProfile)
 router.put("/change-password", authenticateToken, changePassword)
-router.get("/dashboard", authenticateToken, getUserDashboard)
 
 export default router

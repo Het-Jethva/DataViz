@@ -8,8 +8,17 @@ import authRoutes from "./routes/authRoutes.js"
 import adminRoutes from "./routes/adminRoutes.js"
 import dashboardRoutes from "./routes/dashboardRoutes.js"
 
-
 dotenv.config()
+
+const requiredEnvVars = ["MONGO_URI", "JWT_SECRET"]
+const missingEnvVars = requiredEnvVars.filter((envVar) => !process.env[envVar])
+if (missingEnvVars.length > 0) {
+  console.error(
+    `Missing required environment variables: ${missingEnvVars.join(", ")}`
+  )
+  process.exit(1)
+}
+
 const app = express()
 app.use(cors())
 app.use(express.json())
@@ -20,14 +29,38 @@ app.use("/api/admin", adminRoutes)
 app.use("/api/dashboard", dashboardRoutes)
 
 // Health check route
-app.get("/api/health", (req, res) => {
-  res.json({ success: true, message: "Server is running" })
+app.get("/api/health", async (req, res) => {
+  try {
+    await mongoose.connection.db.admin().ping()
+    res.json({
+      success: true,
+      message: "Server is running",
+      database: "connected",
+    })
+  } catch (error) {
+    res.status(503).json({
+      success: false,
+      message: "Database connection failed",
+      database: "disconnected",
+    })
+  }
 })
 
 const PORT = process.env.PORT || 5000
+
 mongoose
   .connect(process.env.MONGO_URI)
-  .then(() =>
+  .then(() => {
+    console.log("Connected to MongoDB")
     app.listen(PORT, () => console.log(`Server running on port ${PORT}`))
-  )
-  .catch((err) => console.log(err))
+  })
+  .catch((err) => {
+    console.error("MongoDB connection error:", err)
+    process.exit(1)
+  })
+
+// Handle unhandled promise rejections
+process.on("unhandledRejection", (err) => {
+  console.error("Unhandled Promise Rejection:", err)
+  process.exit(1)
+})
