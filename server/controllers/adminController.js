@@ -78,7 +78,10 @@ export const updateUser = async (req, res) => {
     const userId = req.params.id
 
     // Prevent admin from deactivating themselves
-    if (userId === req.user._id.toString() && isActive === false) {
+    if (
+      new mongoose.Types.ObjectId(userId).equals(req.user._id) &&
+      isActive === false
+    ) {
       return res.status(400).json({
         success: false,
         message: "Cannot deactivate your own account",
