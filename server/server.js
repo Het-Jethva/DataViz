@@ -29,8 +29,21 @@ app.use("/api/admin", adminRoutes)
 app.use("/api/dashboard", dashboardRoutes)
 
 // Health check route
-app.get("/api/health", (req, res) => {
-  res.json({ success: true, message: "Server is running" })
+app.get("/api/health", async (req, res) => {
+  try {
+    await mongoose.connection.db.admin().ping()
+    res.json({
+      success: true,
+      message: "Server is running",
+      database: "connected",
+    })
+  } catch (error) {
+    res.status(503).json({
+      success: false,
+      message: "Database connection failed",
+      database: "disconnected",
+    })
+  }
 })
 
 const PORT = process.env.PORT || 5000
