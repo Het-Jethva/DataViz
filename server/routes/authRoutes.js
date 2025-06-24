@@ -7,7 +7,6 @@ import {
   changePassword,
 } from "../controllers/authController.js"
 import { authenticateToken } from "../middleware/auth.js"
-import { getUserDashboard } from "../controllers/dashboardController.js"
 
 const router = express.Router()
 

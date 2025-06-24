@@ -1,4 +1,5 @@
 import User from "../models/User.js"
+import mongoose from "mongoose"
 
 // Get all users with pagination
 export const getAllUsers = async (req, res) => {
