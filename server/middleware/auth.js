@@ -4,8 +4,13 @@ import User from "../models/User.js"
 // Verify JWT token
 export const authenticateToken = async (req, res, next) => {
   try {
-    const authHeader = req.headers.authorization
-    const token = authHeader && authHeader.split(" ")[1] // Bearer TOKEN
+    // Try to get token from cookie first, then fallback to Authorization header
+    let token = req.cookies?.token
+    
+    if (!token) {
+      const authHeader = req.headers.authorization
+      token = authHeader && authHeader.split(" ")[1] // Bearer TOKEN
+    }
 
     if (!token) {
       return res.status(401).json({
@@ -55,8 +60,13 @@ export const requireAdmin = (req, res, next) => {
 // Optional authentication (for public routes that can benefit from user context)
 export const optionalAuth = async (req, res, next) => {
   try {
-    const authHeader = req.headers.authorization
-    const token = authHeader && authHeader.split(" ")[1]
+    // Try to get token from cookie first, then fallback to Authorization header
+    let token = req.cookies?.token
+    
+    if (!token) {
+      const authHeader = req.headers.authorization
+      token = authHeader && authHeader.split(" ")[1]
+    }
 
     if (token) {
       const decoded = jwt.verify(token, process.env.JWT_SECRET)
