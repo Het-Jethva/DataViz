@@ -3,30 +3,14 @@ import axios from "axios"
 
 const API_BASE_URL = "http://localhost:5000/api/dashboard"
 
-const safeLocalStorage = {
-  getItem: (key) => {
-    try {
-      return typeof window !== "undefined" ? localStorage.getItem(key) : null
-    } catch (error) {
-      console.error("Error accessing localStorage:", error)
-      return null
-    }
-  },
-}
-
 export const getDashboardData = createAsyncThunk(
   "dashboard/getDashboardData",
   async (_, { rejectWithValue }) => {
     try {
-      const token = safeLocalStorage.getItem("token")
-      if (!token) {
-        throw new Error("No token found")
-      }
-
+      // No need to get token from localStorage; authentication is via httpOnly cookies
       const response = await axios.get(`${API_BASE_URL}/user`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        // No Authorization header needed
+        withCredentials: true,
       })
 
       return response.data.data

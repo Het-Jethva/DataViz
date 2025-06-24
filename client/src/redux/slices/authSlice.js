@@ -24,7 +24,13 @@ export const loginUser = createAsyncThunk(
 
       return response.data.data
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || "Login failed")
+      let message = "Login failed"
+      if (error.response?.data?.message) {
+        message = error.response.data.message
+      } else if (error.message) {
+        message = error.message
+      }
+      return rejectWithValue(message)
     }
   }
 )
@@ -41,9 +47,13 @@ export const registerUser = createAsyncThunk(
 
       return response.data.data
     } catch (error) {
-      return rejectWithValue(
-        error.response?.data?.message || "Registration failed"
-      )
+      let message = "Registration failed"
+      if (error.response?.data?.message) {
+        message = error.response.data.message
+      } else if (error.message) {
+        message = error.message
+      }
+      return rejectWithValue(message)
     }
   }
 )
@@ -68,16 +78,19 @@ export const getCurrentUser = createAsyncThunk(
       const response = await authAPI.get("/profile")
       return response.data.data
     } catch (error) {
-      return rejectWithValue(
-        error.response?.data?.message || "Authentication failed"
-      )
+      let message = "Authentication failed"
+      if (error.response?.data?.message) {
+        message = error.response.data.message
+      } else if (error.message) {
+        message = error.message
+      }
+      return rejectWithValue(message)
     }
   }
 )
 
 const initialState = {
   user: null,
-  token: null, // Not used anymore, but kept for compatibility
   isLoading: false,
   error: null,
   isAuthenticated: false, // Will be determined by successful API calls
@@ -91,7 +104,6 @@ const authSlice = createSlice({
     },
     resetAuth: (state) => {
       state.user = null
-      state.token = null
       state.isAuthenticated = false
       state.error = null
     },
@@ -105,7 +117,6 @@ const authSlice = createSlice({
       })      .addCase(loginUser.fulfilled, (state, action) => {
         state.isLoading = false
         state.user = action.payload.user
-        state.token = null // Not used with httpOnly cookies
         state.isAuthenticated = true
         state.error = null
       })
@@ -121,7 +132,6 @@ const authSlice = createSlice({
       })      .addCase(registerUser.fulfilled, (state, action) => {
         state.isLoading = false
         state.user = action.payload.user
-        state.token = null // Not used with httpOnly cookies
         state.isAuthenticated = true
         state.error = null
       })
@@ -144,12 +154,10 @@ const authSlice = createSlice({
         state.isLoading = false
         state.error = action.payload
         state.isAuthenticated = false
-        state.token = null
       })
       // Logout case
       .addCase(logoutUser.fulfilled, (state) => {
         state.user = null
-        state.token = null
         state.isAuthenticated = false
         state.error = null
       })

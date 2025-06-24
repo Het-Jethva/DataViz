@@ -1,5 +1,6 @@
 import User from "../models/User.js"
 import mongoose from "mongoose"
+import { isValidEmail, isValidName, isValidRole, isValidObjectId } from "../utils/validation.js"
 
 // Get all users with pagination
 export const getAllUsers = async (req, res) => {
@@ -69,7 +70,7 @@ export const getUserById = async (req, res) => {
     const userId = req.params.id
 
     // Validate ObjectId
-    if (!mongoose.Types.ObjectId.isValid(userId)) {
+    if (!isValidObjectId(userId)) {
       return res.status(400).json({
         success: false,
         message: "Invalid user ID",
@@ -104,7 +105,7 @@ export const updateUser = async (req, res) => {
     const userId = req.params.id
 
     // Validate ObjectId
-    if (!mongoose.Types.ObjectId.isValid(userId)) {
+    if (!isValidObjectId(userId)) {
       return res.status(400).json({
         success: false,
         message: "Invalid user ID",
@@ -113,7 +114,7 @@ export const updateUser = async (req, res) => {
 
     // Input validation
     if (name !== undefined) {
-      if (!name || name.trim().length < 2 || name.trim().length > 50) {
+      if (!isValidName(name)) {
         return res.status(400).json({
           success: false,
           message: "Name must be between 2 and 50 characters",
@@ -122,8 +123,7 @@ export const updateUser = async (req, res) => {
     }
 
     if (email !== undefined) {
-      const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/
-      if (!email || !emailRegex.test(email)) {
+      if (!isValidEmail(email)) {
         return res.status(400).json({
           success: false,
           message: "Please enter a valid email address",
@@ -144,7 +144,7 @@ export const updateUser = async (req, res) => {
     }
 
     // Validate role
-    if (role !== undefined && !["user", "admin"].includes(role)) {
+    if (role !== undefined && !isValidRole(role)) {
       return res.status(400).json({
         success: false,
         message: "Invalid role specified",
@@ -161,7 +161,7 @@ export const updateUser = async (req, res) => {
 
     // Prevent admin from deactivating themselves
     if (
-      new mongoose.Types.ObjectId(userId).equals(req.user._id) &&
+      userId.toString() === req.user._id.toString() &&
       isActive === false
     ) {
       return res.status(400).json({
@@ -171,7 +171,7 @@ export const updateUser = async (req, res) => {
     }
 
     // Prevent admin from demoting themselves
-    if (userId === req.user._id.toString() && role === "user") {
+    if (userId.toString() === req.user._id.toString() && role === "user") {
       return res.status(400).json({
         success: false,
         message: "Cannot demote yourself from admin role",
@@ -216,7 +216,7 @@ export const deleteUser = async (req, res) => {
     const userId = req.params.id
 
     // Validate ObjectId
-    if (!mongoose.Types.ObjectId.isValid(userId)) {
+    if (!isValidObjectId(userId)) {
       return res.status(400).json({
         success: false,
         message: "Invalid user ID",

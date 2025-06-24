@@ -10,17 +10,6 @@ const apiClient = axios.create({
   },
 })
 
-// Request interceptor (no longer needed for token, but kept for other headers)
-apiClient.interceptors.request.use(
-  (config) => {
-    // Token is now automatically sent via httpOnly cookie
-    return config
-  },
-  (error) => {
-    return Promise.reject(error)
-  }
-)
-
 // Response interceptor for error handling
 apiClient.interceptors.response.use(
   (response) => response,
