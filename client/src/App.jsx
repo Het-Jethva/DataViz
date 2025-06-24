@@ -10,6 +10,8 @@ import { ThemeProvider } from "./components/theme-provider"
 import Login from "./components/auth/Login"
 import Signup from "./components/auth/Signup"
 import Dashboard from "./components/dashboard/Dashboard"
+import Profile from "./components/Profile"
+import { Toaster } from "@/components/ui/sonner"
 
 function App() {
   return (
@@ -34,6 +36,10 @@ function App() {
                 element={<Dashboard />}
               />
               <Route
+                path="/profile"
+                element={<Profile />}
+              />
+              <Route
                 path="/"
                 element={
                   <Navigate
@@ -43,6 +49,7 @@ function App() {
                 }
               />
             </Routes>
+            <Toaster />
           </div>
         </Router>
       </ThemeProvider>

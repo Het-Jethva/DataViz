@@ -10,6 +10,7 @@ import {
 import { LogOut, ChevronDown, Settings, User } from "lucide-react"
 import { ModeToggle } from "@/components/mode-toggle"
 import { getInitials } from "@/lib/utils"
+import { Link } from "react-router-dom"
 
 const DashboardHeader = ({ user, onLogout }) => {
   return (
@@ -49,7 +50,7 @@ const DashboardHeader = ({ user, onLogout }) => {
                 </div>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
-                  <User className="size-4 mr-2" />Profile
+                  <Link to="/profile" className="text-sm font-medium hover:underline">Profile</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                   <Settings className="size-4 mr-2" />Settings

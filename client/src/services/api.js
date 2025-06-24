@@ -29,3 +29,7 @@ apiClient.interceptors.response.use(
 )
 
 export default apiClient
+
+export const fetchUserUploads = () => apiClient.get("/dashboard/uploads", { withCredentials: true })
+
+export const deleteUserUpload = (id) => apiClient.delete(`/dashboard/uploads/${id}`, { withCredentials: true })

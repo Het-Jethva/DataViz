@@ -4,6 +4,9 @@ import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { Eye, Trash2, Download } from "lucide-react"
 import { formatDate, formatFileSize } from "@/lib/utils"
+import { useEffect, useState } from "react"
+import { fetchUserUploads, deleteUserUpload } from "@/services/api"
+import { toast } from "sonner"
 
 const UploadHistoryItem = ({ item, index, onView, onDelete, isLast }) => (
   <div>
@@ -42,12 +45,20 @@ const UploadHistoryItem = ({ item, index, onView, onDelete, isLast }) => (
   </div>
 )
 
-const UploadHistory = ({ history = [], onView, onDelete }) => {
+const UploadHistory = ({ history = [], loading = false, error = "", onView, onDelete }) => {
   const handleView = (item, index) => {
     if (onView) onView(item, index)
   }
-  const handleDelete = (item, index) => {
-    if (onDelete) onDelete(item, index)
+  const handleDelete = async (item, index) => {
+    if (!window.confirm("Are you sure you want to delete this upload?")) return
+    try {
+      await deleteUserUpload(item.id)
+      if (onDelete) onDelete()
+      toast.success("Upload deleted successfully!")
+    } catch (err) {
+      alert("Failed to delete upload.")
+      toast.error("Failed to delete upload.")
+    }
   }
   return (
     <Card>
@@ -56,7 +67,11 @@ const UploadHistory = ({ history = [], onView, onDelete }) => {
         <CardDescription>View and manage your previously uploaded files</CardDescription>
       </CardHeader>
       <CardContent>
-        {history.length === 0 ? (
+        {loading ? (
+          <div className="text-center py-12">Loading...</div>
+        ) : error ? (
+          <div className="text-center text-red-600 py-12">{error}</div>
+        ) : history.length === 0 ? (
           <div className="text-center py-12">
             <div className="mb-4">
               <span className="inline-block rounded-full bg-muted p-4">
