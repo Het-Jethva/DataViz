@@ -1,11 +1,10 @@
-import { createContext, useContext, useEffect, useState } from "react"
+import { createContext, useContext, useEffect, useState, useCallback } from "react"
 
 const initialState = {
   theme: "system",
   setTheme: () => null,
 }
-
-const ThemeProviderContext = createContext(initialState)
+const ThemeProviderContext = createContext(undefined)
 
 export function ThemeProvider({
   children,
@@ -14,7 +13,6 @@ export function ThemeProvider({
   ...props
 }) {
   const [theme, setTheme] = useState(() => {
-    // Check if we're in browser environment before accessing localStorage
     if (typeof window !== "undefined") {
       return localStorage.getItem(storageKey) || defaultTheme
     }
@@ -22,6 +20,7 @@ export function ThemeProvider({
   })
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
     const root = window.document.documentElement
 
     root.classList.remove("light", "dark")
@@ -41,13 +40,12 @@ export function ThemeProvider({
 
   const value = {
     theme,
-    setTheme: (theme) => {
-      // Check if we're in browser environment before accessing localStorage
+    setTheme: useCallback((theme) => {
       if (typeof window !== "undefined") {
         localStorage.setItem(storageKey, theme)
       }
       setTheme(theme)
-    },
+    }, [storageKey]),
   }
 
   return (
@@ -62,11 +60,8 @@ export function ThemeProvider({
 
 export const useTheme = () => {
   const context = useContext(ThemeProviderContext)
-
-  // If the context is the initialState, warn about missing provider
-  if (context === initialState) {
+  if (context === undefined) {
     throw new Error("useTheme must be used within a ThemeProvider")
   }
-
   return context
 }

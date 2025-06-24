@@ -12,7 +12,7 @@ const ProfileCard = ({ user }) => {
         <div className="flex flex-col items-center gap-4">
           <Avatar className="size-20">
             <AvatarFallback className="text-2xl font-bold">
-              {getInitials(user?.name)}
+              {getInitials(user?.name || "U")}
             </AvatarFallback>
           </Avatar>
           <div className="space-y-2 text-center">
@@ -42,7 +42,7 @@ const ProfileCard = ({ user }) => {
           <div className="flex items-center justify-between py-2">
             <span className="text-sm text-muted-foreground">Member since</span>
             <span className="text-sm font-semibold text-foreground">
-              {formatDate(user?.createdAt)}
+              {formatDate(user?.createdAt || new Date())}
             </span>
           </div>
           {user?.lastLogin && (

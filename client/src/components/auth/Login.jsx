@@ -36,7 +36,6 @@ const Login = () => {
       }
     } catch (err) {
       // Optionally log or handle unexpected errors
-      console.error("Unexpected error during login:", err)
     }
   }
 

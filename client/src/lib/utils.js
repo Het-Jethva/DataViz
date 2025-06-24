@@ -27,8 +27,8 @@ export function formatDate(date) {
 }
 
 export function formatFileSize(bytes) {
+  if (typeof bytes !== 'number' || isNaN(bytes) || bytes < 0) return "-"
   if (bytes === 0) return "0 Bytes"
-  if (!bytes && bytes !== 0) return "-"
   const k = 1024
   const sizes = ["Bytes", "KB", "MB", "GB", "TB"]
   const i = Math.floor(Math.log(bytes) / Math.log(k))

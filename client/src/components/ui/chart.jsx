@@ -13,11 +13,9 @@ const ChartContext = React.createContext(null)
 
 function useChart() {
   const context = React.useContext(ChartContext)
-
   if (!context) {
-    throw new Error("useChart must be used within a <ChartContainer />")
+    throw new Error('useChart must be used within a <ChartContainer />')
   }
-
   return context
 }
 
@@ -25,7 +23,7 @@ function ChartContainer({
   id,
   className,
   children,
-  config,
+  config = {},
   ...props
 }) {
   const uniqueId = React.useId()
@@ -52,10 +50,10 @@ function ChartContainer({
 
 const ChartStyle = ({
   id,
-  config
+  config = {}
 }) => {
-  const colorConfig = Object.entries(config).filter(([, config]) => config.theme || config.color)
-
+  if (!config || typeof config !== 'object') return null;
+  const colorConfig = Object.entries(config).filter(([, config]) => config && (config.theme || config.color))
   if (!colorConfig.length) {
     return null
   }
