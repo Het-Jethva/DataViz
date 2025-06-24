@@ -5,8 +5,10 @@ import { Input } from "@/components/ui/input"
 import { Progress } from "@/components/ui/progress"
 import { Upload, File, CheckCircle, AlertCircle } from "lucide-react"
 import { formatFileSize } from "@/lib/utils"
+import apiClient from "@/services/api"
+import { toast } from "sonner"
 
-const UploadSection = () => {
+const UploadSection = ({ onUploadSuccess }) => {
   const [isDragOver, setIsDragOver] = useState(false)
   const [selectedFile, setSelectedFile] = useState(null)
   const [uploadProgress, setUploadProgress] = useState(0)
@@ -68,22 +70,35 @@ const UploadSection = () => {
     }
   }, [])
 
-  const handleUpload = useCallback(() => {
+  const handleUpload = useCallback(async () => {
     if (selectedFile) {
       setUploadStatus("uploading")
       setUploadProgress(0)
-      const interval = setInterval(() => {
-        setUploadProgress((prev) => {
-          if (prev >= 100) {
-            clearInterval(interval)
-            setUploadStatus("success")
-            return 100
-          }
-          return prev + 10
+      setErrorMsg("")
+      try {
+        const formData = new FormData()
+        formData.append("file", selectedFile)
+        await apiClient.post("/dashboard/upload", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+          onUploadProgress: (progressEvent) => {
+            if (progressEvent.total) {
+              const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+              setUploadProgress(percent)
+            }
+          },
+          withCredentials: true,
         })
-      }, 200)
+        setUploadProgress(100)
+        setUploadStatus("success")
+        toast.success("File uploaded successfully!")
+        if (onUploadSuccess) onUploadSuccess()
+      } catch (err) {
+        setUploadStatus("error")
+        setErrorMsg(err?.response?.data?.error || "Upload failed. Please try again.")
+        toast.error(err?.response?.data?.error || "Upload failed. Please try again.")
+      }
     }
-  }, [selectedFile])
+  }, [selectedFile, onUploadSuccess])
 
   const resetUpload = () => {
     setSelectedFile(null)
