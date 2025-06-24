@@ -3,11 +3,22 @@ import axios from "axios"
 
 const API_BASE_URL = "http://localhost:5000/api/dashboard"
 
+const safeLocalStorage = {
+  getItem: (key) => {
+    try {
+      return typeof window !== "undefined" ? localStorage.getItem(key) : null
+    } catch (error) {
+      console.error("Error accessing localStorage:", error)
+      return null
+    }
+  },
+}
+
 export const getDashboardData = createAsyncThunk(
   "dashboard/getDashboardData",
   async (_, { rejectWithValue }) => {
     try {
-      const token = localStorage.getItem("token")
+      const token = safeLocalStorage.getItem("token")
       if (!token) {
         throw new Error("No token found")
       }

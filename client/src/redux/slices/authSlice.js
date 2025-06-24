@@ -3,6 +3,35 @@ import axios from "axios"
 
 const API_BASE_URL = "http://localhost:5000/api/auth"
 
+const safeLocalStorage = {
+  getItem: (key) => {
+    try {
+      return typeof window !== "undefined" ? localStorage.getItem(key) : null
+    } catch (error) {
+      console.error("Error accessing localStorage:", error)
+      return null
+    }
+  },
+  setItem: (key, value) => {
+    try {
+      if (typeof window !== "undefined") {
+        localStorage.setItem(key, value)
+      }
+    } catch (error) {
+      console.error("Error setting localStorage:", error)
+    }
+  },
+  removeItem: (key) => {
+    try {
+      if (typeof window !== "undefined") {
+        localStorage.removeItem(key)
+      }
+    } catch (error) {
+      console.error("Error removing from localStorage:", error)
+    }
+  },
+}
+
 // Async thunks for API calls
 export const loginUser = createAsyncThunk(
   "auth/loginUser",
@@ -14,7 +43,7 @@ export const loginUser = createAsyncThunk(
       })
 
       // Store token in localStorage
-      localStorage.setItem("token", response.data.data.token)
+      safeLocalStorage.setItem("token", response.data.data.token)
 
       return response.data.data
     } catch (error) {
@@ -34,7 +63,7 @@ export const registerUser = createAsyncThunk(
       })
 
       // Store token in localStorage
-      localStorage.setItem("token", response.data.data.token)
+      safeLocalStorage.setItem("token", response.data.data.token)
 
       return response.data.data
     } catch (error) {
@@ -46,7 +75,7 @@ export const registerUser = createAsyncThunk(
 )
 
 export const logoutUser = createAsyncThunk("auth/logoutUser", async () => {
-  localStorage.removeItem("token")
+  safeLocalStorage.removeItem("token")
   return null
 })
 
@@ -54,7 +83,7 @@ export const getCurrentUser = createAsyncThunk(
   "auth/getCurrentUser",
   async (_, { rejectWithValue }) => {
     try {
-      const token = localStorage.getItem("token")
+      const token = safeLocalStorage.getItem("token")
       if (!token) {
         throw new Error("No token found")
       }
@@ -67,7 +96,7 @@ export const getCurrentUser = createAsyncThunk(
 
       return response.data.data
     } catch (error) {
-      localStorage.removeItem("token")
+      safeLocalStorage.removeItem("token")
       return rejectWithValue(
         error.response?.data?.message || "Authentication failed"
       )
@@ -75,12 +104,16 @@ export const getCurrentUser = createAsyncThunk(
   }
 )
 
+const getTokenFromStorage = () => {
+  return safeLocalStorage.getItem("token")
+}
+
 const initialState = {
   user: null,
-  token: localStorage.getItem("token"),
+  token: getTokenFromStorage(),
   isLoading: false,
   error: null,
-  isAuthenticated: false,
+  isAuthenticated: !!getTokenFromStorage(),
 }
 
 const authSlice = createSlice({
@@ -95,7 +128,7 @@ const authSlice = createSlice({
       state.token = null
       state.isAuthenticated = false
       state.error = null
-      localStorage.removeItem("token")
+      safeLocalStorage.removeItem("token")
     },
   },
   extraReducers: (builder) => {
