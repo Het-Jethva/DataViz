@@ -11,6 +11,13 @@ const UploadSection = () => {
   const [selectedFile, setSelectedFile] = useState(null)
   const [uploadProgress, setUploadProgress] = useState(0)
   const [uploadStatus, setUploadStatus] = useState(null)
+  const [errorMsg, setErrorMsg] = useState("")
+
+  const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10MB
+  const ALLOWED_TYPES = [
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "application/vnd.ms-excel"
+  ]
 
   const handleDragOver = useCallback((e) => {
     e.preventDefault()
@@ -25,23 +32,36 @@ const UploadSection = () => {
   const handleDrop = useCallback((e) => {
     e.preventDefault()
     setIsDragOver(false)
+    setErrorMsg("")
     const files = e.dataTransfer.files
     if (files.length > 0) {
       const file = files[0]
-      if (
-        file.type === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ||
-        file.type === "application/vnd.ms-excel"
-      ) {
-        setSelectedFile(file)
-        setUploadStatus(null)
-        setUploadProgress(0)
+      if (!ALLOWED_TYPES.includes(file.type)) {
+        setErrorMsg("Unsupported file type. Please upload an Excel file (.xlsx, .xls).")
+        return
       }
+      if (file.size > MAX_FILE_SIZE) {
+        setErrorMsg("File size exceeds 10MB limit.")
+        return
+      }
+      setSelectedFile(file)
+      setUploadStatus(null)
+      setUploadProgress(0)
     }
   }, [])
 
   const handleFileSelect = useCallback((e) => {
+    setErrorMsg("")
     const file = e.target.files[0]
     if (file) {
+      if (!ALLOWED_TYPES.includes(file.type)) {
+        setErrorMsg("Unsupported file type. Please upload an Excel file (.xlsx, .xls).")
+        return
+      }
+      if (file.size > MAX_FILE_SIZE) {
+        setErrorMsg("File size exceeds 10MB limit.")
+        return
+      }
       setSelectedFile(file)
       setUploadStatus(null)
       setUploadProgress(0)
@@ -69,6 +89,7 @@ const UploadSection = () => {
     setSelectedFile(null)
     setUploadStatus(null)
     setUploadProgress(0)
+    setErrorMsg("")
   }
 
   const FileInfo = ({ file }) => (
@@ -166,6 +187,9 @@ const UploadSection = () => {
                   </Button>
                 )}
               </div>
+            )}
+            {errorMsg && (
+              <div className="text-red-600 text-sm text-center mb-4">{errorMsg}</div>
             )}
           </div>
         </div>

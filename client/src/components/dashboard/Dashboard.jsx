@@ -22,7 +22,6 @@ const Dashboard = () => {
     }
     dispatch(getCurrentUser())
     dispatch(getDashboardData())
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, navigate, isAuthenticated])
 
   const handleLogout = () => {

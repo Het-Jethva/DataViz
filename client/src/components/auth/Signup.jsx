@@ -46,7 +46,6 @@ const Signup = () => {
       }
     } catch (err) {
       // Optionally log or handle unexpected errors
-      console.error("Unexpected error during signup:", err)
     }
   }
 

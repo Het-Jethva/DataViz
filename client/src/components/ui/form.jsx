@@ -7,7 +7,8 @@ import { Label } from "@/components/ui/label"
 
 const Form = FormProvider
 
-const FormFieldContext = React.createContext({})
+const FormFieldContext = React.createContext(undefined)
+const FormItemContext = React.createContext(undefined)
 
 const FormField = (
   {
@@ -24,27 +25,22 @@ const FormField = (
 const useFormField = () => {
   const fieldContext = React.useContext(FormFieldContext)
   const itemContext = React.useContext(FormItemContext)
+  if (!fieldContext || typeof fieldContext.name !== 'string') {
+    throw new Error("useFormField should be used within <FormField> and must have a valid name")
+  }
   const { getFieldState } = useFormContext()
   const formState = useFormState({ name: fieldContext.name })
   const fieldState = getFieldState(fieldContext.name, formState)
-
-  if (!fieldContext) {
-    throw new Error("useFormField should be used within <FormField>")
-  }
-
-  const { id } = itemContext
-
+  const id = itemContext && itemContext.id ? itemContext.id : undefined
   return {
     id,
     name: fieldContext.name,
-    formItemId: `${id}-form-item`,
-    formDescriptionId: `${id}-form-item-description`,
-    formMessageId: `${id}-form-item-message`,
+    formItemId: id ? `${id}-form-item` : undefined,
+    formDescriptionId: id ? `${id}-form-item-description` : undefined,
+    formMessageId: id ? `${id}-form-item-message` : undefined,
     ...fieldState,
   }
 }
-
-const FormItemContext = React.createContext({})
 
 function FormItem({
   className,

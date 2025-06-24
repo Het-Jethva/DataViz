@@ -28,11 +28,12 @@ const corsOptions = {
     process.env.NODE_ENV === "production"
       ? (() => {
           if (!process.env.FRONTEND_URL) {
-            console.warn(
-              "Warning: FRONTEND_URL is not set in production. Defaulting to http://localhost:5173. Set FRONTEND_URL in your environment variables."
+            console.error(
+              "Error: FRONTEND_URL is not set in production. Set FRONTEND_URL in your environment variables."
             )
+            process.exit(1)
           }
-          return process.env.FRONTEND_URL || "http://localhost:5173"
+          return process.env.FRONTEND_URL
         })()
       : [
           "http://localhost:5173",
