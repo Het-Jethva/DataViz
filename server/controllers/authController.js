@@ -8,6 +8,29 @@ const generateToken = (userId) => {
   })
 }
 
+// Set cookie with JWT token
+const setTokenCookie = (res, token) => {
+  const isProduction = process.env.NODE_ENV === "production"
+  
+  res.cookie("token", token, {
+    httpOnly: true,
+    secure: isProduction, // Use secure cookies in production
+    sameSite: isProduction ? "none" : "lax", // Allow cross-site cookies in production
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    path: "/",
+  })
+}
+
+// Clear token cookie
+const clearTokenCookie = (res) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    path: "/",
+  })
+}
+
 // Register new user
 export const register = async (req, res) => {
   try {
@@ -71,17 +94,24 @@ export const register = async (req, res) => {
       role: role || "user", // Default to user, admin can only be set by existing admin
     })
 
-    await user.save()
-
-    // Generate token
+    await user.save()    // Generate token
     const token = generateToken(user._id)
+    
+    // Set httpOnly cookie
+    setTokenCookie(res, token)
 
     res.status(201).json({
       success: true,
       message: "User registered successfully",
       data: {
-        user,
-        token,
+        user: {
+          id: user._id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+          createdAt: user.createdAt,
+          isActive: user.isActive,
+        },
       },
     })
   } catch (error) {
@@ -138,17 +168,29 @@ export const login = async (req, res) => {
         success: false,
         message: "Invalid email or password",
       })
-    }
-
-    // Generate token
+    }    // Generate token
     const token = generateToken(user._id)
+    
+    // Update last login
+    user.lastLogin = new Date()
+    await user.save({ validateBeforeSave: false })
+    
+    // Set httpOnly cookie
+    setTokenCookie(res, token)
 
     res.json({
       success: true,
       message: "Login successful",
       data: {
-        user,
-        token,
+        user: {
+          id: user._id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+          createdAt: user.createdAt,
+          lastLogin: user.lastLogin,
+          isActive: user.isActive,
+        },
       },
     })
   } catch (error) {
@@ -239,6 +281,23 @@ export const updateProfile = async (req, res) => {
       data: {
         user: updatedUser,
       },
+    })
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    })
+  }
+}
+
+// Logout user
+export const logout = async (req, res) => {
+  try {
+    clearTokenCookie(res)
+    
+    res.json({
+      success: true,
+      message: "Logged out successfully",
     })
   } catch (error) {
     res.status(500).json({
