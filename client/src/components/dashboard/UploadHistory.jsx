@@ -7,7 +7,15 @@ import {
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { History, FileText, Eye, Trash2 } from "lucide-react"
+import { Separator } from "@/components/ui/separator"
+import {
+  History,
+  FileText,
+  Eye,
+  Trash2,
+  Download,
+  Calendar,
+} from "lucide-react"
 
 const UploadHistory = ({ history = [], onView, onDelete }) => {
   const handleView = (item, index) => {
@@ -29,6 +37,8 @@ const UploadHistory = ({ history = [], onView, onDelete }) => {
         year: "numeric",
         month: "short",
         day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
       })
     } catch {
       return "Recently uploaded"
@@ -43,97 +53,117 @@ const UploadHistory = ({ history = [], onView, onDelete }) => {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <History className="h-5 w-5" />
-          Upload History
-        </CardTitle>
-        <CardDescription>
-          View and manage your previously uploaded files
-        </CardDescription>
+    <Card className="border-0 shadow-lg shadow-slate-200/50 dark:shadow-slate-900/50 bg-gradient-to-br from-white to-slate-50 dark:from-slate-900 dark:to-slate-950">
+      <CardHeader className="pb-6">
+        <div className="flex items-center gap-3">
+          <div className="p-2 rounded-lg bg-gradient-to-r from-blue-500 to-indigo-500">
+            <History className="size-5 text-white" />
+          </div>
+          <div>
+            <CardTitle className="text-xl font-bold text-slate-900 dark:text-slate-100">
+              Upload History
+            </CardTitle>
+            <CardDescription className="text-slate-600 dark:text-slate-400">
+              View and manage your previously uploaded files
+            </CardDescription>
+          </div>
+        </div>
       </CardHeader>
       <CardContent>
         {history.length === 0 ? (
-          <div className="text-center py-12">
-            <div className="flex justify-center mb-4">
-              <div className="p-4 rounded-full bg-muted">
-                <FileText className="h-8 w-8 text-muted-foreground" />
+          <div className="text-center py-16">
+            <div className="flex justify-center mb-6">
+              <div className="p-6 rounded-2xl bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900">
+                <FileText className="size-12 text-slate-400 dark:text-slate-500" />
               </div>
             </div>
-            <h3 className="text-lg font-medium mb-2">No uploads yet</h3>
-            <p className="text-muted-foreground">
-              Upload your first Excel file to get started with data
-              visualization
-            </p>
+            <div className="space-y-3">
+              <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-100">
+                No uploads yet
+              </h3>
+              <p className="text-slate-600 dark:text-slate-400 max-w-sm mx-auto">
+                Upload your first Excel file to get started with data
+                visualization and see your history here
+              </p>
+            </div>
           </div>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-4">
             {history.map((item, index) => (
-              <div
-                key={item.id || index}
-                className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors"
-              >
-                <div className="flex items-center gap-4 flex-1 min-w-0">
-                  <div className="flex-shrink-0">
-                    <div className="p-2 rounded-md bg-green-100 dark:bg-green-900/20">
-                      <FileText className="h-4 w-4 text-green-600 dark:text-green-400" />
+              <div key={item.id || index}>
+                <div className="flex items-center justify-between p-6 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:shadow-md hover:border-slate-300 dark:hover:border-slate-600 transition-all duration-200 group">
+                  <div className="flex items-center gap-4 flex-1 min-w-0">
+                    <div className="flex-shrink-0">
+                      <div className="p-3 rounded-xl bg-gradient-to-br from-green-100 to-emerald-100 dark:from-green-900/30 dark:to-emerald-900/30 group-hover:from-green-200 group-hover:to-emerald-200 dark:group-hover:from-green-900/50 dark:group-hover:to-emerald-900/50 transition-colors">
+                        <FileText className="size-5 text-green-600 dark:text-green-400" />
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h4 className="font-medium truncate">
-                      {item.filename || `Upload ${index + 1}`}
-                    </h4>
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <span>{formatDate(item.uploadDate)}</span>
-                      {item.fileSize && (
-                        <>
-                          <span>•</span>
+                    <div className="flex-1 min-w-0 space-y-2">
+                      <h4 className="font-semibold text-slate-900 dark:text-slate-100 truncate">
+                        {item.filename || `Upload ${index + 1}`}
+                      </h4>
+                      <div className="flex items-center gap-3 text-sm text-slate-600 dark:text-slate-400">
+                        <div className="flex items-center gap-1">
+                          <Calendar className="size-3" />
+                          <span>{formatDate(item.uploadDate)}</span>
+                        </div>
+                        {item.fileSize && (
                           <Badge
                             variant="outline"
-                            className="text-xs"
+                            className="text-xs font-medium"
                           >
                             {formatFileSize(item.fileSize)}
                           </Badge>
-                        </>
-                      )}
-                      {item.rowCount && (
-                        <>
-                          <span>•</span>
+                        )}
+                        {item.rowCount && (
                           <Badge
                             variant="outline"
-                            className="text-xs"
+                            className="text-xs font-medium"
                           >
                             {item.rowCount} rows
                           </Badge>
-                        </>
-                      )}
+                        )}
+                      </div>
                     </div>
                   </div>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleView(item, index)}
+                      className="hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/30 dark:hover:text-blue-400"
+                      aria-label={`View ${
+                        item.filename || `Upload ${index + 1}`
+                      }`}
+                    >
+                      <Eye className="size-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-700 dark:hover:text-slate-300"
+                      aria-label={`Download ${
+                        item.filename || `Upload ${index + 1}`
+                      }`}
+                    >
+                      <Download className="size-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleDelete(item, index)}
+                      className="hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/30 dark:hover:text-red-400"
+                      aria-label={`Delete ${
+                        item.filename || `Upload ${index + 1}`
+                      }`}
+                    >
+                      <Trash2 className="size-4" />
+                    </Button>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleView(item, index)}
-                    aria-label={`View ${
-                      item.filename || `Upload ${index + 1}`
-                    }`}
-                  >
-                    <Eye className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleDelete(item, index)}
-                    className="text-destructive hover:text-destructive"
-                    aria-label={`Delete ${
-                      item.filename || `Upload ${index + 1}`
-                    }`}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
+                {index < history.length - 1 && (
+                  <Separator className="my-4 bg-slate-200 dark:bg-slate-700" />
+                )}
               </div>
             ))}
           </div>
