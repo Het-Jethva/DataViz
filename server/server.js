@@ -11,7 +11,7 @@ import dashboardRoutes from "./routes/dashboardRoutes.js"
 
 dotenv.config()
 
-const requiredEnvVars = ["MONGO_URI", "JWT_SECRET"]
+const requiredEnvVars = ["MONGODB_URI", "JWT_SECRET"]
 const missingEnvVars = requiredEnvVars.filter((envVar) => !process.env[envVar])
 if (missingEnvVars.length > 0) {
   console.error(
@@ -26,7 +26,14 @@ const app = express()
 const corsOptions = {
   origin:
     process.env.NODE_ENV === "production"
-      ? process.env.FRONTEND_URL || "http://localhost:5173"
+      ? (() => {
+          if (!process.env.FRONTEND_URL) {
+            console.warn(
+              "Warning: FRONTEND_URL is not set in production. Defaulting to http://localhost:5173. Set FRONTEND_URL in your environment variables."
+            )
+          }
+          return process.env.FRONTEND_URL || "http://localhost:5173"
+        })()
       : [
           "http://localhost:5173",
           "http://localhost:3000",
@@ -85,7 +92,7 @@ app.use((err, req, res, next) => {
     timestamp: new Date().toISOString(),
   })
 
-  res.status(500).json({
+  res.status(err.status || 500).json({
     success: false,
     message:
       process.env.NODE_ENV === "production"
@@ -105,7 +112,7 @@ app.use((req, res) => {
 const PORT = process.env.PORT || 5000
 
 mongoose
-  .connect(process.env.MONGO_URI)
+  .connect(process.env.MONGODB_URI)
   .then(() => {
     console.log("Connected to MongoDB")
     app.listen(PORT, () => console.log(`Server running on port ${PORT}`))

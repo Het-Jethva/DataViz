@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken"
 import User from "../models/User.js"
+import { isValidEmail, isValidPassword, isValidName, isValidRole } from "../utils/validation.js"
 
 // Generate JWT token
 const generateToken = (userId) => {
@@ -45,7 +46,7 @@ export const register = async (req, res) => {
     }
 
     // Validate name length and format
-    if (name.trim().length < 2 || name.trim().length > 50) {
+    if (!isValidName(name)) {
       return res.status(400).json({
         success: false,
         message: "Name must be between 2 and 50 characters",
@@ -53,8 +54,7 @@ export const register = async (req, res) => {
     }
 
     // Validate email format
-    const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/
-    if (!emailRegex.test(email)) {
+    if (!isValidEmail(email)) {
       return res.status(400).json({
         success: false,
         message: "Please enter a valid email address",
@@ -62,7 +62,7 @@ export const register = async (req, res) => {
     }
 
     // Validate password strength
-    if (password.length < 6) {
+    if (!isValidPassword(password)) {
       return res.status(400).json({
         success: false,
         message: "Password must be at least 6 characters long",
@@ -70,7 +70,7 @@ export const register = async (req, res) => {
     }
 
     // Validate role if provided
-    if (role && !["user", "admin"].includes(role)) {
+    if (role && !isValidRole(role)) {
       return res.status(400).json({
         success: false,
         message: "Invalid role specified",
@@ -136,8 +136,7 @@ export const login = async (req, res) => {
     }
 
     // Validate email format
-    const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/
-    if (!emailRegex.test(email)) {
+    if (!isValidEmail(email)) {
       return res.status(400).json({
         success: false,
         message: "Please enter a valid email address",
@@ -162,8 +161,8 @@ export const login = async (req, res) => {
     }
 
     // Verify password
-    const isValidPassword = await user.comparePassword(password)
-    if (!isValidPassword) {
+    const passwordIsValid = await user.comparePassword(password)
+    if (!passwordIsValid) {
       return res.status(401).json({
         success: false,
         message: "Invalid email or password",
@@ -239,7 +238,7 @@ export const updateProfile = async (req, res) => {
     }
 
     // Validate name
-    if (name.trim().length < 2 || name.trim().length > 50) {
+    if (!isValidName(name)) {
       return res.status(400).json({
         success: false,
         message: "Name must be between 2 and 50 characters",
@@ -247,8 +246,7 @@ export const updateProfile = async (req, res) => {
     }
 
     // Validate email format
-    const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/
-    if (!emailRegex.test(email)) {
+    if (!isValidEmail(email)) {
       return res.status(400).json({
         success: false,
         message: "Please enter a valid email address",
@@ -321,7 +319,7 @@ export const changePassword = async (req, res) => {
     }
 
     // Validate new password strength
-    if (newPassword.length < 6) {
+    if (!isValidPassword(newPassword)) {
       return res.status(400).json({
         success: false,
         message: "New password must be at least 6 characters long",
@@ -339,8 +337,8 @@ export const changePassword = async (req, res) => {
     const user = await User.findById(req.user._id)
 
     // Verify current password
-    const isValidPassword = await user.comparePassword(currentPassword)
-    if (!isValidPassword) {
+    const currentPasswordIsValid = await user.comparePassword(currentPassword)
+    if (!currentPasswordIsValid) {
       return res.status(400).json({
         success: false,
         message: "Current password is incorrect",

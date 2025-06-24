@@ -33,6 +33,9 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    lastLogin: {
+      type: Date,
+    },
     uploadHistory: [
       {
         fileName: String,
