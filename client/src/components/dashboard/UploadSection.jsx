@@ -58,9 +58,7 @@ const UploadSection = () => {
   const handleUpload = useCallback(() => {
     if (selectedFile) {
       setUploadStatus("uploading")
-      setUploadProgress(0)
-
-      // Simulate upload progress
+      setUploadProgress(0) // Simulate upload progress
       const interval = setInterval(() => {
         setUploadProgress((prev) => {
           if (prev >= 100) {
@@ -71,8 +69,6 @@ const UploadSection = () => {
           return prev + 10
         })
       }, 200)
-
-      console.log("Uploading file:", selectedFile.name)
     }
   }, [selectedFile])
 

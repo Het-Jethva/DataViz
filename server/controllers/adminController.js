@@ -1,26 +1,42 @@
 import User from "../models/User.js"
+import mongoose from "mongoose"
 
 // Get all users with pagination
 export const getAllUsers = async (req, res) => {
   try {
+    // Validate and sanitize pagination parameters
     const page = Math.max(1, parseInt(req.query.page) || 1)
     const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 10))
     const sortBy = req.query.sortBy || "createdAt"
     const sortOrder = req.query.sortOrder === "asc" ? 1 : -1
-    const search = req.query.search || ""
+    const search = req.query.search ? req.query.search.trim() : ""
 
-    // Build search query
+    // Validate sortBy field to prevent NoSQL injection
+    const allowedSortFields = ["createdAt", "name", "email", "role", "isActive"]
+    const safeSortBy = allowedSortFields.includes(sortBy) ? sortBy : "createdAt"
+
+    // Build search query with regex escaping to prevent ReDoS attacks
     const searchQuery = search
       ? {
           $or: [
-            { name: { $regex: search, $options: "i" } },
-            { email: { $regex: search, $options: "i" } },
+            {
+              name: {
+                $regex: search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
+                $options: "i",
+              },
+            },
+            {
+              email: {
+                $regex: search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
+                $options: "i",
+              },
+            },
           ],
         }
       : {}
 
     const users = await User.find(searchQuery)
-      .sort({ [sortBy]: sortOrder })
+      .sort({ [safeSortBy]: sortOrder })
       .limit(limit * 1)
       .skip((page - 1) * limit)
       .select("-password")
@@ -50,7 +66,17 @@ export const getAllUsers = async (req, res) => {
 // Get user by ID
 export const getUserById = async (req, res) => {
   try {
-    const user = await User.findById(req.params.id).select("-password")
+    const userId = req.params.id
+
+    // Validate ObjectId
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid user ID",
+      })
+    }
+
+    const user = await User.findById(userId).select("-password")
 
     if (!user) {
       return res.status(404).json({
@@ -77,6 +103,62 @@ export const updateUser = async (req, res) => {
     const { name, email, role, isActive } = req.body
     const userId = req.params.id
 
+    // Validate ObjectId
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid user ID",
+      })
+    }
+
+    // Input validation
+    if (name !== undefined) {
+      if (!name || name.trim().length < 2 || name.trim().length > 50) {
+        return res.status(400).json({
+          success: false,
+          message: "Name must be between 2 and 50 characters",
+        })
+      }
+    }
+
+    if (email !== undefined) {
+      const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/
+      if (!email || !emailRegex.test(email)) {
+        return res.status(400).json({
+          success: false,
+          message: "Please enter a valid email address",
+        })
+      }
+
+      // Check if email is already taken by another user
+      const existingUser = await User.findOne({
+        email: email.toLowerCase(),
+        _id: { $ne: userId },
+      })
+      if (existingUser) {
+        return res.status(400).json({
+          success: false,
+          message: "Email already in use",
+        })
+      }
+    }
+
+    // Validate role
+    if (role !== undefined && !["user", "admin"].includes(role)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid role specified",
+      })
+    }
+
+    // Validate isActive
+    if (isActive !== undefined && typeof isActive !== "boolean") {
+      return res.status(400).json({
+        success: false,
+        message: "isActive must be a boolean value",
+      })
+    }
+
     // Prevent admin from deactivating themselves
     if (
       new mongoose.Types.ObjectId(userId).equals(req.user._id) &&
@@ -88,20 +170,25 @@ export const updateUser = async (req, res) => {
       })
     }
 
-    // Check if email is being changed and if it's already taken
-    const existingUser = await User.findOne({ email, _id: { $ne: userId } })
-    if (existingUser) {
+    // Prevent admin from demoting themselves
+    if (userId === req.user._id.toString() && role === "user") {
       return res.status(400).json({
         success: false,
-        message: "Email already in use",
+        message: "Cannot demote yourself from admin role",
       })
     }
 
-    const updatedUser = await User.findByIdAndUpdate(
-      userId,
-      { name, email, role, isActive },
-      { new: true, runValidators: true }
-    ).select("-password")
+    // Prepare update data
+    const updateData = {}
+    if (name !== undefined) updateData.name = name.trim()
+    if (email !== undefined) updateData.email = email.toLowerCase()
+    if (role !== undefined) updateData.role = role
+    if (isActive !== undefined) updateData.isActive = isActive
+
+    const updatedUser = await User.findByIdAndUpdate(userId, updateData, {
+      new: true,
+      runValidators: true,
+    }).select("-password")
 
     if (!updatedUser) {
       return res.status(404).json({
@@ -127,6 +214,14 @@ export const updateUser = async (req, res) => {
 export const deleteUser = async (req, res) => {
   try {
     const userId = req.params.id
+
+    // Validate ObjectId
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid user ID",
+      })
+    }
 
     // Prevent admin from deleting themselves
     if (userId === req.user._id.toString()) {
