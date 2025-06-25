@@ -1,184 +1,75 @@
-# DataViz - Excel Data Visualization Platform
+Absolutely! Here’s a rewritten, modern, and clear README for your DataViz project, tailored to your actual codebase and best practices:
 
-A full-stack web application for uploading Excel files and creating interactive 2D/3D data visualizations with user authentication and admin management.
+---
+
+# DataViz
+
+A full-stack web application for uploading Excel files and creating interactive 2D/3D data visualizations, with user authentication and admin management.
+
+---
 
 ## 🚀 Tech Stack
 
-### Frontend
-- **React 19.1.0** - Modern UI library
-- **Redux Toolkit** - State management
-- **Vite** - Fast build tool
-- **TailwindCSS** - Utility-first CSS framework
-- **Chart.js** - 2D charts and graphs
-- **Three.js** - 3D visualizations
-- **React Router** - Client-side routing
+**Frontend**
+- React 19
+- Redux Toolkit
+- Vite
+- TailwindCSS
+- Chart.js (2D charts)
+- Three.js (3D charts)
+- React Router
 
-### Backend
-- **Node.js** - JavaScript runtime
-- **Express.js** - Web framework
-- **MongoDB** - NoSQL database
-- **Mongoose** - MongoDB ODM
-- **JWT** - Authentication
-- **Multer** - File upload handling
-- **SheetJS/xlsx** - Excel file parsing
+**Backend**
+- Node.js
+- Express.js
+- MongoDB + Mongoose
+- JWT (Authentication)
+- Multer (File uploads)
+- SheetJS/xlsx (Excel parsing)
+
+---
 
 ## 📁 Project Structure
 
 ```
 DataViz/
-├── client/                        # Frontend React application
-│   ├── public/
-│   │   ├── favicon.ico
-│   │   └── charts/                # Static chart exports
+├── client/         # React frontend
 │   ├── src/
 │   │   ├── components/
-│   │   │   ├── common/
-│   │   │   │   ├── Header.jsx
-│   │   │   │   ├── Footer.jsx
-│   │   │   │   ├── Sidebar.jsx
-│   │   │   │   ├── LoadingSpinner.jsx
-│   │   │   │   └── ErrorBoundary.jsx
-│   │   │   ├── auth/
-│   │   │   │   ├── LoginForm.jsx
-│   │   │   │   ├── RegisterForm.jsx
-│   │   │   │   └── ProtectedRoute.jsx
-│   │   │   ├── upload/
-│   │   │   │   ├── FileUpload.jsx
-│   │   │   │   ├── FilePreview.jsx
-│   │   │   │   └── UploadProgress.jsx
-│   │   │   ├── charts/
-│   │   │   │   ├── ChartContainer.jsx
-│   │   │   │   ├── Chart2D.jsx
-│   │   │   │   ├── Chart3D.jsx
-│   │   │   │   ├── ChartControls.jsx
-│   │   │   │   └── ChartExport.jsx
-│   │   │   ├── dashboard/
-│   │   │   │   ├── DashboardStats.jsx
-│   │   │   │   ├── RecentUploads.jsx
-│   │   │   │   └── QuickActions.jsx
-│   │   │   └── admin/
-│   │   │       ├── UserManagement.jsx
-│   │   │       ├── UserTable.jsx
-│   │   │       └── AdminStats.jsx
-│   │   ├── pages/
-│   │   │   ├── HomePage.jsx
-│   │   │   ├── LoginPage.jsx
-│   │   │   ├── RegisterPage.jsx
-│   │   │   ├── DashboardPage.jsx
-│   │   │   ├── VisualizePage.jsx
-│   │   │   ├── AdminPage.jsx
-│   │   │   └── NotFoundPage.jsx
 │   │   ├── redux/
-│   │   │   ├── store.js
-│   │   │   ├── slices/
-│   │   │   │   ├── authSlice.js
-│   │   │   │   ├── dataSlice.js
-│   │   │   │   ├── chartSlice.js
-│   │   │   │   ├── uploadSlice.js
-│   │   │   │   └── adminSlice.js
-│   │   │   └── middleware/
-│   │   │       └── authMiddleware.js
 │   │   ├── services/
-│   │   │   ├── api.js              # Axios instance
-│   │   │   ├── auth.service.js
-│   │   │   ├── data.service.js
-│   │   │   ├── chart.service.js
-│   │   │   └── admin.service.js
-│   │   ├── utils/
-│   │   │   ├── constants.js
-│   │   │   ├── helpers.js
-│   │   │   ├── validators.js
-│   │   │   ├── formatters.js
-│   │   │   └── chartConfig.js
 │   │   ├── hooks/
-│   │   │   ├── useAuth.js
-│   │   │   ├── useFileUpload.js
-│   │   │   ├── useChart.js
-│   │   │   └── useLocalStorage.js
-│   │   ├── layouts/
-│   │   │   ├── MainLayout.jsx
-│   │   │   ├── AuthLayout.jsx
-│   │   │   └── AdminLayout.jsx
-│   │   ├── assets/
-│   │   │   ├── images/
-│   │   │   ├── icons/
-│   │   │   └── styles/
-│   │   │       └── components.css
+│   │   ├── lib/
 │   │   ├── App.jsx
 │   │   ├── main.jsx
 │   │   └── index.css
 │   ├── package.json
-│   ├── vite.config.js
-│   └── tailwind.config.js
-├── server/                        # Backend Node.js application
-│   ├── controllers/
-│   │   ├── auth.controller.js
-│   │   ├── data.controller.js
-│   │   ├── user.controller.js
-│   │   └── admin.controller.js
-│   ├── middleware/
-│   │   ├── auth.middleware.js
-│   │   ├── admin.middleware.js
-│   │   ├── upload.middleware.js
-│   │   └── error.middleware.js
-│   ├── models/
-│   │   ├── User.model.js
-│   │   ├── Dataset.model.js
-│   │   └── Chart.model.js
-│   ├── routes/
-│   │   ├── auth.routes.js
-│   │   ├── data.routes.js
-│   │   ├── user.routes.js
-│   │   └── admin.routes.js
-│   ├── services/
-│   │   ├── excel.service.js
-│   │   ├── auth.service.js
-│   │   └── email.service.js
-│   ├── utils/
-│   │   ├── database.js
-│   │   ├── jwt.js
-│   │   ├── validation.js
-│   │   └── constants.js
-│   ├── uploads/                   # File upload directory
+│   └── vite.config.js
+├── server/         # Node.js backend
 │   ├── config/
-│   │   ├── database.config.js
-│   │   └── app.config.js
-│   ├── package.json
-│   └── server.js
+│   ├── controllers/
+│   ├── middleware/
+│   ├── models/
+│   ├── routes/
+│   ├── utils/
+│   ├── uploads/
+│   ├── server.js
+│   └── package.json
 └── README.md
 ```
 
-## ✨ Key Features
+---
 
-### 🔐 Authentication & Authorization
-- JWT-based user authentication
-- Role-based access control (User/Admin)
-- Protected routes and API endpoints
-- User registration and login
+## ✨ Features
 
-### 📊 Data Management
-- Excel file upload (.xlsx, .xls)
-- Data parsing and validation
-- Dynamic column mapping
-- Upload history tracking
+- **User Authentication:** JWT-based, with role-based access (User/Admin)
+- **Excel Upload & Parsing:** Upload `.xlsx`/`.xls` files, parse and validate data
+- **Data Visualization:** Interactive 2D (Chart.js) and 3D (Three.js) charts
+- **User Dashboard:** Upload history, profile management
+- **Admin Panel:** User management, platform stats
+- **Responsive UI:** Modern, mobile-friendly design with TailwindCSS
 
-### 📈 Visualization
-- **2D Charts**: Bar, Line, Pie, Scatter, Area charts
-- **3D Visualizations**: Interactive 3D charts with Three.js
-- Real-time chart customization
-- Export charts as images/PDFs
-
-### 👥 User Management
-- User dashboard with upload history
-- Admin panel for user management
-- Usage statistics and analytics
-- Bulk operations support
-
-### 🎨 User Experience
-- Responsive design with TailwindCSS
-- Real-time upload progress
-- Interactive chart controls
-- Modern, clean interface
+---
 
 ## 🛠️ Installation & Setup
 
@@ -187,100 +78,85 @@ DataViz/
 - MongoDB (v5+)
 - npm or yarn
 
-### Backend Setup
+### 1. Backend Setup
+
 ```bash
 cd server
 npm install
 cp .env.example .env
-# Configure your environment variables
+# Edit .env with your values (see below)
 npm run dev
 ```
 
-### Frontend Setup
+### 2. Frontend Setup
+
 ```bash
 cd client
 npm install
 npm run dev
 ```
 
-### Environment Variables
-Create `.env` file in server directory:
+---
+
+## ⚙️ Environment Variables
+
+### Backend (`server/.env`)
+
 ```env
 PORT=5000
 MONGODB_URI=mongodb://localhost:27017/dataviz
 JWT_SECRET=your_jwt_secret_key
-JWT_EXPIRE=7d
+JWT_EXPIRES_IN=7d
 NODE_ENV=development
+# Required in production for CORS
+FRONTEND_URL=http://localhost:5173
 ```
+- `MONGODB_URI` and `JWT_SECRET` are required.
+- `FRONTEND_URL` is required in production for CORS.
+- `PORT`, `JWT_EXPIRES_IN`, and `NODE_ENV` are optional but recommended.
 
-## 🚀 Development Workflow
+### Frontend (`client/.env`)
 
-### Commit Message Convention
+```env
+VITE_API_URL=http://localhost:5000/api
 ```
-feat: add new feature
-fix: bug fix
-docs: documentation
-style: formatting
-refactor: code restructuring
-test: adding tests
-chore: maintenance
-```
+- If not set, defaults to `http://localhost:5000/api`.
 
-### Branch Strategy
-- `main` - Production-ready code
-- `develop` - Development branch
-- `feature/*` - Feature branches
-- `hotfix/*` - Bug fixes
+---
 
-## 📚 API Documentation
+## 🚦 Development Workflow
 
-### Authentication Endpoints
-- `POST /api/auth/register` - User registration
-- `POST /api/auth/login` - User login
-- `POST /api/auth/logout` - User logout
-- `GET /api/auth/profile` - Get user profile
+- **Frontend:** `npm run dev` (Vite dev server)
+- **Backend:** `npm run dev` (Nodemon/Express)
+- **Build frontend:** `npm run build`
+- **Lint frontend:** `npm run lint`
 
-### Data Endpoints
-- `POST /api/data/upload` - Upload Excel file
-- `GET /api/data/datasets` - Get user datasets
-- `GET /api/data/dataset/:id` - Get specific dataset
-- `DELETE /api/data/dataset/:id` - Delete dataset
+---
 
-### Chart Endpoints
-- `POST /api/charts/create` - Create chart configuration
-- `GET /api/charts/user` - Get user charts
-- `PUT /api/charts/:id` - Update chart
-- `DELETE /api/charts/:id` - Delete chart
-
-### Admin Endpoints
-- `GET /api/admin/users` - Get all users
-- `PUT /api/admin/users/:id` - Update user
-- `DELETE /api/admin/users/:id` - Delete user
-- `GET /api/admin/stats` - Get platform statistics
-
-## 🔧 Available Scripts
-
-### Frontend
-```bash
-npm run dev          # Start development server
-npm run build        # Build for production
-npm run preview      # Preview production build
-npm run lint         # Run ESLint
-```
-
-### Backend
-```bash
-npm run dev          # Start development server
-npm run start        # Start production server
-npm run test         # Run tests
-npm run seed         # Seed database
-```
-
-## 🤝 Contributing
+## 🧑‍💻 Contributing
 
 1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'feat: add AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
+2. Create your feature branch (`git checkout -b feature/my-feature`)
+3. Commit your changes (`git commit -m 'feat: add my feature'`)
+4. Push to the branch (`git push origin feature/my-feature`)
 5. Open a Pull Request
+
+---
+
+## 📚 API Overview
+
+### Auth
+- `POST /api/auth/register` — Register
+- `POST /api/auth/login` — Login
+- `POST /api/auth/logout` — Logout
+- `GET /api/auth/profile` — Get profile
+
+### Data
+- `POST /api/dashboard/upload` — Upload Excel file
+- `GET /api/dashboard/history` — Get upload history
+
+### Admin
+- `GET /api/admin/users` — List users
+- `PUT /api/admin/users/:id` — Update user
+- `DELETE /api/admin/users/:id` — Delete user
 
