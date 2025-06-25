@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { toast } from "sonner"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { fetchUserUploads } from "@/services/api"
 
 const Profile = () => {
   const [user, setUser] = useState(null)
@@ -14,6 +15,7 @@ const Profile = () => {
   const [saving, setSaving] = useState(false)
   const [passwords, setPasswords] = useState({ current: "", new: "" })
   const [passwordSaving, setPasswordSaving] = useState(false)
+  const [uploadCount, setUploadCount] = useState(0)
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -29,7 +31,16 @@ const Profile = () => {
         setLoading(false)
       }
     }
+    const fetchUploads = async () => {
+      try {
+        const res = await fetchUserUploads()
+        setUploadCount(res.data.uploads.length)
+      } catch (err) {
+        setUploadCount(0)
+      }
+    }
     fetchProfile()
+    fetchUploads()
   }, [])
 
   const handleChange = (e) => {
@@ -84,6 +95,7 @@ const Profile = () => {
           </Avatar>
           <div className="text-xl font-bold mb-1">{user?.name || "Profile"}</div>
           <div className="text-muted-foreground mb-2">{user?.email}</div>
+          <div className="text-sm text-muted-foreground mb-2">Total Uploads: {uploadCount}</div>
         </div>
         {/* Right: Forms */}
         <div className="md:col-span-2 space-y-8">
