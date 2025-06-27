@@ -11,21 +11,7 @@ export const generateToken = (userId) => {
 
 // Register new user
 export async function registerService({ name, email, password, role }) {
-  if (!name || !email || !password) {
-    throw new Error("Name, email, and password are required")
-  }
-  if (!isValidName(name)) {
-    throw new Error("Name must be between 2 and 50 characters")
-  }
-  if (!isValidEmail(email)) {
-    throw new Error("Please enter a valid email address")
-  }
-  if (!isValidPassword(password)) {
-    throw new Error("Password must be at least 6 characters long")
-  }
-  if (role && !isValidRole(role)) {
-    throw new Error("Invalid role specified")
-  }
+  // Validation is handled by middleware
   const existingUser = await User.findOne({ email: email.toLowerCase() })
   if (existingUser) {
     throw new Error("User already exists with this email")
@@ -42,12 +28,7 @@ export async function registerService({ name, email, password, role }) {
 
 // Login user
 export async function loginService({ email, password }) {
-  if (!email || !password) {
-    throw new Error("Email and password are required")
-  }
-  if (!isValidEmail(email)) {
-    throw new Error("Please enter a valid email address")
-  }
+  // Validation is handled by middleware
   const user = await User.findOne({ email: email.toLowerCase() })
   if (!user) {
     throw new Error("Invalid email or password")
@@ -79,15 +60,7 @@ export function getProfileService(user) {
 
 // Update user profile
 export async function updateProfileService({ userId, name, email, currentEmail }) {
-  if (!name || !email) {
-    throw new Error("Name and email are required")
-  }
-  if (!isValidName(name)) {
-    throw new Error("Name must be between 2 and 50 characters")
-  }
-  if (!isValidEmail(email)) {
-    throw new Error("Please enter a valid email address")
-  }
+  // Validation is handled by middleware
   if (email.toLowerCase() !== currentEmail.toLowerCase()) {
     const existingUser = await User.findOne({ email: email.toLowerCase() })
     if (existingUser) {
@@ -104,15 +77,7 @@ export async function updateProfileService({ userId, name, email, currentEmail }
 
 // Change password
 export async function changePasswordService({ userId, currentPassword, newPassword }) {
-  if (!currentPassword || !newPassword) {
-    throw new Error("Current password and new password are required")
-  }
-  if (!isValidPassword(newPassword)) {
-    throw new Error("New password must be at least 6 characters long")
-  }
-  if (currentPassword === newPassword) {
-    throw new Error("New password must be different from current password")
-  }
+  // Validation is handled by middleware
   const user = await User.findById(userId)
   const currentPasswordIsValid = await user.comparePassword(currentPassword)
   if (!currentPasswordIsValid) {

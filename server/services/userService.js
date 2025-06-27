@@ -43,17 +43,10 @@ export async function getUserByIdService(userId) {
 // Update user (admin only)
 export async function updateUserService({ userId, updateData, currentUser }) {
   const { name, email, role, isActive } = updateData
-  // Input validation
-  if (name !== undefined && !isValidName(name)) {
-    throw new Error("Name must be between 2 and 50 characters")
-  }
+  // Validation for name, email, and role is handled by middleware
   if (email !== undefined) {
-    if (!isValidEmail(email)) throw new Error("Please enter a valid email address")
     const existingUser = await User.findOne({ email: email.toLowerCase(), _id: { $ne: userId } })
     if (existingUser) throw new Error("Email already in use")
-  }
-  if (role !== undefined && !isValidRole(role)) {
-    throw new Error("Invalid role specified")
   }
   if (isActive !== undefined && typeof isActive !== "boolean") {
     throw new Error("isActive must be a boolean value")
