@@ -37,8 +37,13 @@ export const uploadExcelData = async (req, res) => {
     const sheetName = workbook.SheetNames[0]
     const sheet = workbook.Sheets[sheetName]
     const jsonData = xlsx.utils.sheet_to_json(sheet)
-    // Save jsonData to MongoDB
-    await ExcelData.create({ user: req.user.id, data: jsonData })
+    // Save jsonData to MongoDB with fileName and uploadDate
+    await ExcelData.create({
+      user: req.user.id,
+      data: jsonData,
+      fileName: req.file.originalname,
+      uploadDate: Date.now()
+    })
     fs.unlinkSync(filePath) // Clean up uploaded file
     return res.status(200).json({ message: "File processed and saved" })
   } catch (error) {
@@ -48,8 +53,15 @@ export const uploadExcelData = async (req, res) => {
 
 export const getUserUploads = async (req, res) => {
   try {
-    const uploads = await ExcelData.find({ user: req.user.id }).sort({ uploadedAt: -1 })
-    res.status(200).json({ uploads })
+    const uploads = await ExcelData.find({ user: req.user.id }).sort({ uploadDate: -1 })
+    // Only return relevant fields
+    const formattedUploads = uploads.map(upload => ({
+      _id: upload._id,
+      fileName: upload.fileName,
+      uploadDate: upload.uploadDate,
+      data: upload.data
+    }))
+    res.status(200).json({ uploads: formattedUploads })
   } catch (error) {
     res.status(500).json({ error: error.message })
   }

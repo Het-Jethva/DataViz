@@ -30,8 +30,8 @@ const Dashboard = () => {
       setHistory(
         res.data.uploads.map((item) => ({
           id: item._id,
-          filename: item.filename || "Excel Upload",
-          uploadDate: item.uploadedAt,
+          fileName: item.fileName || "Excel Upload",
+          uploadDate: item.uploadDate,
           rowCount: item.data?.length || 0,
           data: item.data || [],
         }))
