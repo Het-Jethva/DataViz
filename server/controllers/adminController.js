@@ -69,14 +69,6 @@ export const getUserById = async (req, res) => {
   try {
     const userId = req.params.id
 
-    // Validate ObjectId
-    if (!isValidObjectId(userId)) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid user ID",
-      })
-    }
-
     const user = await User.findById(userId).select("-password")
 
     if (!user) {
@@ -103,14 +95,6 @@ export const updateUser = async (req, res) => {
   try {
     const { name, email, role, isActive } = req.body
     const userId = req.params.id
-
-    // Validate ObjectId
-    if (!isValidObjectId(userId)) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid user ID",
-      })
-    }
 
     // Input validation
     if (name !== undefined) {
@@ -214,14 +198,6 @@ export const updateUser = async (req, res) => {
 export const deleteUser = async (req, res) => {
   try {
     const userId = req.params.id
-
-    // Validate ObjectId
-    if (!isValidObjectId(userId)) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid user ID",
-      })
-    }
 
     // Prevent admin from deleting themselves
     if (userId === req.user._id.toString()) {

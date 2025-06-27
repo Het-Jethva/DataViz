@@ -7,6 +7,7 @@ import {
   getDashboardStats,
 } from "../controllers/adminController.js"
 import { authenticateToken, requireAdmin } from "../middleware/auth.js"
+import { validateObjectId } from "../middleware/validateObjectId.js"
 
 const router = express.Router()
 
@@ -18,8 +19,8 @@ router.get("/stats", getDashboardStats)
 
 // User management
 router.get("/users", getAllUsers)
-router.get("/users/:id", getUserById)
-router.put("/users/:id", updateUser)
-router.delete("/users/:id", deleteUser)
+router.get("/users/:id", validateObjectId("id"), getUserById)
+router.put("/users/:id", validateObjectId("id"), updateUser)
+router.delete("/users/:id", validateObjectId("id"), deleteUser)
 
 export default router
