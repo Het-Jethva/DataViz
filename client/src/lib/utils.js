@@ -1,5 +1,6 @@
 import { clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
+import * as XLSX from "xlsx"
 
 export function cn(...inputs) {
   return twMerge(clsx(inputs))
@@ -33,4 +34,28 @@ export function formatFileSize(bytes) {
   const sizes = ["Bytes", "KB", "MB", "GB", "TB"]
   const i = Math.floor(Math.log(bytes) / Math.log(k))
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i]
+}
+
+export function downloadCSV(data, filename) {
+  if (!data || !data.length) return
+  const csvRows = []
+  const headers = Object.keys(data[0])
+  csvRows.push(headers.join(","))
+  for (const row of data) {
+    csvRows.push(headers.map(h => JSON.stringify(row[h] ?? "")).join(","))
+  }
+  const blob = new Blob([csvRows.join("\n")], { type: "text/csv" })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement("a")
+  a.href = url
+  a.download = filename
+  a.click()
+  URL.revokeObjectURL(url)
+}
+
+export function downloadExcel(data, filename) {
+  const ws = XLSX.utils.json_to_sheet(data)
+  const wb = XLSX.utils.book_new()
+  XLSX.utils.book_append_sheet(wb, ws, "Sheet1")
+  XLSX.writeFile(wb, filename)
 }

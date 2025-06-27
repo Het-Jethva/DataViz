@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { Eye, Trash2, Download } from "lucide-react"
-import { formatDate, formatFileSize } from "@/lib/utils"
+import { formatDate, formatFileSize, downloadCSV, downloadExcel } from "@/lib/utils"
 import { useEffect, useState } from "react"
 import { fetchUserUploads, deleteUserUpload } from "@/services/api"
 import { toast } from "sonner"
@@ -20,30 +20,6 @@ import {
   AlertDialogAction,
   AlertDialogCancel,
 } from "@/components/ui/alert-dialog"
-
-function downloadCSV(data, filename) {
-  if (!data || !data.length) return
-  const csvRows = []
-  const headers = Object.keys(data[0])
-  csvRows.push(headers.join(","))
-  for (const row of data) {
-    csvRows.push(headers.map(h => JSON.stringify(row[h] ?? "")).join(","))
-  }
-  const blob = new Blob([csvRows.join("\n")], { type: "text/csv" })
-  const url = URL.createObjectURL(blob)
-  const a = document.createElement("a")
-  a.href = url
-  a.download = filename
-  a.click()
-  URL.revokeObjectURL(url)
-}
-
-function downloadExcel(data, filename) {
-  const ws = XLSX.utils.json_to_sheet(data)
-  const wb = XLSX.utils.book_new()
-  XLSX.utils.book_append_sheet(wb, ws, "Sheet1")
-  XLSX.writeFile(wb, filename)
-}
 
 const UploadHistoryItem = ({ item, index, onView, onDelete, isLast }) => {
   const [open, setOpen] = useState(false)
