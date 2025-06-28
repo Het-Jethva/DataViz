@@ -45,7 +45,16 @@ const Signup = () => {
         navigate("/dashboard")
       }
     } catch (err) {
-      // Optionally log or handle unexpected errors
+      // Log the error for debugging purposes
+      console.error("Signup error:", err)
+      
+      // Show a user-friendly error message
+      // Note: The Redux state should handle most errors, but this catches unexpected ones
+      if (err.message) {
+        // If there's a specific error message, it will be handled by the Redux error state
+        // This catch block is mainly for unexpected errors that aren't handled by the Redux slice
+        console.warn("Unexpected error during signup:", err.message)
+      }
     }
   }
 
