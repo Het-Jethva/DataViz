@@ -112,24 +112,29 @@ const Dashboard = () => {
                   </DialogHeader>
                   {Array.isArray(viewData?.data) && viewData.data.length > 0 ? (
                     <div className="overflow-x-auto max-h-96">
-                      <table className="min-w-full text-xs border bg-background rounded">
-                        <thead>
-                          <tr>
-                            {Object.keys(viewData.data[0]).map((col) => (
-                              <th key={col} className="px-2 py-1 border-b bg-muted text-left font-semibold">{col}</th>
-                            ))}
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {viewData.data.slice(0, DATA_PREVIEW_ROW_LIMIT).map((row, i) => (
-                            <tr key={i} className="even:bg-muted/50">
-                              {Object.keys(viewData.data[0]).map((col) => (
-                                <td key={col} className="px-2 py-1 border-b">{row[col]}</td>
+                      {(() => {
+                        const columns = Object.keys(viewData.data[0]);
+                        return (
+                          <table className="min-w-full text-xs border bg-background rounded">
+                            <thead>
+                              <tr>
+                                {columns.map((col) => (
+                                  <th key={col} className="px-2 py-1 border-b bg-muted text-left font-semibold">{col}</th>
+                                ))}
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {viewData.data.slice(0, DATA_PREVIEW_ROW_LIMIT).map((row, i) => (
+                                <tr key={i} className="even:bg-muted/50">
+                                  {columns.map((col) => (
+                                    <td key={col} className="px-2 py-1 border-b">{row[col]}</td>
+                                  ))}
+                                </tr>
                               ))}
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
+                            </tbody>
+                          </table>
+                        );
+                      })()}
                       {viewData.data.length > DATA_PREVIEW_ROW_LIMIT && (
                         <div className="text-xs text-muted-foreground mt-2">Showing first {DATA_PREVIEW_ROW_LIMIT} of {viewData.data.length} rows</div>
                       )}
