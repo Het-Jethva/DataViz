@@ -58,18 +58,15 @@ export const registerUser = createAsyncThunk(
   }
 )
 
-export const logoutUser = createAsyncThunk(
-  "auth/logoutUser", 
-  async () => {
-    try {
-      await authAPI.post("/logout")
-      return null
-    } catch {
-      // Even if logout fails on server, clear client state
-      return null
-    }
+export const logoutUser = createAsyncThunk("auth/logoutUser", async () => {
+  try {
+    await authAPI.post("/logout")
+    return null
+  } catch {
+    // Even if logout fails on server, clear client state
+    return null
   }
-)
+})
 
 export const getCurrentUser = createAsyncThunk(
   "auth/getCurrentUser",
@@ -99,7 +96,8 @@ const initialState = {
 const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {    clearError: (state) => {
+  reducers: {
+    clearError: (state) => {
       state.error = null
     },
     resetAuth: (state) => {
@@ -114,9 +112,10 @@ const authSlice = createSlice({
       .addCase(loginUser.pending, (state) => {
         state.isLoading = true
         state.error = null
-      })      .addCase(loginUser.fulfilled, (state, action) => {
+      })
+      .addCase(loginUser.fulfilled, (state, action) => {
         state.isLoading = false
-        state.user = action.payload.user || action.payload;
+        state.user = action.payload.user || action.payload
         state.isAuthenticated = true
         state.error = null
       })
@@ -130,9 +129,10 @@ const authSlice = createSlice({
       .addCase(registerUser.pending, (state) => {
         state.isLoading = true
         state.error = null
-      })      .addCase(registerUser.fulfilled, (state, action) => {
+      })
+      .addCase(registerUser.fulfilled, (state, action) => {
         state.isLoading = false
-        state.user = action.payload.user || action.payload;
+        state.user = action.payload.user || action.payload
         state.isAuthenticated = true
         state.error = null
       })
@@ -148,7 +148,7 @@ const authSlice = createSlice({
       })
       .addCase(getCurrentUser.fulfilled, (state, action) => {
         state.isLoading = false
-        state.user = action.payload.user || action.payload;
+        state.user = action.payload.user || action.payload
         state.isAuthenticated = true
         state.error = null
       })
