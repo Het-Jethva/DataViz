@@ -31,7 +31,13 @@ export async function uploadExcelDataService({ file, userId }) {
     fileName: file.originalname,
     uploadDate: Date.now(),
   })
-  fs.unlinkSync(filePath)
+  // Use async file deletion to prevent blocking the event loop
+  try {
+    await fs.promises.unlink(filePath)
+  } catch (error) {
+    console.error("Error deleting temporary file:", error)
+    // Don't throw error for file cleanup failures
+  }
   return true
 }
 

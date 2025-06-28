@@ -19,10 +19,35 @@ export const getUserDashboard = async (req, res) => {
 
 export const uploadExcelData = async (req, res) => {
   try {
+    // Check if file exists
+    if (!req.file) {
+      return res.status(400).json({ error: "No file uploaded" })
+    }
+
+    // Additional validation
+    if (!req.file.originalname) {
+      return res.status(400).json({ error: "Invalid file" })
+    }
+
     await uploadExcelDataService({ file: req.file, userId: req.user.id })
     res.status(200).json({ message: "File processed and saved" })
   } catch (error) {
-    res.status(error.message === "No file uploaded" ? 400 : 500).json({ error: error.message })
+    // Handle multer errors
+    if (error.code === 'LIMIT_FILE_SIZE') {
+      return res.status(400).json({ error: "File size too large. Maximum size is 10MB." })
+    }
+    if (error.code === 'LIMIT_FILE_COUNT') {
+      return res.status(400).json({ error: "Too many files. Only one file allowed." })
+    }
+    if (error.message.includes("Only Excel files")) {
+      return res.status(400).json({ error: error.message })
+    }
+    if (error.message.includes("Invalid filename")) {
+      return res.status(400).json({ error: error.message })
+    }
+    
+    console.error("Upload error:", error)
+    res.status(500).json({ error: "File upload failed. Please try again." })
   }
 }
 
