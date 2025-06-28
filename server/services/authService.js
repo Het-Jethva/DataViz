@@ -79,6 +79,9 @@ export async function updateProfileService({ userId, name, email, currentEmail }
 export async function changePasswordService({ userId, currentPassword, newPassword }) {
   // Validation is handled by middleware
   const user = await User.findById(userId)
+  if (!user) {
+    throw new Error("User not found")
+  }
   const currentPasswordIsValid = await user.comparePassword(currentPassword)
   if (!currentPasswordIsValid) {
     throw new Error("Current password is incorrect")
