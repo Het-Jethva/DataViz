@@ -46,11 +46,126 @@ export const uploadExcelData = async (req, res) => {
   }
 }
 
+export const uploadParsedData = async (req, res) => {
+  try {
+    const { data, filename, rowCount } = req.body
+    
+    if (!data || !Array.isArray(data)) {
+      return res.status(400).json({ error: "Invalid data format" })
+    }
+
+    // Extract headers from the first row of data
+    const headers = data.length > 0 ? Object.keys(data[0]) : []
+    const columnCount = headers.length
+
+    // Determine file type from filename
+    const fileType = filename.toLowerCase().endsWith('.xlsx') ? 'xlsx' : 
+                    filename.toLowerCase().endsWith('.xls') ? 'xls' : 'csv'
+
+    // Save parsed data to MongoDB with enhanced schema
+    const excelData = await ExcelData.create({
+      user: req.user.id,
+      filename: filename,
+      originalFilename: filename,
+      data: data,
+      rowCount: rowCount,
+      columnCount: columnCount,
+      headers: headers,
+      fileType: fileType,
+      status: 'completed',
+      metadata: {
+        sheetName: 'Sheet1', // Default sheet name
+        description: `Uploaded ${rowCount} rows with ${columnCount} columns`,
+        tags: []
+      },
+      uploadedAt: new Date(),
+      lastAccessed: new Date(),
+      isActive: true
+    })
+
+    res.status(200).json({ 
+      success: true,
+      message: "Data uploaded successfully",
+      uploadId: excelData._id,
+      rowCount: data.length,
+      columnCount: columnCount,
+      headers: headers
+    })
+  } catch (error) {
+    console.error('Upload error:', error)
+    res.status(500).json({ error: error.message })
+  }
+}
+
 export const getUserUploads = async (req, res) => {
   try {
-    const uploads = await ExcelData.find({ user: req.user.id }).sort({ uploadedAt: -1 })
-    res.status(200).json({ uploads })
+    const uploads = await ExcelData.find({ 
+      user: req.user.id,
+      isActive: true 
+    })
+    .select('filename originalFilename rowCount columnCount headers fileType status uploadedAt lastAccessed metadata')
+    .sort({ uploadedAt: -1 })
+    .lean()
+
+    // Transform the data to match frontend expectations
+    const formattedUploads = uploads.map(upload => ({
+      id: upload._id,
+      filename: upload.filename,
+      originalFilename: upload.originalFilename,
+      uploadDate: upload.uploadedAt,
+      lastAccessed: upload.lastAccessed,
+      rowCount: upload.rowCount,
+      columnCount: upload.columnCount,
+      headers: upload.headers,
+      fileType: upload.fileType,
+      status: upload.status,
+      metadata: upload.metadata
+    }))
+
+    res.status(200).json({ 
+      success: true,
+      uploads: formattedUploads 
+    })
   } catch (error) {
+    console.error('Get uploads error:', error)
+    res.status(500).json({ error: error.message })
+  }
+}
+
+export const getUploadData = async (req, res) => {
+  try {
+    const { id } = req.params
+    
+    const upload = await ExcelData.findOne({ 
+      _id: id, 
+      user: req.user.id,
+      isActive: true 
+    })
+
+    if (!upload) {
+      return res.status(404).json({ 
+        success: false,
+        error: "Upload not found or not authorized" 
+      })
+    }
+
+    // Update last accessed time
+    await upload.updateLastAccessed()
+
+    res.status(200).json({ 
+      success: true,
+      data: upload.data,
+      metadata: {
+        filename: upload.filename,
+        rowCount: upload.rowCount,
+        columnCount: upload.columnCount,
+        headers: upload.headers,
+        fileType: upload.fileType,
+        uploadedAt: upload.uploadedAt
+      }
+    })
+  } catch (error) {
+    console.error('Get upload data error:', error)
     res.status(500).json({ error: error.message })
   }
 }
@@ -58,12 +173,22 @@ export const getUserUploads = async (req, res) => {
 export const deleteUpload = async (req, res) => {
   try {
     const { id } = req.params
-    const upload = await ExcelData.findOneAndDelete({ _id: id, user: req.user.id })
+    const upload = await ExcelData.findOneAndUpdate(
+      { _id: id, user: req.user.id },
+      { isActive: false },
+      { new: true }
+    )
+    
     if (!upload) {
       return res.status(404).json({ error: "Upload not found or not authorized" })
     }
-    res.status(200).json({ message: "Upload deleted" })
+    
+    res.status(200).json({ 
+      success: true,
+      message: "Upload deleted successfully" 
+    })
   } catch (error) {
+    console.error('Delete upload error:', error)
     res.status(500).json({ error: error.message })
   }
 }

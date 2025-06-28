@@ -13,9 +13,11 @@ const ChartContext = React.createContext(null)
 
 function useChart() {
   const context = React.useContext(ChartContext)
+
   if (!context) {
-    throw new Error('useChart must be used within a <ChartContainer />')
+    throw new Error("useChart must be used within a <ChartContainer />")
   }
+
   return context
 }
 
@@ -23,7 +25,7 @@ function ChartContainer({
   id,
   className,
   children,
-  config = {},
+  config,
   ...props
 }) {
   const uniqueId = React.useId()
@@ -35,7 +37,7 @@ function ChartContainer({
         data-slot="chart"
         data-chart={chartId}
         className={cn(
-          "[&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-grid_line[stroke='var(--border)']]:stroke-border/50 [&_.recharts-curve.recharts-tooltip-cursor]:stroke-border [&_.recharts-polar-grid_[stroke='#ccc']]:stroke-border [&_.recharts-radial-bar-background-sector]:fill-muted [&_.recharts-rectangle.recharts-tooltip-cursor]:fill-muted [&_.recharts-reference-line_[stroke='#ccc']]:stroke-border flex aspect-video justify-center text-xs [&_.recharts-dot[stroke='var(--primary-foreground)']]:stroke-transparent [&_.recharts-layer]:outline-hidden [&_.recharts-sector[stroke='var(--primary-foreground)']]:stroke-transparent [&_.recharts-surface]:outline-hidden",
+          "[&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-grid_line[stroke='#ccc']]:stroke-border/50 [&_.recharts-curve.recharts-tooltip-cursor]:stroke-border [&_.recharts-polar-grid_[stroke='#ccc']]:stroke-border [&_.recharts-radial-bar-background-sector]:fill-muted [&_.recharts-rectangle.recharts-tooltip-cursor]:fill-muted [&_.recharts-reference-line_[stroke='#ccc']]:stroke-border flex aspect-video justify-center text-xs [&_.recharts-dot[stroke='#fff']]:stroke-transparent [&_.recharts-layer]:outline-hidden [&_.recharts-sector]:outline-hidden [&_.recharts-sector[stroke='#fff']]:stroke-transparent [&_.recharts-surface]:outline-hidden",
           className
         )}
         {...props}>
@@ -50,10 +52,10 @@ function ChartContainer({
 
 const ChartStyle = ({
   id,
-  config = {}
+  config
 }) => {
-  if (!config || typeof config !== 'object') return null;
-  const colorConfig = Object.entries(config).filter(([, config]) => config && (config.theme || config.color))
+  const colorConfig = Object.entries(config).filter(([, config]) => config.theme || config.color)
+
   if (!colorConfig.length) {
     return null
   }
