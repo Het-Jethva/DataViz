@@ -11,6 +11,9 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { fetchUserUploads } from "@/services/api"
 
+// Number of rows to show in the data preview table
+const DATA_PREVIEW_ROW_LIMIT = 20;
+
 const Dashboard = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -30,8 +33,8 @@ const Dashboard = () => {
       setHistory(
         res.data.uploads.map((item) => ({
           id: item._id,
-          filename: item.filename || "Excel Upload",
-          uploadDate: item.uploadedAt,
+          fileName: item.fileName || "Excel Upload",
+          uploadDate: item.uploadDate,
           rowCount: item.data?.length || 0,
           data: item.data || [],
         }))
@@ -118,7 +121,7 @@ const Dashboard = () => {
                           </tr>
                         </thead>
                         <tbody>
-                          {viewData.data.slice(0, 20).map((row, i) => (
+                          {viewData.data.slice(0, DATA_PREVIEW_ROW_LIMIT).map((row, i) => (
                             <tr key={i} className="even:bg-muted/50">
                               {Object.keys(viewData.data[0]).map((col) => (
                                 <td key={col} className="px-2 py-1 border-b">{row[col]}</td>
@@ -127,8 +130,8 @@ const Dashboard = () => {
                           ))}
                         </tbody>
                       </table>
-                      {viewData.data.length > 20 && (
-                        <div className="text-xs text-muted-foreground mt-2">Showing first 20 of {viewData.data.length} rows</div>
+                      {viewData.data.length > DATA_PREVIEW_ROW_LIMIT && (
+                        <div className="text-xs text-muted-foreground mt-2">Showing first {DATA_PREVIEW_ROW_LIMIT} of {viewData.data.length} rows</div>
                       )}
                     </div>
                   ) : (

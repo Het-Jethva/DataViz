@@ -1,4 +1,5 @@
 import axios from "axios"
+import { toast } from "sonner"
 
 // Create axios instance with default config
 const apiClient = axios.create({
@@ -20,9 +21,9 @@ apiClient.interceptors.response.use(
         window.location.href = "/login"
       }
     } else if (error.response?.status === 403) {
-      window.alert("You do not have permission to perform this action.")
+      toast.error("You do not have permission to perform this action.")
     } else if (error.response?.status === 500) {
-      window.alert("A server error occurred. Please try again later.")
+      toast.error("A server error occurred. Please try again later.")
     }
     return Promise.reject(error)
   }
