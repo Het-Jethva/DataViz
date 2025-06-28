@@ -125,6 +125,78 @@ const UploadSection = ({ onUploadSuccess }) => {
     </div>
   )
 
+  const SuccessMessage = ({ onReset }) => (
+    <div className="space-y-3 text-center">
+      <h3 className="text-lg font-semibold text-green-700">Upload Successful!</h3>
+      <p className="text-sm text-green-600">Your file has been processed and is ready for visualization</p>
+      <Button onClick={onReset} variant="outline" className="mt-4">Upload Another File</Button>
+    </div>
+  )
+
+  const FileSelectionArea = ({ isDragOver, selectedFile, uploadStatus, uploadProgress }) => {
+    if (selectedFile) {
+      return (
+        <div className="space-y-4 text-center w-full max-w-sm">
+          <FileInfo file={selectedFile} />
+          {uploadStatus === "uploading" && <UploadStatus progress={uploadProgress} />}
+        </div>
+      )
+    }
+
+    return (
+      <div className="space-y-3 text-center">
+        <h3 className="text-lg font-semibold text-foreground">
+          {isDragOver ? "Drop your file here" : "Drag and drop your Excel file"}
+        </h3>
+        <p className="text-sm text-muted-foreground">or click to browse your files</p>
+      </div>
+    )
+  }
+
+  const ActionButtons = ({ uploadStatus, selectedFile, onUpload }) => {
+    if (uploadStatus === "success") return null
+
+    return (
+      <div className="flex gap-3">
+        <Button variant="outline" asChild disabled={uploadStatus === "uploading"}>
+          <label htmlFor="file-upload" className="cursor-pointer">
+            <File className="size-4 mr-2" />Choose File
+          </label>
+        </Button>
+        {selectedFile && uploadStatus !== "uploading" && (
+          <Button onClick={onUpload}>
+            <Upload className="size-4 mr-2" />Upload File
+          </Button>
+        )}
+      </div>
+    )
+  }
+
+  const UploadIcon = ({ isDragOver, uploadStatus }) => {
+    const getIcon = () => {
+      if (uploadStatus === "success") {
+        return <CheckCircle className="size-12 text-green-600" />
+      }
+      if (uploadStatus === "error") {
+        return <AlertCircle className="size-12 text-red-600" />
+      }
+      return <Upload className={`size-12 ${isDragOver ? "text-primary" : "text-muted-foreground"}`} />
+    }
+
+    const getBackgroundClass = () => {
+      if (isDragOver) return "bg-primary/10 scale-110"
+      if (uploadStatus === "success") return "bg-green-100"
+      if (uploadStatus === "uploading") return "bg-primary/10"
+      return "bg-muted"
+    }
+
+    return (
+      <div className={`p-6 rounded-xl transition-all ${getBackgroundClass()}`}>
+        {getIcon()}
+      </div>
+    )
+  }
+
   return (
     <Card>
       <CardHeader className="pb-4">
@@ -145,42 +217,19 @@ const UploadSection = ({ onUploadSuccess }) => {
           }`}
         >
           <div className="flex flex-col items-center gap-6">
-            <div className={`p-6 rounded-xl transition-all ${
-              isDragOver
-                ? "bg-primary/10 scale-110"
-                : uploadStatus === "success"
-                ? "bg-green-100"
-                : uploadStatus === "uploading"
-                ? "bg-primary/10"
-                : "bg-muted"
-            }`}>
-              {uploadStatus === "success" ? (
-                <CheckCircle className="size-12 text-green-600" />
-              ) : uploadStatus === "error" ? (
-                <AlertCircle className="size-12 text-red-600" />
-              ) : (
-                <Upload className={`size-12 ${isDragOver ? "text-primary" : "text-muted-foreground"}`} />
-              )}
-            </div>
+            <UploadIcon isDragOver={isDragOver} uploadStatus={uploadStatus} />
+            
             {uploadStatus === "success" ? (
-              <div className="space-y-3 text-center">
-                <h3 className="text-lg font-semibold text-green-700">Upload Successful!</h3>
-                <p className="text-sm text-green-600">Your file has been processed and is ready for visualization</p>
-                <Button onClick={resetUpload} variant="outline" className="mt-4">Upload Another File</Button>
-              </div>
-            ) : selectedFile ? (
-              <div className="space-y-4 text-center w-full max-w-sm">
-                <FileInfo file={selectedFile} />
-                {uploadStatus === "uploading" && <UploadStatus progress={uploadProgress} />}
-              </div>
+              <SuccessMessage onReset={resetUpload} />
             ) : (
-              <div className="space-y-3 text-center">
-                <h3 className="text-lg font-semibold text-foreground">
-                  {isDragOver ? "Drop your file here" : "Drag and drop your Excel file"}
-                </h3>
-                <p className="text-sm text-muted-foreground">or click to browse your files</p>
-              </div>
+              <FileSelectionArea 
+                isDragOver={isDragOver}
+                selectedFile={selectedFile}
+                uploadStatus={uploadStatus}
+                uploadProgress={uploadProgress}
+              />
             )}
+            
             <Input
               type="file"
               accept=".xlsx,.xls"
@@ -189,20 +238,13 @@ const UploadSection = ({ onUploadSuccess }) => {
               id="file-upload"
               disabled={uploadStatus === "uploading"}
             />
-            {uploadStatus !== "success" && (
-              <div className="flex gap-3">
-                <Button variant="outline" asChild disabled={uploadStatus === "uploading"}>
-                  <label htmlFor="file-upload" className="cursor-pointer">
-                    <File className="size-4 mr-2" />Choose File
-                  </label>
-                </Button>
-                {selectedFile && uploadStatus !== "uploading" && (
-                  <Button onClick={handleUpload}>
-                    <Upload className="size-4 mr-2" />Upload File
-                  </Button>
-                )}
-              </div>
-            )}
+            
+            <ActionButtons 
+              uploadStatus={uploadStatus}
+              selectedFile={selectedFile}
+              onUpload={handleUpload}
+            />
+            
             {errorMsg && (
               <div className="text-red-600 text-sm text-center mb-4">{errorMsg}</div>
             )}

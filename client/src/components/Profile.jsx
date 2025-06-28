@@ -29,7 +29,7 @@ const Profile = () => {
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [apiClient])
 
   const fetchUploads = useCallback(async () => {
     try {
