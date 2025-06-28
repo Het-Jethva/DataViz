@@ -31,18 +31,29 @@ export async function uploadExcelDataService({ file, userId }) {
     fileName: file.originalname,
     uploadDate: Date.now(),
   })
-  fs.unlinkSync(filePath)
+  // Use async file deletion to prevent blocking the event loop
+  try {
+    await fs.promises.unlink(filePath)
+  } catch (error) {
+    console.error("Error deleting temporary file:", error)
+    // Don't throw error for file cleanup failures
+  }
   return true
 }
 
 export async function getUserUploadsService(userId) {
-  const uploads = await ExcelData.find({ user: userId }).sort({ uploadDate: -1 })
-  return uploads.map(upload => ({
-    _id: upload._id,
-    fileName: upload.fileName,
-    uploadDate: upload.uploadDate,
-    data: upload.data,
-  }))
+  try {
+    const uploads = await ExcelData.find({ user: userId }).sort({ uploadDate: -1 })
+    return uploads.map(upload => ({
+      _id: upload._id,
+      fileName: upload.fileName,
+      uploadDate: upload.uploadDate,
+      data: upload.data,
+    }))
+  } catch (error) {
+    console.error("Error fetching user uploads:", error)
+    throw new Error("Failed to fetch upload history. Please try again later.")
+  }
 }
 
 export async function deleteUploadService({ uploadId, userId }) {

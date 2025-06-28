@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import apiClient from "@/services/api"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -17,31 +17,33 @@ const Profile = () => {
   const [passwordSaving, setPasswordSaving] = useState(false)
   const [uploadCount, setUploadCount] = useState(0)
 
+  const fetchProfile = useCallback(async () => {
+    setLoading(true)
+    setError("")
+    try {
+      const res = await apiClient.get("/auth/profile", { withCredentials: true })
+      setUser(res.data.data)
+      setForm({ name: res.data.data.name, email: res.data.data.email })
+    } catch (err) {
+      setError("Failed to load profile.")
+    } finally {
+      setLoading(false)
+    }
+  }, [apiClient])
+
+  const fetchUploads = useCallback(async () => {
+    try {
+      const res = await fetchUserUploads()
+      setUploadCount(res.data.uploads.length)
+    } catch (err) {
+      setUploadCount(0)
+    }
+  }, [])
+
   useEffect(() => {
-    const fetchProfile = async () => {
-      setLoading(true)
-      setError("")
-      try {
-        const res = await apiClient.get("/auth/profile", { withCredentials: true })
-        setUser(res.data.data)
-        setForm({ name: res.data.data.name, email: res.data.data.email })
-      } catch (err) {
-        setError("Failed to load profile.")
-      } finally {
-        setLoading(false)
-      }
-    }
-    const fetchUploads = async () => {
-      try {
-        const res = await fetchUserUploads()
-        setUploadCount(res.data.uploads.length)
-      } catch (err) {
-        setUploadCount(0)
-      }
-    }
     fetchProfile()
     fetchUploads()
-  }, [])
+  }, [fetchProfile, fetchUploads])
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value })

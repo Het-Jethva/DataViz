@@ -27,6 +27,4 @@ export function useIsMobile() {
   }, [])
 
   return !!isMobile
-}
-
-// NOTE: For consistency, consider renaming this file to useIsMobile.js
+} 
