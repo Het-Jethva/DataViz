@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
-import { AppSidebar } from "./app-sidebar"
-import { SiteHeader } from "./site-header"
+import { AppSidebar } from "../layout/app-sidebar"
+import { SiteHeader } from "../layout/site-header"
 import { SidebarProvider } from "@/components/ui/sidebar"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -58,7 +58,7 @@ import {
   Plus,
   RefreshCw,
 } from "lucide-react"
-import apiClient, { deleteUserUpload } from "../services/api"
+import apiClient, { deleteUserUpload } from "../../services/api"
 
 export default function Projects() {
   const [projects, setProjects] = useState([])

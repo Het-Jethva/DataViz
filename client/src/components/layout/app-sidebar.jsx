@@ -24,10 +24,10 @@ import {
 } from "lucide-react"
 import { useNavigate, useLocation } from "react-router-dom"
 import { useSelector, useDispatch } from "react-redux"
-import { logoutUser } from "../redux/slices/authSlice"
-import { useTheme } from "./theme-provider"
-import { useColorTheme } from "./theme-context"
-import { DataVizLogo } from "./Logo"
+import { logoutUser } from "../../store/redux/slices/authSlice"
+import { useTheme } from "../common/theme-provider"
+import { useColorTheme } from "../common/theme-context"
+import { DataVizLogo } from "../common/Logo"
 import {
   Sidebar,
   SidebarContent,

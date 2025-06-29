@@ -5,9 +5,9 @@ import cors from "cors"
 import cookieParser from "cookie-parser"
 
 // Import routes
-import authRoutes from "./routes/authRoutes.js"
-import adminRoutes from "./routes/adminRoutes.js"
-import dashboardRoutes from "./routes/dashboardRoutes.js"
+import authRoutes from "./src/routes/authRoutes.js"
+import adminRoutes from "./src/routes/adminRoutes.js"
+import dashboardRoutes from "./src/routes/dashboardRoutes.js"
 
 dotenv.config()
 
