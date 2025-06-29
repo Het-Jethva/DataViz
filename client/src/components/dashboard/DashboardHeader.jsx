@@ -8,11 +8,21 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { LogOut, ChevronDown, Settings, User } from "lucide-react"
-import { ModeToggle } from "@/components/mode-toggle"
 import { getInitials } from "@/lib/utils"
 import { Link } from "react-router-dom"
+import { useColorTheme } from "@/components/theme-context"
+
+const colorThemeGradients = {
+  default: "bg-gradient-to-br from-[#39D08A] to-[#179651] dark:from-[#176943] dark:to-[#137144]",
+  "green-teal": "bg-gradient-to-br from-[#3B82F6] to-[#14B8A6]",
+  "purple-blue": "bg-gradient-to-br from-purple-400 to-blue-400",
+  "red-orange": "bg-gradient-to-br from-red-400 to-orange-400",
+}
 
 const DashboardHeader = ({ user, onLogout }) => {
+  const { colorTheme } = useColorTheme()
+  const avatarGradient = colorThemeGradients[colorTheme] || colorThemeGradients.default
+
   return (
     <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
       <div className="max-w-7xl mx-auto px-4">
@@ -24,14 +34,15 @@ const DashboardHeader = ({ user, onLogout }) => {
             </div>
             <span className="text-xl font-bold text-foreground">DataViz</span>
           </div>
-          {/* Theme Toggle and User Menu */}
+          {/* User Menu */}
           <div className="flex items-center gap-3">
-            <ModeToggle />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="h-10 gap-3 px-3 rounded-xl">
-                  <Avatar className="size-8">
-                    <AvatarFallback>{getInitials(user?.name)}</AvatarFallback>
+                  <Avatar className={`size-8 ${avatarGradient}`}>
+                    <AvatarFallback className="text-white font-semibold">
+                      {getInitials(user?.name)}
+                    </AvatarFallback>
                   </Avatar>
                   <span className="hidden sm:block font-semibold text-foreground">
                     {user?.name || "User"}

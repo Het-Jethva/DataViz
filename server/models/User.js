@@ -33,6 +33,11 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    colorTheme: {
+      type: String,
+      default: 'default', // Excel Green
+      enum: ['default', 'green-teal', 'purple-blue', 'red-orange'],
+    },
     lastLogin: {
       type: Date,
     },

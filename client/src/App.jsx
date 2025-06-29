@@ -11,7 +11,8 @@ import { ThemeProvider } from "./components/theme-context"
 import Login from "./components/auth/Login"
 import Signup from "./components/auth/Signup"
 import Dashboard from "./components/dashboard/Dashboard"
-import DataPage from "./components/data/DataPage"
+import AskAI from "./components/chat/AskAI"
+import Projects from "./components/Projects"
 import Profile from "./components/Profile"
 import ProtectedRoute from "./components/ProtectedRoute"
 import { Toaster } from "@/components/ui/sonner"
@@ -20,7 +21,7 @@ function App() {
   return (
     <Provider store={store}>
       <UIThemeProvider
-        defaultTheme="system"
+        defaultTheme="light"
         storageKey="dataviz-ui-theme"
       >
         <ThemeProvider>
@@ -44,10 +45,18 @@ function App() {
                   }
                 />
                 <Route
-                  path="/data"
+                  path="/chat"
                   element={
                     <ProtectedRoute>
-                      <DataPage />
+                      <AskAI />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/projects"
+                  element={
+                    <ProtectedRoute>
+                      <Projects />
                     </ProtectedRoute>
                   }
                 />

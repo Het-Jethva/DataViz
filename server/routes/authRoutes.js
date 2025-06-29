@@ -6,6 +6,7 @@ import {
   getProfile,
   updateProfile,
   changePassword,
+  updateColorTheme,
 } from "../controllers/authController.js"
 import { authenticateToken } from "../middleware/auth.js"
 
@@ -20,5 +21,6 @@ router.post("/logout", logout)
 router.get("/profile", authenticateToken, getProfile)
 router.put("/profile", authenticateToken, updateProfile)
 router.put("/change-password", authenticateToken, changePassword)
+router.patch("/theme", authenticateToken, updateColorTheme)
 
 export default router

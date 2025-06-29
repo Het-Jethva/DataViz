@@ -1,6 +1,10 @@
-"use client"
-
-import { IconDots, IconFolder, IconShare3, IconTrash } from "@tabler/icons-react";
+import {
+  ArrowUpRight,
+  Link,
+  MoreHorizontal,
+  StarOff,
+  Trash2,
+} from "lucide-react"
 
 import {
   DropdownMenu,
@@ -19,45 +23,50 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 
-export function NavDocuments({
-  items
+export function NavFavorites({
+  favorites
 }) {
   const { isMobile } = useSidebar()
 
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
-      <SidebarGroupLabel>Documents</SidebarGroupLabel>
+      <SidebarGroupLabel>Favorites</SidebarGroupLabel>
       <SidebarMenu>
-        {items.map((item) => (
+        {favorites.map((item) => (
           <SidebarMenuItem key={item.name}>
             <SidebarMenuButton asChild>
-              <a href={item.url}>
-                <item.icon />
+              <a href={item.url} title={item.name}>
+                <span>{item.emoji}</span>
                 <span>{item.name}</span>
               </a>
             </SidebarMenuButton>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <SidebarMenuAction showOnHover className="data-[state=open]:bg-accent rounded-sm">
-                  <IconDots />
+                <SidebarMenuAction showOnHover>
+                  <MoreHorizontal />
                   <span className="sr-only">More</span>
                 </SidebarMenuAction>
               </DropdownMenuTrigger>
               <DropdownMenuContent
-                className="w-24 rounded-lg"
+                className="w-56 rounded-lg"
                 side={isMobile ? "bottom" : "right"}
                 align={isMobile ? "end" : "start"}>
                 <DropdownMenuItem>
-                  <IconFolder />
-                  <span>Open</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <IconShare3 />
-                  <span>Share</span>
+                  <StarOff className="text-muted-foreground" />
+                  <span>Remove from Favorites</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem variant="destructive">
-                  <IconTrash />
+                <DropdownMenuItem>
+                  <Link className="text-muted-foreground" />
+                  <span>Copy Link</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <ArrowUpRight className="text-muted-foreground" />
+                  <span>Open in New Tab</span>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>
+                  <Trash2 className="text-muted-foreground" />
                   <span>Delete</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -66,7 +75,7 @@ export function NavDocuments({
         ))}
         <SidebarMenuItem>
           <SidebarMenuButton className="text-sidebar-foreground/70">
-            <IconDots className="text-sidebar-foreground/70" />
+            <MoreHorizontal />
             <span>More</span>
           </SidebarMenuButton>
         </SidebarMenuItem>

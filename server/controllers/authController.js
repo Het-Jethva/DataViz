@@ -111,6 +111,7 @@ export const register = async (req, res) => {
           role: user.role,
           createdAt: user.createdAt,
           isActive: user.isActive,
+          colorTheme: user.colorTheme,
         },
       },
     })
@@ -189,6 +190,7 @@ export const login = async (req, res) => {
           createdAt: user.createdAt,
           lastLogin: user.lastLogin,
           isActive: user.isActive,
+          colorTheme: user.colorTheme,
         },
       },
     })
@@ -213,6 +215,7 @@ export const getProfile = async (req, res) => {
         createdAt: req.user.createdAt,
         lastLogin: req.user.lastLogin,
         uploadsCount: req.user.uploadsCount || 0,
+        colorTheme: req.user.colorTheme,
       },
     })
   } catch (error) {
@@ -352,6 +355,35 @@ export const changePassword = async (req, res) => {
     res.json({
       success: true,
       message: "Password changed successfully",
+    })
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    })
+  }
+}
+
+// Update user color theme
+export const updateColorTheme = async (req, res) => {
+  try {
+    const { colorTheme } = req.body
+    const validThemes = ['default', 'green-teal', 'purple-blue', 'red-orange']
+    if (!validThemes.includes(colorTheme)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid color theme',
+      })
+    }
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      { colorTheme },
+      { new: true, runValidators: true }
+    )
+    res.json({
+      success: true,
+      message: 'Color theme updated',
+      data: { colorTheme: user.colorTheme },
     })
   } catch (error) {
     res.status(500).json({

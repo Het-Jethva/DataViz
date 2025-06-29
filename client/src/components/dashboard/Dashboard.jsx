@@ -6,6 +6,8 @@ import UploadSection from "./UploadSection"
 import PreviewSection from "./PreviewSection"
 import RecentUploads from "./RecentUploads"
 import apiClient from "../../services/api"
+import { ThemeSelector } from "../theme-selector"
+import { Separator } from "@/components/ui/separator"
 
 export default function Dashboard() {
   const [previewData, setPreviewData] = useState(null)
@@ -80,23 +82,36 @@ export default function Dashboard() {
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex bg-background">
+      <div className="min-h-screen flex w-full bg-gradient-to-br from-background via-background to-muted/20">
         <AppSidebar />
         <div className="flex-1 flex flex-col">
-          <SiteHeader />
-          <main className="flex-1 grid grid-cols-1 lg:grid-cols-3 gap-8 min-h-[calc(100vh-4rem)] p-6">
-            <div className="lg:col-span-2 flex flex-col h-full">
-              <UploadSection onUploadSuccess={handleUploadSuccess} />
-              <div className="flex-1 flex flex-col">
+          {/* Fixed Header with Theme Selector */}
+          <div className="sticky top-0 z-40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b">
+            <div className="flex h-16 items-center justify-between px-6">
+              <div>
+                <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
+                <p className="text-sm text-muted-foreground">Manage your Excel uploads and data processing</p>
+              </div>
+              <ThemeSelector />
+            </div>
+          </div>
+
+          <main className="flex-1 p-6 space-y-6">
+            <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
+              {/* Upload and Preview Section */}
+              <div className="xl:col-span-3 space-y-6">
+                <UploadSection onUploadSuccess={handleUploadSuccess} />
                 <PreviewSection 
                   data={previewData} 
                   loading={loading} 
                   onUploadToDatabase={handleUploadToDatabase}
                 />
               </div>
-            </div>
-            <div className="flex flex-col h-full">
-              <RecentUploads uploads={uploads} onPreview={handlePreview} />
+
+              {/* Sidebar Content */}
+              <div className="xl:col-span-1">
+                <RecentUploads uploads={uploads} onPreview={handlePreview} />
+              </div>
             </div>
           </main>
         </div>

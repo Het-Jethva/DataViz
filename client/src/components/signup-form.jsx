@@ -10,6 +10,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Alert, AlertDescription } from "@/components/ui/alert"
+import { useColorTheme } from "@/components/theme-context"
 
 const formSchema = z
   .object({
@@ -49,6 +50,13 @@ const themeText = {
   },
 }
 
+const colorThemes = [
+  { id: "default", name: "Excel Green", gradient: themeGradients.default },
+  { id: "green-teal", name: "Ocean Drive", gradient: themeGradients["green-teal"] },
+  { id: "purple-blue", name: "Royal Twilight", gradient: themeGradients["purple-blue"] },
+  { id: "red-orange", name: "Sunset Blaze", gradient: themeGradients["red-orange"] },
+]
+
 export function SignupForm({
   className,
   theme = "default",
@@ -57,6 +65,7 @@ export function SignupForm({
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const { isLoading, error } = useSelector((state) => state.auth)
+  const { colorTheme, setColorTheme } = useColorTheme()
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -80,8 +89,8 @@ export function SignupForm({
     }
   }
 
-  const imageGradient = themeGradients[theme] || themeGradients.default
-  const welcomeText = themeText[theme] || themeText.default
+  const imageGradient = themeGradients[colorTheme] || themeGradients.default
+  const welcomeText = themeText[colorTheme] || themeText.default
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -92,18 +101,16 @@ export function SignupForm({
             <form onSubmit={form.handleSubmit(onSubmit)}>
               <div className="flex flex-col gap-6">
                 <div className="flex flex-col items-center text-center">
-                  <h1 className="text-2xl font-bold text-black dark:text-white">Create Account</h1>
+                  <h1 className="text-2xl font-bold text-black dark:text-white">Join DataViz</h1>
                   <p className="text-muted-foreground text-balance">
-                    Enter your details below to create your account
+                    Create your account
                   </p>
                 </div>
-                
                 {error && (
                   <Alert variant="destructive">
                     <AlertDescription>{error}</AlertDescription>
                   </Alert>
                 )}
-
                 <div className="grid gap-3">
                   <Label htmlFor="name">Full Name</Label>
                   <Input 
@@ -117,7 +124,6 @@ export function SignupForm({
                     <p className="text-sm text-red-500">{form.formState.errors.name.message}</p>
                   )}
                 </div>
-
                 <div className="grid gap-3">
                   <Label htmlFor="email">Email</Label>
                   <Input 
@@ -131,7 +137,6 @@ export function SignupForm({
                     <p className="text-sm text-red-500">{form.formState.errors.email.message}</p>
                   )}
                 </div>
-
                 <div className="grid gap-3">
                   <Label htmlFor="password">Password</Label>
                   <Input 
@@ -145,7 +150,6 @@ export function SignupForm({
                     <p className="text-sm text-red-500">{form.formState.errors.password.message}</p>
                   )}
                 </div>
-
                 <div className="grid gap-3">
                   <Label htmlFor="confirmPassword">Confirm Password</Label>
                   <Input 
@@ -159,11 +163,24 @@ export function SignupForm({
                     <p className="text-sm text-red-500">{form.formState.errors.confirmPassword.message}</p>
                   )}
                 </div>
-
                 <Button type="submit" className="w-full" disabled={isLoading}>
                   {isLoading ? "Creating account..." : "Create account"}
                 </Button>
-
+                {/* Color Theme Selector below button */}
+                <div className="flex justify-center my-4">
+                  <div className="flex gap-4">
+                    {colorThemes.map((t) => (
+                      <button
+                        type="button"
+                        key={t.id}
+                        className={`w-8 h-8 rounded-full border-2 transition-all duration-150 ${colorTheme === t.id ? 'border-primary scale-110 shadow-lg' : 'border-transparent opacity-70 hover:opacity-100'} ${t.gradient}`}
+                        title={t.name}
+                        onClick={() => setColorTheme(t.id)}
+                        aria-label={t.name}
+                      />
+                    ))}
+                  </div>
+                </div>
                 <div className="text-center text-sm">
                   Already have an account?{" "}
                   <Link to="/login" className="underline underline-offset-4">
@@ -173,7 +190,6 @@ export function SignupForm({
               </div>
             </form>
           </div>
-          
           {/* Right: Gradient with Welcome Text */}
           <div className={`relative hidden md:flex items-center justify-center ${imageGradient} h-full`}>
             <div className="text-center text-white px-6">

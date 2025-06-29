@@ -3,6 +3,7 @@ import xlsx from "xlsx"
 import fs from "fs"
 import path from "path"
 import ExcelData from "../models/ExcelData.js"
+import mongoose from "mongoose"
 
 export const getUserDashboard = async (req, res) => {
   try {
@@ -173,23 +174,44 @@ export const getUploadData = async (req, res) => {
 export const deleteUpload = async (req, res) => {
   try {
     const { id } = req.params
-    const upload = await ExcelData.findOneAndUpdate(
-      { _id: id, user: req.user.id },
-      { isActive: false },
-      { new: true }
-    )
+    
+    // Validate ObjectId format
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ 
+        success: false,
+        error: "Invalid upload ID format" 
+      })
+    }
+
+    // Find the upload and verify ownership
+    const upload = await ExcelData.findOne({ 
+      _id: id, 
+      user: req.user.id,
+      isActive: true 
+    })
     
     if (!upload) {
-      return res.status(404).json({ error: "Upload not found or not authorized" })
+      return res.status(404).json({ 
+        success: false,
+        error: "Upload not found or not authorized" 
+      })
     }
+
+    // Soft delete by setting isActive to false
+    upload.isActive = false
+    await upload.save()
     
     res.status(200).json({ 
       success: true,
-      message: "Upload deleted successfully" 
+      message: "Upload deleted successfully",
+      deletedId: id
     })
   } catch (error) {
     console.error('Delete upload error:', error)
-    res.status(500).json({ error: error.message })
+    res.status(500).json({ 
+      success: false,
+      error: "Failed to delete upload. Please try again." 
+    })
   }
 }
 
