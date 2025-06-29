@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import { getCurrentUser, logoutUser } from "../../redux/slices/authSlice"
@@ -25,7 +25,7 @@ const Dashboard = () => {
   const [historyLoading, setHistoryLoading] = useState(true)
   const [historyError, setHistoryError] = useState("")
 
-  const refreshHistory = async () => {
+  const refreshHistory = useCallback(async () => {
     setHistoryLoading(true)
     setHistoryError("")
     try {
@@ -44,7 +44,7 @@ const Dashboard = () => {
     } finally {
       setHistoryLoading(false)
     }
-  }
+  }, [])
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -54,7 +54,7 @@ const Dashboard = () => {
     dispatch(getCurrentUser())
     dispatch(getDashboardData())
     refreshHistory()
-  }, [dispatch, navigate, isAuthenticated])
+  }, [dispatch, navigate, isAuthenticated, refreshHistory])
 
   const handleLogout = () => {
     dispatch(logoutUser())
