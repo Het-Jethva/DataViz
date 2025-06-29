@@ -43,3 +43,10 @@ export const fetchAnalysisHistory = (uploadId) =>
 
 export const fetchGeminiSummary = (uploadId, chartConfig, dataSample) =>
   apiClient.post(`/dashboard/summary/${uploadId}`, { chartConfig, dataSample }, { withCredentials: true })
+
+// Admin API
+export const fetchAdminUsers = (params = {}) => apiClient.get("/admin/users", { params })
+export const fetchAdminUserById = (id) => apiClient.get(`/admin/users/${id}`)
+export const updateAdminUser = (id, data) => apiClient.put(`/admin/users/${id}`, data)
+export const deleteAdminUser = (id) => apiClient.delete(`/admin/users/${id}`)
+export const fetchAdminStats = () => apiClient.get("/admin/stats")

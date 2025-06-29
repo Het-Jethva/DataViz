@@ -52,6 +52,11 @@ const DashboardHeader = ({ user, onLogout }) => {
                 <DropdownMenuItem>
                   <Link to="/profile" className="text-sm font-medium hover:underline">Profile</Link>
                 </DropdownMenuItem>
+                {user?.role === "admin" && (
+                  <DropdownMenuItem>
+                    <Link to="/admin" className="text-sm font-medium hover:underline">Admin Panel</Link>
+                  </DropdownMenuItem>
+                )}
                 <DropdownMenuItem>
                   <Settings className="size-4 mr-2" />Settings
                 </DropdownMenuItem>
