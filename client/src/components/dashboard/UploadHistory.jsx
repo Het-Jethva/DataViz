@@ -2,7 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
-import { Eye, Trash2, Download } from "lucide-react"
+import { Eye, Trash2, Download, BarChart3 } from "lucide-react"
 import { formatDate, formatFileSize, downloadCSV, downloadExcel } from "@/lib/utils"
 import { useEffect, useState } from "react"
 import { fetchUserUploads, deleteUserUpload } from "@/services/api"
@@ -20,11 +20,14 @@ import {
   AlertDialogAction,
   AlertDialogCancel,
 } from "@/components/ui/alert-dialog"
+import { useDispatch } from "react-redux"
+import { setSelectedData } from "../../redux/slices/chartSlice"
 
-const UploadHistoryItem = ({ item, index, onView, onDelete, isLast }) => {
+const UploadHistoryItem = ({ item, index, onView, onDelete, isLast, onCreateChart }) => {
   const [open, setOpen] = useState(false)
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [deleting, setDeleting] = useState(false)
+  
   const handleDownload = (type) => {
     if (type === "csv") {
       downloadCSV(item.data, `${item.fileName || "upload"}.csv`)
@@ -33,6 +36,7 @@ const UploadHistoryItem = ({ item, index, onView, onDelete, isLast }) => {
     }
     setOpen(false)
   }
+  
   const handleDelete = async () => {
     setDeleting(true)
     try {
@@ -45,6 +49,12 @@ const UploadHistoryItem = ({ item, index, onView, onDelete, isLast }) => {
       setDeleting(false)
     }
   }
+
+  const handleCreateChart = () => {
+    onCreateChart?.(item.data)
+    toast.success("Data selected for charting! Switch to Charts & Analytics tab to configure.")
+  }
+  
   return (
     <div>
       <div className="flex items-center justify-between p-4 rounded-lg border hover:shadow transition-all">
@@ -69,6 +79,9 @@ const UploadHistoryItem = ({ item, index, onView, onDelete, isLast }) => {
         <div className="flex items-center gap-2 ml-4">
           <Button variant="ghost" size="icon" onClick={() => onView?.(item, index)} aria-label={`View ${item.fileName || `Upload ${index + 1}`}`}>
             <Eye className="size-4" />
+          </Button>
+          <Button variant="ghost" size="icon" onClick={handleCreateChart} aria-label={`Create chart from ${item.fileName || `Upload ${index + 1}`}`}>
+            <BarChart3 className="size-4" />
           </Button>
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
@@ -111,7 +124,7 @@ const UploadHistoryItem = ({ item, index, onView, onDelete, isLast }) => {
   )
 }
 
-const UploadHistory = ({ history = [], loading = false, error = "", onView, onDelete }) => {
+const UploadHistory = ({ history = [], loading = false, error = "", onView, onDelete, onCreateChart }) => {
   const handleView = (item, index) => {
     if (onView) onView(item, index)
   }
@@ -152,6 +165,7 @@ const UploadHistory = ({ history = [], loading = false, error = "", onView, onDe
                 index={index}
                 onView={handleView}
                 onDelete={handleDelete}
+                onCreateChart={onCreateChart}
                 isLast={index === history.length - 1}
               />
             ))}
