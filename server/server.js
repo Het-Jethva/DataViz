@@ -2,6 +2,7 @@ import express from "express"
 import dotenv from "dotenv"
 import cors from "cors"
 import cookieParser from "cookie-parser"
+import mongoose from "mongoose"
 
 // Import routes
 import authRoutes from "./routes/authRoutes.js"
