@@ -124,6 +124,13 @@ const isNumericColumn = (data, column) => {
   })
 }
 
+// Helper function to check if a single value is numeric
+const isNumericValue = (value) => {
+  if (typeof value === 'number') return true
+  const parsed = parseFloat(value)
+  return !isNaN(parsed) && value !== null && value !== undefined && value !== ""
+}
+
 export const process3DData = (data, xAxis, yAxis, zAxis) => {
   // Early return for edge cases
   if (!data || data.length === 0) {
@@ -306,7 +313,7 @@ export const getChartOptions = (chartType, title = "Data Visualization", xAxisLa
                 const label = context.label || '';
                 const value = context.parsed;
                 const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                const percentage = ((value / total) * 100).toFixed(1);
+                const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : '0.0';
                 return `${label}: ${value} (${percentage}%)`;
               }
             }
@@ -457,23 +464,19 @@ export const validateYAxisData = (data, yAxis, chartType = "line") => {
   }
   
   const yValues = data.map(row => row[yAxis])
-  const numericValues = yValues.filter(value => {
-    if (typeof value === 'number') return true
-    const parsed = parseFloat(value)
-    return !isNaN(parsed) && value !== null && value !== undefined && value !== ""
-  }).length
+  const numericValuesArray = yValues.filter(isNumericValue)
   
   const totalValues = yValues.length
-  const minValue = Math.min(...yValues.filter(v => !isNaN(parseFloat(v))))
-  const maxValue = Math.max(...yValues.filter(v => !isNaN(parseFloat(v))))
+  const minValue = numericValuesArray.length > 0 ? Math.min(...numericValuesArray) : 0
+  const maxValue = numericValuesArray.length > 0 ? Math.max(...numericValuesArray) : 0
   
   // For line, scatter, and area charts, we need numeric Y-axis
   if (["line", "scatter", "area"].includes(chartType)) {
-    if (numericValues === 0) {
+    if (numericValuesArray.length === 0) {
       return { 
         isValid: false, 
         error: "Y-axis must contain numeric values for this chart type", 
-        numericValues, 
+        numericValues: 0, 
         totalValues,
         minValue: 0,
         maxValue: 0
@@ -484,7 +487,7 @@ export const validateYAxisData = (data, yAxis, chartType = "line") => {
   return { 
     isValid: true, 
     error: null, 
-    numericValues, 
+    numericValues: numericValuesArray.length, 
     totalValues,
     minValue: isFinite(minValue) ? minValue : 0,
     maxValue: isFinite(maxValue) ? maxValue : 0
