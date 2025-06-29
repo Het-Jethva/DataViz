@@ -12,6 +12,7 @@ import Signup from "./components/auth/Signup"
 import Dashboard from "./components/dashboard/Dashboard"
 import Profile from "./components/Profile"
 import { Toaster } from "@/components/ui/sonner"
+import AdminPanel from "./components/admin/AdminPanel"
 
 function App() {
   return (
@@ -38,6 +39,10 @@ function App() {
               <Route
                 path="/profile"
                 element={<Profile />}
+              />
+              <Route
+                path="/admin"
+                element={<AdminPanel />}
               />
               <Route
                 path="/"
