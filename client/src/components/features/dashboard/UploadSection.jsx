@@ -1,9 +1,8 @@
-
 import { useRef, useState } from "react"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Upload, FileSpreadsheet, Loader2 } from "lucide-react"
-import { cn } from "@/lib/utils"
+import { cn } from "@/utils/lib/utils"
 import * as XLSX from 'xlsx'
 
 export default function UploadSection({ onUploadSuccess }) {

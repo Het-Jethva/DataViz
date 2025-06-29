@@ -3,14 +3,14 @@ import { Link, useNavigate } from "react-router-dom"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
-import { loginUser } from "../redux/slices/authSlice"
-import { cn } from "@/lib/utils"
+import { loginUser } from "../store/redux/slices/authSlice"
+import { cn } from "@/utils/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { useColorTheme } from "@/components/theme-context"
+import { useColorTheme } from "./common/theme-context"
 
 const formSchema = z.object({
   email: z.string().email("Please enter a valid email address"),

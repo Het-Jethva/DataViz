@@ -3,7 +3,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { User } from "lucide-react"
-import { getInitials, formatDate } from "@/lib/utils"
+import { getInitials, formatDate } from "@/utils/lib/utils"
 
 const ProfileCard = ({ user }) => {
   return (

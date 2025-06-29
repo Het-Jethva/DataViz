@@ -1,7 +1,7 @@
 import { useEffect } from "react"
 import { useSelector, useDispatch } from "react-redux"
 import { Navigate, useLocation } from "react-router-dom"
-import { getCurrentUser } from "../redux/slices/authSlice"
+import { getCurrentUser } from "../../store/redux/slices/authSlice"
 
 export default function ProtectedRoute({ children }) {
   const dispatch = useDispatch()

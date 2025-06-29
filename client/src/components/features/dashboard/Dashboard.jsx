@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react"
-import { AppSidebar } from "../app-sidebar"
-import { SiteHeader } from "../site-header"
+import { AppSidebar } from "../../layout/app-sidebar"
+import { SiteHeader } from "../../layout/site-header"
 import { SidebarProvider } from "@/components/ui/sidebar"
 import UploadSection from "./UploadSection"
 import PreviewSection from "./PreviewSection"
 import RecentUploads from "./RecentUploads"
-import apiClient from "../../services/api"
-import { ThemeSelector } from "../theme-selector"
+import apiClient from "../../../services/api"
+import { ThemeSelector } from "../../common/theme-selector"
 import { Separator } from "@/components/ui/separator"
 
 export default function Dashboard() {

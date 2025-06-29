@@ -1,9 +1,9 @@
 import { useEffect } from "react"
 import { useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
-import { LoginForm } from "../login-form"
-import { ThemeSelector } from "../theme-selector"
-import { useColorTheme } from "../theme-context"
+import { LoginForm } from "../../login-form"
+import { ThemeSelector } from "../../common/theme-selector"
+import { useColorTheme } from "../../common/theme-context"
 
 const Login = () => {
   const { colorTheme } = useColorTheme()

@@ -1,9 +1,9 @@
 import { useEffect } from "react"
 import { useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
-import { SignupForm } from "../signup-form"
-import { ThemeSelector } from "../theme-selector"
-import { useColorTheme } from "../theme-context"
+import { SignupForm } from "../../signup-form"
+import { ThemeSelector } from "../../common/theme-selector"
+import { useColorTheme } from "../../common/theme-context"
 
 const Signup = () => {
   const { colorTheme } = useColorTheme()

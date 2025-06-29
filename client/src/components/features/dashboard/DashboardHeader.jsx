@@ -8,7 +8,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { LogOut, ChevronDown, Settings, User } from "lucide-react"
-import { getInitials } from "@/lib/utils"
+import { getInitials } from "@/utils/lib/utils"
 import { Link } from "react-router-dom"
 import { useColorTheme } from "@/components/theme-context"
 
