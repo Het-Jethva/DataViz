@@ -98,15 +98,20 @@ const Chart2D = () => {
     if (chartRef.current && chartData) {
       console.log('Chart2D: Chart data updated, forcing re-render')
       // Small delay to ensure DOM is ready
-      setTimeout(() => {
+      const timeout1 = setTimeout(() => {
         const canvas = chartRef.current.querySelector('canvas')
         if (canvas) {
           canvas.style.display = 'none'
-          setTimeout(() => {
+          const timeout2 = setTimeout(() => {
             canvas.style.display = 'block'
           }, 10)
+          // Store timeout2 for cleanup
+          return () => clearTimeout(timeout2)
         }
       }, 100)
+      
+      // Cleanup function to clear timeout1
+      return () => clearTimeout(timeout1)
     }
   }, [chartData])
 
@@ -177,29 +182,38 @@ const Chart2D = () => {
   }
 
   const renderChart = () => {
-    const commonProps = {
-      data: chartData,
-      options: options,
-      redraw: true,
-      key: `${chartType}-${xAxis}-${yAxis}-${Date.now()}` // Force re-render with unique key
-    }
+    try {
+      const commonProps = {
+        data: chartData,
+        options: options,
+        redraw: true,
+        key: `${chartType}-${xAxis}-${yAxis}-${chartData?.datasets?.[0]?.data?.length || 0}` // Use data length for stable key
+      }
 
-    switch (chartType) {
-      case "line":
-        return <Line {...commonProps} />
-      case "bar":
-        return <Bar {...commonProps} />
-      case "scatter":
-        return <Scatter {...commonProps} />
-      case "pie":
-        return <Pie {...commonProps} />
-      case "doughnut":
-        return <Doughnut {...commonProps} />
-      case "area":
-        // Area chart uses Line component with fill enabled
-        return <Line {...commonProps} />
-      default:
-        return <Line {...commonProps} />
+      switch (chartType) {
+        case "line":
+          return <Line {...commonProps} />
+        case "bar":
+          return <Bar {...commonProps} />
+        case "scatter":
+          return <Scatter {...commonProps} />
+        case "pie":
+          return <Pie {...commonProps} />
+        case "doughnut":
+          return <Doughnut {...commonProps} />
+        case "area":
+          // Area chart uses Line component with fill enabled
+          return <Line {...commonProps} />
+        default:
+          return <Line {...commonProps} />
+      }
+    } catch (error) {
+      console.error('Error rendering chart:', error)
+      return (
+        <div className="flex items-center justify-center h-full text-red-500">
+          <p>Error rendering chart. Please try again.</p>
+        </div>
+      )
     }
   }
 
@@ -211,24 +225,6 @@ const Chart2D = () => {
           <Button variant="outline" size="sm" onClick={downloadChart}>
             <Download className="h-4 w-4 mr-2" />
             Download
-          </Button>
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={() => {
-              console.log('Chart2D: Manual refresh triggered')
-              // Force re-render by updating the key
-              const canvas = chartRef.current?.querySelector('canvas')
-              if (canvas) {
-                canvas.style.display = 'none'
-                setTimeout(() => {
-                  canvas.style.display = 'block'
-                }, 10)
-              }
-            }}
-          >
-            <RefreshCw className="h-4 w-4 mr-2" />
-            Refresh
           </Button>
         </div>
       </CardHeader>
