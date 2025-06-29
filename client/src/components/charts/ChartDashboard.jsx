@@ -1,6 +1,11 @@
 import { useSelector, useDispatch } from "react-redux"
 import { useState, useEffect, useCallback } from "react"
 import { setSelectedData } from "../../redux/slices/chartSlice"
+import {
+  saveAnalysisHistoryThunk,
+  fetchAnalysisHistoryThunk,
+  fetchGeminiSummaryThunk
+} from "../../redux/slices/chartSlice"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -14,10 +19,11 @@ import { fetchUserUploads } from "@/services/api"
 
 const ChartDashboard = () => {
   const dispatch = useDispatch()
-  const { selectedData, chartType } = useSelector((state) => state.chart)
+  const { selectedData, chartType, xAxis, yAxis, zAxis, chartOptions, analysisHistory, analysisLoading, geminiSummary, geminiLoading } = useSelector((state) => state.chart)
   const [uploadHistory, setUploadHistory] = useState([])
   const [historyLoading, setHistoryLoading] = useState(true)
   const [historyError, setHistoryError] = useState("")
+  const [activeUploadId, setActiveUploadId] = useState(null)
 
   const refreshHistory = useCallback(async () => {
     setHistoryLoading(true)
@@ -27,6 +33,7 @@ const ChartDashboard = () => {
       setUploadHistory(
         res.data.uploads.map((item) => ({
           id: item._id,
+          _id: item._id,
           fileName: item.fileName || "Excel Upload",
           uploadDate: item.uploadDate,
           rowCount: item.data?.length || 0,
@@ -44,8 +51,39 @@ const ChartDashboard = () => {
     refreshHistory()
   }, [refreshHistory])
 
-  const handleDataSelect = (data) => {
-    dispatch(setSelectedData(data))
+  useEffect(() => {
+    if (activeUploadId) {
+      dispatch(fetchAnalysisHistoryThunk(activeUploadId))
+    }
+  }, [activeUploadId, dispatch])
+
+  const handleDataSelect = (upload) => {
+    dispatch(setSelectedData(upload.data))
+    setActiveUploadId(upload._id || upload.id)
+  }
+
+  const handleSaveAnalysis = () => {
+    if (!activeUploadId || !selectedData) return
+    dispatch(saveAnalysisHistoryThunk({
+      uploadId: activeUploadId,
+      data: {
+        chartType,
+        xAxis,
+        yAxis,
+        zAxis,
+        options: chartOptions,
+        summary: geminiSummary || undefined
+      }
+    }))
+  }
+
+  const handleGeminiSummary = () => {
+    if (!activeUploadId || !selectedData) return
+    dispatch(fetchGeminiSummaryThunk({
+      uploadId: activeUploadId,
+      chartConfig: { chartType, xAxis, yAxis, zAxis, options: chartOptions },
+      dataSample: selectedData.slice(0, 20)
+    }))
   }
 
   if (historyLoading) {
@@ -112,7 +150,7 @@ const ChartDashboard = () => {
                     ? "border-primary bg-primary/5"
                     : "border-border hover:border-primary/50"
                 }`}
-                onClick={() => handleDataSelect(upload.data)}
+                onClick={() => handleDataSelect(upload)}
               >
                 <div className="flex items-center justify-between mb-2">
                   <h4 className="font-semibold text-sm truncate">
@@ -140,7 +178,7 @@ const ChartDashboard = () => {
                     className="w-full"
                     onClick={(e) => {
                       e.stopPropagation()
-                      handleDataSelect(upload.data)
+                      handleDataSelect(upload)
                     }}
                   >
                     <Eye className="h-4 w-4 mr-2" />
@@ -236,6 +274,38 @@ const ChartDashboard = () => {
             You can choose from line charts, bar charts, scatter plots, pie charts, and 3D visualizations.
           </AlertDescription>
         </Alert>
+      )}
+
+      {selectedData && (
+        <div className="flex flex-col md:flex-row gap-4 mt-4">
+          <Button onClick={handleSaveAnalysis} disabled={analysisLoading || !activeUploadId} variant="default">
+            {analysisLoading ? "Saving..." : "Save Analysis"}
+          </Button>
+          <Button onClick={handleGeminiSummary} disabled={geminiLoading || !activeUploadId} variant="outline">
+            {geminiLoading ? "Getting AI Summary..." : "Get AI Summary"}
+          </Button>
+        </div>
+      )}
+
+      {geminiSummary && (
+        <div className="mt-4 p-4 bg-muted rounded">
+          <strong>AI Summary:</strong>
+          <div className="text-sm mt-2">{geminiSummary}</div>
+        </div>
+      )}
+
+      {analysisHistory && analysisHistory.length > 0 && (
+        <div className="mt-4">
+          <strong>Analysis History:</strong>
+          <ul className="list-disc ml-6 text-sm">
+            {analysisHistory.map((item, idx) => (
+              <li key={idx} className="mb-2">
+                <span className="font-medium">{item.chartType}</span> | X: {item.xAxis} | Y: {item.yAxis} {item.zAxis ? `| Z: ${item.zAxis}` : ""} | {item.createdAt && new Date(item.createdAt).toLocaleString()}<br/>
+                {item.summary && <span className="text-muted-foreground">AI: {item.summary}</span>}
+              </li>
+            ))}
+          </ul>
+        </div>
       )}
     </div>
   )

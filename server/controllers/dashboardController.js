@@ -4,6 +4,8 @@ import {
   getUserUploadsService,
   deleteUploadService
 } from "../services/dashboardService.js"
+import ExcelData from "../models/ExcelData.js"
+import { getGeminiSummaryService } from "../services/geminiService.js"
 
 export const getUserDashboard = async (req, res) => {
   try {
@@ -66,6 +68,48 @@ export const deleteUpload = async (req, res) => {
     res.status(200).json({ message: "Upload deleted" })
   } catch (error) {
     res.status(error.message === "Upload not found or not authorized" ? 404 : 500).json({ error: error.message })
+  }
+}
+
+// Save analysis history for an upload
+export const saveAnalysisHistory = async (req, res) => {
+  try {
+    const { uploadId } = req.params
+    const { chartType, xAxis, yAxis, zAxis, options, summary } = req.body
+    const upload = await ExcelData.findById(uploadId)
+    if (!upload) return res.status(404).json({ error: "Upload not found" })
+    // Only allow owner
+    if (upload.user.toString() !== req.user.id) return res.status(403).json({ error: "Not authorized" })
+    const historyItem = { chartType, xAxis, yAxis, zAxis, options, summary, createdAt: new Date() }
+    upload.analysisHistory.push(historyItem)
+    await upload.save()
+    res.json({ success: true, history: upload.analysisHistory })
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+}
+
+// Get analysis history for an upload
+export const getAnalysisHistory = async (req, res) => {
+  try {
+    const { uploadId } = req.params
+    const upload = await ExcelData.findById(uploadId)
+    if (!upload) return res.status(404).json({ error: "Upload not found" })
+    if (upload.user.toString() !== req.user.id) return res.status(403).json({ error: "Not authorized" })
+    res.json({ success: true, history: upload.analysisHistory })
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+}
+
+// Gemini summary endpoint (calls Gemini API)
+export const getGeminiSummary = async (req, res) => {
+  try {
+    const { chartConfig, dataSample } = req.body;
+    const summary = await getGeminiSummaryService({ chartConfig, dataSample });
+    res.json({ summary });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 }
 

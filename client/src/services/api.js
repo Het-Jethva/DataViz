@@ -34,3 +34,12 @@ export default apiClient
 export const fetchUserUploads = () => apiClient.get("/dashboard/uploads", { withCredentials: true })
 
 export const deleteUserUpload = (id) => apiClient.delete(`/dashboard/uploads/${id}`, { withCredentials: true })
+
+export const saveAnalysisHistory = (uploadId, data) =>
+  apiClient.post(`/dashboard/analysis/${uploadId}`, data, { withCredentials: true })
+
+export const fetchAnalysisHistory = (uploadId) =>
+  apiClient.get(`/dashboard/analysis/${uploadId}`, { withCredentials: true })
+
+export const fetchGeminiSummary = (uploadId, chartConfig, dataSample) =>
+  apiClient.post(`/dashboard/summary/${uploadId}`, { chartConfig, dataSample }, { withCredentials: true })
