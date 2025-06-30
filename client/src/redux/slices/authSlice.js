@@ -1,7 +1,9 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios'
 
-const API_BASE_URL = 'http://localhost:5000/api/auth'
+const API_BASE_URL = import.meta.env.VITE_API_URL
+    ? `${import.meta.env.VITE_API_URL.replace('/api', '')}/api/auth`
+    : 'http://localhost:5000/api/auth'
 
 // Configure axios for credentials
 const authAPI = axios.create({
