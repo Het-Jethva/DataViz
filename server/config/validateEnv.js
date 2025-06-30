@@ -1,4 +1,4 @@
-const requiredEnvVars = ['MONGODB_URI', 'JWT_SECRET']
+const requiredEnvVars = ['MONGODB_URI', 'JWT_SECRET', 'GEMINI_API_KEY']
 
 const validateEnv = () => {
     const missingEnvVars = requiredEnvVars.filter(
