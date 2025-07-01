@@ -1,6 +1,4 @@
 import { useEffect, useState, useCallback } from 'react'
-import { useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
 import {
     fetchAdminStats,
     fetchAdminUsers,
@@ -65,8 +63,6 @@ import { format } from 'date-fns'
 const PAGE_SIZE = 10
 
 const AdminPanel = () => {
-    const { user, isAuthenticated } = useSelector((state) => state.auth)
-    const navigate = useNavigate()
     const [stats, setStats] = useState(null)
     const [users, setUsers] = useState([])
     const [loading, setLoading] = useState(true)
@@ -80,21 +76,12 @@ const AdminPanel = () => {
     const [deleteLoading, setDeleteLoading] = useState(false)
     const [viewUser, setViewUser] = useState(null)
 
-    // Restrict access to admins only
-    useEffect(() => {
-        if (!isAuthenticated) {
-            navigate('/login')
-        } else if (user && user.role !== 'admin') {
-            navigate('/dashboard')
-        }
-    }, [isAuthenticated, user, navigate])
-
     // Fetch stats
     const fetchStats = useCallback(async () => {
         try {
             const res = await fetchAdminStats()
             setStats(res.data.data)
-        } catch (err) {
+        } catch {
             setStats(null)
         }
     }, [])
@@ -111,7 +98,7 @@ const AdminPanel = () => {
             })
             setUsers(res.data.data.users || res.data.data)
             setTotal(res.data.data.total || 0)
-        } catch (err) {
+        } catch {
             setError('Failed to load users.')
         } finally {
             setLoading(false)

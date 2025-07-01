@@ -13,6 +13,7 @@ import Dashboard from './components/dashboard/Dashboard'
 import Profile from './components/Profile'
 import { Toaster } from '@/components/ui/sonner'
 import AdminPanel from './components/admin/AdminPanel'
+import PrivateRoute from './components/auth/PrivateRoute'
 
 function App() {
     return (
@@ -23,9 +24,30 @@ function App() {
                         <Routes>
                             <Route path="/login" element={<Login />} />
                             <Route path="/signup" element={<Signup />} />
-                            <Route path="/dashboard" element={<Dashboard />} />
-                            <Route path="/profile" element={<Profile />} />
-                            <Route path="/admin" element={<AdminPanel />} />
+                            <Route
+                                path="/dashboard"
+                                element={
+                                    <PrivateRoute>
+                                        <Dashboard />
+                                    </PrivateRoute>
+                                }
+                            />
+                            <Route
+                                path="/profile"
+                                element={
+                                    <PrivateRoute>
+                                        <Profile />
+                                    </PrivateRoute>
+                                }
+                            />
+                            <Route
+                                path="/admin"
+                                element={
+                                    <PrivateRoute>
+                                        <AdminPanel />
+                                    </PrivateRoute>
+                                }
+                            />
                             <Route
                                 path="/"
                                 element={<Navigate to="/login" replace />}

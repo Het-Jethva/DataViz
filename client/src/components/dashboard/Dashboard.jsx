@@ -1,7 +1,6 @@
 import { useEffect, useState, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { getCurrentUser, logoutUser } from '../../redux/slices/authSlice'
 import { getDashboardData } from '../../redux/slices/dashboardSlice'
 import { setSelectedData } from '../../redux/slices/chartSlice'
 import DashboardHeader from './DashboardHeader'
@@ -25,10 +24,8 @@ const DATA_PREVIEW_ROW_LIMIT = 20
 const Dashboard = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const { user, isAuthenticated } = useSelector((state) => state.auth)
-    const { profile, uploadHistory, isLoading } = useSelector(
-        (state) => state.dashboard
-    )
+    const { user } = useSelector((state) => state.auth)
+    const { profile, isLoading } = useSelector((state) => state.dashboard)
     const [viewData, setViewData] = useState(null)
     const [viewOpen, setViewOpen] = useState(false)
     const [history, setHistory] = useState([])
@@ -49,7 +46,7 @@ const Dashboard = () => {
                     data: item.data || [],
                 }))
             )
-        } catch (err) {
+        } catch {
             setHistoryError('Failed to load upload history.')
         } finally {
             setHistoryLoading(false)
@@ -57,17 +54,11 @@ const Dashboard = () => {
     }, [])
 
     useEffect(() => {
-        if (!isAuthenticated) {
-            navigate('/login')
-            return
-        }
-        dispatch(getCurrentUser())
         dispatch(getDashboardData())
         refreshHistory()
-    }, [dispatch, navigate, isAuthenticated, refreshHistory])
+    }, [dispatch, refreshHistory])
 
     const handleLogout = () => {
-        dispatch(logoutUser())
         navigate('/login')
     }
 
