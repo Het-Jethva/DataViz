@@ -50,7 +50,7 @@ function App() {
                             />
                             <Route
                                 path="/"
-                                element={<Navigate to="/login" replace />}
+                                element={<Navigate to="/dashboard" replace />}
                             />
                         </Routes>
                         <Toaster />
