@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
@@ -38,7 +39,15 @@ const formSchema = z
 const Signup = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const { isLoading, error } = useSelector((state) => state.auth)
+    const { isLoading, error, isAuthenticated } = useSelector(
+        (state) => state.auth
+    )
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            navigate('/dashboard')
+        }
+    }, [isAuthenticated, navigate])
 
     const form = useForm({
         resolver: zodResolver(formSchema),
