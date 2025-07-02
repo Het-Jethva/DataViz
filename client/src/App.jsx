@@ -1,9 +1,4 @@
-import {
-    BrowserRouter as Router,
-    Routes,
-    Route,
-    Navigate,
-} from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import { store } from './redux/store'
 import { ThemeProvider } from './components/theme-provider'
@@ -14,6 +9,7 @@ import Profile from './components/Profile'
 import { Toaster } from '@/components/ui/sonner'
 import AdminPanel from './components/admin/AdminPanel'
 import PrivateRoute from './components/auth/PrivateRoute'
+import LandingPage from './components/landing/LandingPage'
 
 function App() {
     return (
@@ -22,6 +18,7 @@ function App() {
                 <Router>
                     <div className="App">
                         <Routes>
+                            <Route path="/" element={<LandingPage />} />
                             <Route path="/login" element={<Login />} />
                             <Route path="/signup" element={<Signup />} />
                             <Route
@@ -47,10 +44,6 @@ function App() {
                                         <AdminPanel />
                                     </PrivateRoute>
                                 }
-                            />
-                            <Route
-                                path="/"
-                                element={<Navigate to="/dashboard" replace />}
                             />
                         </Routes>
                         <Toaster />
