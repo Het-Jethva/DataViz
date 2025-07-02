@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { getDashboardData } from '../../redux/slices/dashboardSlice'
 import { setSelectedData } from '../../redux/slices/chartSlice'
+import { logoutUser } from '../../redux/slices/authSlice'
 import DashboardHeader from './DashboardHeader'
 import ProfileCard from './ProfileCard'
 import UploadSection from './UploadSection'
@@ -58,7 +59,8 @@ const Dashboard = () => {
         refreshHistory()
     }, [dispatch, refreshHistory])
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
+        await dispatch(logoutUser())
         navigate('/login')
     }
 
