@@ -1,11 +1,6 @@
 import jwt from 'jsonwebtoken'
 import User from '../models/User.js'
-import {
-    isValidEmail,
-    isValidPassword,
-    isValidName,
-    isValidRole,
-} from '../utils/validation.js'
+import { isValidEmail, isValidPassword, isValidName, isValidRole } from '../utils/validation.js'
 
 // Generate JWT token
 export const generateToken = (userId) => {
@@ -64,12 +59,7 @@ export function getProfileService(user) {
 }
 
 // Update user profile
-export async function updateProfileService({
-    userId,
-    name,
-    email,
-    currentEmail,
-}) {
+export async function updateProfileService({ userId, name, email, currentEmail }) {
     // Validation is handled by middleware
     if (email.toLowerCase() !== currentEmail.toLowerCase()) {
         const existingUser = await User.findOne({ email: email.toLowerCase() })
@@ -86,11 +76,7 @@ export async function updateProfileService({
 }
 
 // Change password
-export async function changePasswordService({
-    userId,
-    currentPassword,
-    newPassword,
-}) {
+export async function changePasswordService({ userId, currentPassword, newPassword }) {
     // Validation is handled by middleware
     const user = await User.findById(userId)
     if (!user) {

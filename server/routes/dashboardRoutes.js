@@ -31,14 +31,8 @@ const upload = multer({
         const allowedExtensions = ['.xlsx', '.xls']
         const fileExtension = path.extname(file.originalname).toLowerCase()
 
-        if (
-            !allowedMimeTypes.includes(file.mimetype) ||
-            !allowedExtensions.includes(fileExtension)
-        ) {
-            return cb(
-                new Error('Only Excel files (.xlsx, .xls) are allowed'),
-                false
-            )
+        if (!allowedMimeTypes.includes(file.mimetype) || !allowedExtensions.includes(fileExtension)) {
+            return cb(new Error('Only Excel files (.xlsx, .xls) are allowed'), false)
         }
 
         // Validate filename
@@ -57,12 +51,7 @@ const upload = multer({
 })
 
 router.get('/user', authenticateToken, getUserDashboard)
-router.post(
-    '/upload',
-    authenticateToken,
-    upload.single('file'),
-    uploadExcelData
-)
+router.post('/upload', authenticateToken, upload.single('file'), uploadExcelData)
 router.get('/uploads', authenticateToken, getUserUploads)
 router.delete('/uploads/:id', authenticateToken, deleteUpload)
 router.post('/analysis/:uploadId', authenticateToken, saveAnalysisHistory)

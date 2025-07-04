@@ -1,11 +1,5 @@
 import { useState, useCallback } from 'react'
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Progress } from '@/components/ui/progress'
@@ -45,9 +39,7 @@ const UploadSection = ({ onUploadSuccess }) => {
         if (files.length > 0) {
             const file = files[0]
             if (!ALLOWED_TYPES.includes(file.type)) {
-                setErrorMsg(
-                    'Unsupported file type. Please upload an Excel file (.xlsx, .xls).'
-                )
+                setErrorMsg('Unsupported file type. Please upload an Excel file (.xlsx, .xls).')
                 return
             }
             if (file.size > MAX_FILE_SIZE) {
@@ -65,9 +57,7 @@ const UploadSection = ({ onUploadSuccess }) => {
         const file = e.target.files[0]
         if (file) {
             if (!ALLOWED_TYPES.includes(file.type)) {
-                setErrorMsg(
-                    'Unsupported file type. Please upload an Excel file (.xlsx, .xls).'
-                )
+                setErrorMsg('Unsupported file type. Please upload an Excel file (.xlsx, .xls).')
                 return
             }
             if (file.size > MAX_FILE_SIZE) {
@@ -92,10 +82,7 @@ const UploadSection = ({ onUploadSuccess }) => {
                     headers: { 'Content-Type': 'multipart/form-data' },
                     onUploadProgress: (progressEvent) => {
                         if (progressEvent.total) {
-                            const percent = Math.round(
-                                (progressEvent.loaded * 100) /
-                                    progressEvent.total
-                            )
+                            const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total)
                             setUploadProgress(percent)
                         }
                     },
@@ -107,14 +94,8 @@ const UploadSection = ({ onUploadSuccess }) => {
                 if (onUploadSuccess) onUploadSuccess()
             } catch (err) {
                 setUploadStatus('error')
-                setErrorMsg(
-                    err?.response?.data?.error ||
-                        'Upload failed. Please try again.'
-                )
-                toast.error(
-                    err?.response?.data?.error ||
-                        'Upload failed. Please try again.'
-                )
+                setErrorMsg(err?.response?.data?.error || 'Upload failed. Please try again.')
+                toast.error(err?.response?.data?.error || 'Upload failed. Please try again.')
             }
         }
     }, [selectedFile, onUploadSuccess])
@@ -133,9 +114,7 @@ const UploadSection = ({ onUploadSuccess }) => {
                 <File className="size-4 text-primary" />
                 <span className="truncate">{file.name}</span>
             </div>
-            <p className="text-xs text-muted-foreground">
-                {formatFileSize(file.size)}
-            </p>
+            <p className="text-xs text-muted-foreground">{formatFileSize(file.size)}</p>
         </div>
     )
 
@@ -148,31 +127,20 @@ const UploadSection = ({ onUploadSuccess }) => {
 
     const SuccessMessage = ({ onReset }) => (
         <div className="space-y-3 text-center">
-            <h3 className="text-lg font-semibold text-green-700">
-                Upload Successful!
-            </h3>
-            <p className="text-sm text-green-600">
-                Your file has been processed and is ready for visualization
-            </p>
+            <h3 className="text-lg font-semibold text-green-700">Upload Successful!</h3>
+            <p className="text-sm text-green-600">Your file has been processed and is ready for visualization</p>
             <Button onClick={onReset} variant="outline" className="mt-4">
                 Upload Another File
             </Button>
         </div>
     )
 
-    const FileSelectionArea = ({
-        isDragOver,
-        selectedFile,
-        uploadStatus,
-        uploadProgress,
-    }) => {
+    const FileSelectionArea = ({ isDragOver, selectedFile, uploadStatus, uploadProgress }) => {
         if (selectedFile) {
             return (
                 <div className="space-y-4 text-center w-full max-w-sm">
                     <FileInfo file={selectedFile} />
-                    {uploadStatus === 'uploading' && (
-                        <UploadStatus progress={uploadProgress} />
-                    )}
+                    {uploadStatus === 'uploading' && <UploadStatus progress={uploadProgress} />}
                 </div>
             )
         }
@@ -180,13 +148,9 @@ const UploadSection = ({ onUploadSuccess }) => {
         return (
             <div className="space-y-3 text-center">
                 <h3 className="text-lg font-semibold text-foreground">
-                    {isDragOver
-                        ? 'Drop your file here'
-                        : 'Drag and drop your Excel file'}
+                    {isDragOver ? 'Drop your file here' : 'Drag and drop your Excel file'}
                 </h3>
-                <p className="text-sm text-muted-foreground">
-                    or click to browse your files
-                </p>
+                <p className="text-sm text-muted-foreground">or click to browse your files</p>
             </div>
         )
     }
@@ -196,11 +160,7 @@ const UploadSection = ({ onUploadSuccess }) => {
 
         return (
             <div className="flex gap-3">
-                <Button
-                    variant="outline"
-                    asChild
-                    disabled={uploadStatus === 'uploading'}
-                >
+                <Button variant="outline" asChild disabled={uploadStatus === 'uploading'}>
                     <label htmlFor="file-upload" className="cursor-pointer">
                         <File className="size-4 mr-2" />
                         Choose File
@@ -224,11 +184,7 @@ const UploadSection = ({ onUploadSuccess }) => {
             if (uploadStatus === 'error') {
                 return <AlertCircle className="size-12 text-red-600" />
             }
-            return (
-                <Upload
-                    className={`size-12 ${isDragOver ? 'text-primary' : 'text-muted-foreground'}`}
-                />
-            )
+            return <Upload className={`size-12 ${isDragOver ? 'text-primary' : 'text-muted-foreground'}`} />
         }
 
         const getBackgroundClass = () => {
@@ -238,24 +194,14 @@ const UploadSection = ({ onUploadSuccess }) => {
             return 'bg-muted'
         }
 
-        return (
-            <div
-                className={`p-6 rounded-xl transition-all ${getBackgroundClass()}`}
-            >
-                {getIcon()}
-            </div>
-        )
+        return <div className={`p-6 rounded-xl transition-all ${getBackgroundClass()}`}>{getIcon()}</div>
     }
 
     return (
         <Card>
             <CardHeader className="pb-4">
-                <CardTitle className="text-lg font-bold">
-                    Upload Excel File
-                </CardTitle>
-                <CardDescription>
-                    Upload your Excel file to create beautiful visualizations
-                </CardDescription>
+                <CardTitle className="text-lg font-bold">Upload Excel File</CardTitle>
+                <CardDescription>Upload your Excel file to create beautiful visualizations</CardDescription>
             </CardHeader>
             <CardContent>
                 <div
@@ -271,10 +217,7 @@ const UploadSection = ({ onUploadSuccess }) => {
                     }`}
                 >
                     <div className="flex flex-col items-center gap-6">
-                        <UploadIcon
-                            isDragOver={isDragOver}
-                            uploadStatus={uploadStatus}
-                        />
+                        <UploadIcon isDragOver={isDragOver} uploadStatus={uploadStatus} />
 
                         {uploadStatus === 'success' ? (
                             <SuccessMessage onReset={resetUpload} />
@@ -302,17 +245,12 @@ const UploadSection = ({ onUploadSuccess }) => {
                             onUpload={handleUpload}
                         />
 
-                        {errorMsg && (
-                            <div className="text-red-600 text-sm text-center mb-4">
-                                {errorMsg}
-                            </div>
-                        )}
+                        {errorMsg && <div className="text-red-600 text-sm text-center mb-4">{errorMsg}</div>}
                     </div>
                 </div>
                 <div className="text-center mt-6 p-4 bg-muted rounded-xl">
                     <p className="text-xs text-muted-foreground">
-                        <strong>Supported formats:</strong> .xlsx, .xls •{' '}
-                        <strong>Max size:</strong> 10MB
+                        <strong>Supported formats:</strong> .xlsx, .xls • <strong>Max size:</strong> 10MB
                     </p>
                 </div>
             </CardContent>

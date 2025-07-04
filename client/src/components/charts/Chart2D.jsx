@@ -15,12 +15,7 @@ import {
     RadialLinearScale,
 } from 'chart.js'
 import { Line, Bar, Scatter, Pie, Doughnut } from 'react-chartjs-2'
-import {
-    processChartData,
-    getChartOptions,
-    validateChartData,
-    validateYAxisData,
-} from '../../lib/chartUtils'
+import { processChartData, getChartOptions, validateChartData, validateYAxisData } from '../../lib/chartUtils'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Download, RefreshCw } from 'lucide-react'
@@ -44,9 +39,7 @@ ChartJS.register(
 )
 
 const Chart2D = () => {
-    const { selectedData, chartType, xAxis, yAxis, chartOptions } = useSelector(
-        (state) => state.chart
-    )
+    const { selectedData, chartType, xAxis, yAxis, chartOptions } = useSelector((state) => state.chart)
     const chartRef = useRef(null)
 
     // Memoize chart data and options to prevent unnecessary re-renders
@@ -61,11 +54,7 @@ const Chart2D = () => {
         }
 
         // Validate Y-axis data specifically
-        const yAxisValidation = validateYAxisData(
-            selectedData,
-            yAxis,
-            chartType
-        )
+        const yAxisValidation = validateYAxisData(selectedData, yAxis, chartType)
         if (!yAxisValidation.isValid) {
             console.error('Y-axis data validation failed:', yAxisValidation)
             return null
@@ -84,19 +73,13 @@ const Chart2D = () => {
             yAxis,
             dataLength: selectedData.length,
         })
-        const processedData = processChartData(
-            selectedData,
-            xAxis,
-            yAxis,
-            chartType
-        )
+        const processedData = processChartData(selectedData, xAxis, yAxis, chartType)
 
         if (processedData) {
             console.log('Chart2D: Successfully processed chart data:', {
                 labelsCount: processedData.labels.length,
                 dataPointsCount: processedData.datasets[0]?.data?.length || 0,
-                sampleYValues:
-                    processedData.datasets[0]?.data?.slice(0, 3) || [],
+                sampleYValues: processedData.datasets[0]?.data?.slice(0, 3) || [],
             })
         }
 
@@ -104,12 +87,7 @@ const Chart2D = () => {
     }, [selectedData, xAxis, yAxis, chartType])
 
     const options = useMemo(() => {
-        const generatedOptions = getChartOptions(
-            chartType,
-            chartOptions.plugins.title.text,
-            xAxis,
-            yAxis
-        )
+        const generatedOptions = getChartOptions(chartType, chartOptions.plugins.title.text, xAxis, yAxis)
 
         console.log('Chart2D: Generated chart options:', {
             chartType,
@@ -151,9 +129,7 @@ const Chart2D = () => {
                 </CardHeader>
                 <CardContent>
                     <div className="text-center py-12 text-muted-foreground">
-                        <p>
-                            Configure your chart axes to see the visualization
-                        </p>
+                        <p>Configure your chart axes to see the visualization</p>
                         <p className="text-xs mt-2">
                             Current state: X={xAxis || 'Not set'}, Y=
                             {yAxis || 'Not set'}
@@ -173,33 +149,22 @@ const Chart2D = () => {
                 <CardContent>
                     <Alert variant="destructive">
                         <AlertDescription>
-                            {yAxis &&
-                            selectedData &&
-                            selectedData.length > 0 ? (
+                            {yAxis && selectedData && selectedData.length > 0 ? (
                                 <div>
-                                    <p>
-                                        Error processing chart data. Please
-                                        check your axis selection.
-                                    </p>
+                                    <p>Error processing chart data. Please check your axis selection.</p>
                                     <p className="text-xs mt-2">
                                         <strong>Current selection:</strong> X=
                                         {xAxis}, Y={yAxis}, Type={chartType}
                                     </p>
                                     <p className="text-xs">
                                         <strong>Y-axis data type:</strong>{' '}
-                                        {validateYAxisData(
-                                            selectedData,
-                                            yAxis,
-                                            chartType
-                                        ).numericValues > 0
+                                        {validateYAxisData(selectedData, yAxis, chartType).numericValues > 0
                                             ? 'Numeric'
                                             : 'Categorical'}
                                     </p>
                                     <p className="text-xs">
                                         <strong>Recommendation:</strong>{' '}
-                                        {['line', 'scatter', 'area'].includes(
-                                            chartType
-                                        )
+                                        {['line', 'scatter', 'area'].includes(chartType)
                                             ? 'Choose a numeric column for Y-axis'
                                             : chartType === 'bar'
                                               ? 'Bar charts work with both numeric and categorical data'
@@ -285,20 +250,13 @@ const Chart2D = () => {
     return (
         <Card>
             <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle>
-                    2D Chart -{' '}
-                    {chartType.charAt(0).toUpperCase() + chartType.slice(1)}
-                </CardTitle>
+                <CardTitle>2D Chart - {chartType.charAt(0).toUpperCase() + chartType.slice(1)}</CardTitle>
                 <div className="flex gap-2">
                     <Button variant="outline" size="sm" onClick={downloadChart}>
                         <Download className="h-4 w-4 mr-2" />
                         Download
                     </Button>
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={downloadChartPDF}
-                    >
+                    <Button variant="outline" size="sm" onClick={downloadChartPDF}>
                         <Download className="h-4 w-4 mr-2" />
                         PDF
                     </Button>
@@ -322,8 +280,7 @@ const Chart2D = () => {
                         <strong>Chart Type:</strong> {chartType}
                     </p>
                     <p>
-                        <strong>Processed Data Points:</strong>{' '}
-                        {chartData?.datasets[0]?.data?.length || 0}
+                        <strong>Processed Data Points:</strong> {chartData?.datasets[0]?.data?.length || 0}
                     </p>
                 </div>
             </CardContent>

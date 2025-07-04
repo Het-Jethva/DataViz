@@ -39,14 +39,10 @@ export const uploadExcelData = async (req, res) => {
     } catch (error) {
         // Handle multer errors
         if (error.code === 'LIMIT_FILE_SIZE') {
-            return res
-                .status(400)
-                .json({ error: 'File size too large. Maximum size is 10MB.' })
+            return res.status(400).json({ error: 'File size too large. Maximum size is 10MB.' })
         }
         if (error.code === 'LIMIT_FILE_COUNT') {
-            return res
-                .status(400)
-                .json({ error: 'Too many files. Only one file allowed.' })
+            return res.status(400).json({ error: 'Too many files. Only one file allowed.' })
         }
         if (error.message.includes('Only Excel files')) {
             return res.status(400).json({ error: error.message })
@@ -77,9 +73,7 @@ export const deleteUpload = async (req, res) => {
         })
         res.status(200).json({ message: 'Upload deleted' })
     } catch (error) {
-        res.status(
-            error.message === 'Upload not found or not authorized' ? 404 : 500
-        ).json({ error: error.message })
+        res.status(error.message === 'Upload not found or not authorized' ? 404 : 500).json({ error: error.message })
     }
 }
 
@@ -91,8 +85,7 @@ export const saveAnalysisHistory = async (req, res) => {
         const upload = await ExcelData.findById(uploadId)
         if (!upload) return res.status(404).json({ error: 'Upload not found' })
         // Only allow owner
-        if (upload.user.toString() !== req.user.id)
-            return res.status(403).json({ error: 'Not authorized' })
+        if (upload.user.toString() !== req.user.id) return res.status(403).json({ error: 'Not authorized' })
         const historyItem = {
             chartType,
             xAxis,
@@ -116,8 +109,7 @@ export const getAnalysisHistory = async (req, res) => {
         const { uploadId } = req.params
         const upload = await ExcelData.findById(uploadId)
         if (!upload) return res.status(404).json({ error: 'Upload not found' })
-        if (upload.user.toString() !== req.user.id)
-            return res.status(403).json({ error: 'Not authorized' })
+        if (upload.user.toString() !== req.user.id) return res.status(403).json({ error: 'Not authorized' })
         res.json({ success: true, history: upload.analysisHistory })
     } catch (err) {
         res.status(500).json({ error: err.message })

@@ -54,9 +54,7 @@ export async function getUserUploadsService(userId) {
         }))
     } catch (error) {
         console.error('Error fetching user uploads:', error)
-        throw new Error(
-            'Failed to fetch upload history. Please try again later.'
-        )
+        throw new Error('Failed to fetch upload history. Please try again later.')
     }
 }
 

@@ -1,29 +1,14 @@
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { Eye, Trash2, Download, BarChart3 } from 'lucide-react'
-import {
-    formatDate,
-    formatFileSize,
-    downloadCSV,
-    downloadExcel,
-} from '@/lib/utils'
+import { formatDate, formatFileSize, downloadCSV, downloadExcel } from '@/lib/utils'
 import { useEffect, useState } from 'react'
 import { fetchUserUploads, deleteUserUpload } from '@/services/api'
 import { toast } from 'sonner'
 import * as XLSX from 'xlsx'
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from '@/components/ui/popover'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import {
     AlertDialog,
     AlertDialogTrigger,
@@ -38,14 +23,7 @@ import {
 import { useDispatch } from 'react-redux'
 import { setSelectedData } from '../../redux/slices/chartSlice'
 
-const UploadHistoryItem = ({
-    item,
-    index,
-    onView,
-    onDelete,
-    isLast,
-    onCreateChart,
-}) => {
+const UploadHistoryItem = ({ item, index, onView, onDelete, isLast, onCreateChart }) => {
     const [open, setOpen] = useState(false)
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
     const [deleting, setDeleting] = useState(false)
@@ -74,18 +52,14 @@ const UploadHistoryItem = ({
 
     const handleCreateChart = () => {
         onCreateChart?.(item.data)
-        toast.success(
-            'Data selected for charting! Switch to Charts & Analytics tab to configure.'
-        )
+        toast.success('Data selected for charting! Switch to Charts & Analytics tab to configure.')
     }
 
     return (
         <div>
             <div className="flex items-center justify-between p-4 rounded-lg border hover:shadow transition-all">
                 <div className="flex-1 min-w-0">
-                    <h4 className="font-semibold text-foreground truncate">
-                        {item.fileName || `Upload ${index + 1}`}
-                    </h4>
+                    <h4 className="font-semibold text-foreground truncate">{item.fileName || `Upload ${index + 1}`}</h4>
                     <div className="flex items-center gap-3 text-xs text-muted-foreground mt-1">
                         <span>
                             {formatDate(item.uploadDate, {
@@ -95,18 +69,12 @@ const UploadHistoryItem = ({
                             })}
                         </span>
                         {item.fileSize && (
-                            <Badge
-                                variant="outline"
-                                className="text-xs font-medium"
-                            >
+                            <Badge variant="outline" className="text-xs font-medium">
                                 {formatFileSize(item.fileSize)}
                             </Badge>
                         )}
                         {item.rowCount && (
-                            <Badge
-                                variant="outline"
-                                className="text-xs font-medium"
-                            >
+                            <Badge variant="outline" className="text-xs font-medium">
                                 {item.rowCount} rows
                             </Badge>
                         )}
@@ -156,10 +124,7 @@ const UploadHistoryItem = ({
                             </Button>
                         </PopoverContent>
                     </Popover>
-                    <AlertDialog
-                        open={deleteDialogOpen}
-                        onOpenChange={setDeleteDialogOpen}
-                    >
+                    <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
                         <AlertDialogTrigger asChild>
                             <Button
                                 variant="ghost"
@@ -171,24 +136,15 @@ const UploadHistoryItem = ({
                         </AlertDialogTrigger>
                         <AlertDialogContent>
                             <AlertDialogHeader>
-                                <AlertDialogTitle>
-                                    Delete Upload?
-                                </AlertDialogTitle>
+                                <AlertDialogTitle>Delete Upload?</AlertDialogTitle>
                                 <AlertDialogDescription>
-                                    Are you sure you want to delete this upload?
-                                    This action cannot be undone.
+                                    Are you sure you want to delete this upload? This action cannot be undone.
                                 </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
-                                <AlertDialogCancel disabled={deleting}>
-                                    Cancel
-                                </AlertDialogCancel>
+                                <AlertDialogCancel disabled={deleting}>Cancel</AlertDialogCancel>
                                 <AlertDialogAction asChild>
-                                    <Button
-                                        onClick={handleDelete}
-                                        disabled={deleting}
-                                        variant="destructive"
-                                    >
+                                    <Button onClick={handleDelete} disabled={deleting} variant="destructive">
                                         {deleting ? 'Deleting...' : 'Delete'}
                                     </Button>
                                 </AlertDialogAction>
@@ -202,14 +158,7 @@ const UploadHistoryItem = ({
     )
 }
 
-const UploadHistory = ({
-    history = [],
-    loading = false,
-    error = '',
-    onView,
-    onDelete,
-    onCreateChart,
-}) => {
+const UploadHistory = ({ history = [], loading = false, error = '', onView, onDelete, onCreateChart }) => {
     const handleView = (item, index) => {
         if (onView) onView(item, index)
     }
@@ -222,35 +171,25 @@ const UploadHistory = ({
     return (
         <Card>
             <CardHeader className="pb-4">
-                <CardTitle className="text-lg font-bold">
-                    Upload History
-                </CardTitle>
-                <CardDescription>
-                    View and manage your previously uploaded files
-                </CardDescription>
+                <CardTitle className="text-lg font-bold">Upload History</CardTitle>
+                <CardDescription>View and manage your previously uploaded files</CardDescription>
             </CardHeader>
             <CardContent>
                 {loading ? (
                     <div className="text-center py-12">Loading...</div>
                 ) : error ? (
-                    <div className="text-center text-red-600 py-12">
-                        {error}
-                    </div>
+                    <div className="text-center text-red-600 py-12">{error}</div>
                 ) : history.length === 0 ? (
                     <div className="text-center py-12">
                         <div className="mb-4">
                             <span className="inline-block rounded-full bg-muted p-4">
-                                <span className="text-muted-foreground text-2xl">
-                                    📄
-                                </span>
+                                <span className="text-muted-foreground text-2xl">📄</span>
                             </span>
                         </div>
-                        <h3 className="text-lg font-semibold text-foreground mb-2">
-                            No uploads yet
-                        </h3>
+                        <h3 className="text-lg font-semibold text-foreground mb-2">No uploads yet</h3>
                         <p className="text-muted-foreground">
-                            Upload your first Excel file to get started with
-                            data visualization and see your history here.
+                            Upload your first Excel file to get started with data visualization and see your history
+                            here.
                         </p>
                     </div>
                 ) : (

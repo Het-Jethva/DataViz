@@ -1,36 +1,12 @@
 import { useEffect, useState, useCallback } from 'react'
-import {
-    fetchAdminStats,
-    fetchAdminUsers,
-    updateAdminUser,
-    deleteAdminUser,
-} from '@/services/api'
-import {
-    Card,
-    CardHeader,
-    CardTitle,
-    CardContent,
-    CardDescription,
-} from '@/components/ui/card'
-import {
-    Table,
-    TableHeader,
-    TableBody,
-    TableRow,
-    TableHead,
-    TableCell,
-} from '@/components/ui/table'
+import { fetchAdminStats, fetchAdminUsers, updateAdminUser, deleteAdminUser } from '@/services/api'
+import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card'
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Input } from '@/components/ui/input'
-import {
-    Select,
-    SelectTrigger,
-    SelectContent,
-    SelectItem,
-    SelectValue,
-} from '@/components/ui/select'
+import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from '@/components/ui/select'
 import {
     AlertDialog,
     AlertDialogTrigger,
@@ -51,13 +27,7 @@ import {
     PaginationNext,
 } from '@/components/ui/pagination'
 import { Edit, Trash2 } from 'lucide-react'
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogDescription,
-} from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
 import { format } from 'date-fns'
 
 const PAGE_SIZE = 10
@@ -112,8 +82,7 @@ const AdminPanel = () => {
 
     // Edit user handlers
     const handleEdit = (user) => setEditUser(user)
-    const handleEditChange = (field, value) =>
-        setEditUser((u) => ({ ...u, [field]: value }))
+    const handleEditChange = (field, value) => setEditUser((u) => ({ ...u, [field]: value }))
     const handleEditSave = async () => {
         setEditLoading(true)
         try {
@@ -156,9 +125,7 @@ const AdminPanel = () => {
                 <Card>
                     <CardHeader>
                         <CardTitle>Admin Dashboard</CardTitle>
-                        <CardDescription>
-                            Manage users and view platform statistics
-                        </CardDescription>
+                        <CardDescription>Manage users and view platform statistics</CardDescription>
                     </CardHeader>
                     <CardContent>
                         {!stats ? (
@@ -172,9 +139,7 @@ const AdminPanel = () => {
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                                 <Card className="bg-muted">
                                     <CardHeader>
-                                        <CardTitle className="text-lg">
-                                            Total Users
-                                        </CardTitle>
+                                        <CardTitle className="text-lg">Total Users</CardTitle>
                                         <CardDescription className="text-2xl font-bold">
                                             {stats.stats.totalUsers}
                                         </CardDescription>
@@ -182,9 +147,7 @@ const AdminPanel = () => {
                                 </Card>
                                 <Card className="bg-muted">
                                     <CardHeader>
-                                        <CardTitle className="text-lg">
-                                            Active Users
-                                        </CardTitle>
+                                        <CardTitle className="text-lg">Active Users</CardTitle>
                                         <CardDescription className="text-2xl font-bold">
                                             {stats.stats.activeUsers}
                                         </CardDescription>
@@ -192,9 +155,7 @@ const AdminPanel = () => {
                                 </Card>
                                 <Card className="bg-muted">
                                     <CardHeader>
-                                        <CardTitle className="text-lg">
-                                            Inactive Users
-                                        </CardTitle>
+                                        <CardTitle className="text-lg">Inactive Users</CardTitle>
                                         <CardDescription className="text-2xl font-bold">
                                             {stats.stats.inactiveUsers}
                                         </CardDescription>
@@ -202,9 +163,7 @@ const AdminPanel = () => {
                                 </Card>
                                 <Card className="bg-muted">
                                     <CardHeader>
-                                        <CardTitle className="text-lg">
-                                            Admins
-                                        </CardTitle>
+                                        <CardTitle className="text-lg">Admins</CardTitle>
                                         <CardDescription className="text-2xl font-bold">
                                             {stats.stats.adminUsers}
                                         </CardDescription>
@@ -214,15 +173,10 @@ const AdminPanel = () => {
                         )}
                         {stats && stats.recentUsers && (
                             <div className="mt-8">
-                                <CardTitle className="text-base mb-2">
-                                    Recent Users
-                                </CardTitle>
+                                <CardTitle className="text-base mb-2">Recent Users</CardTitle>
                                 <div className="flex flex-wrap gap-2">
                                     {stats.recentUsers.map((u) => (
-                                        <Badge
-                                            key={u._id || u.email}
-                                            variant="secondary"
-                                        >
+                                        <Badge key={u._id || u.email} variant="secondary">
                                             {u.name} ({u.email})
                                         </Badge>
                                     ))}
@@ -235,9 +189,7 @@ const AdminPanel = () => {
                 <Card>
                     <CardHeader>
                         <CardTitle>User Management</CardTitle>
-                        <CardDescription>
-                            Search, view, edit, or delete users
-                        </CardDescription>
+                        <CardDescription>Search, view, edit, or delete users</CardDescription>
                     </CardHeader>
                     <CardContent>
                         <div className="flex flex-col md:flex-row md:items-center gap-4 mb-4">
@@ -273,148 +225,87 @@ const AdminPanel = () => {
                                 </TableHeader>
                                 <TableBody>
                                     {loading ? (
-                                        Array.from({ length: PAGE_SIZE }).map(
-                                            (_, i) => (
-                                                <TableRow key={i}>
-                                                    {Array.from({
-                                                        length: 9,
-                                                    }).map((_, j) => (
-                                                        <TableCell key={j}>
-                                                            <Skeleton className="h-6 w-full" />
-                                                        </TableCell>
-                                                    ))}
-                                                </TableRow>
-                                            )
-                                        )
+                                        Array.from({ length: PAGE_SIZE }).map((_, i) => (
+                                            <TableRow key={i}>
+                                                {Array.from({
+                                                    length: 9,
+                                                }).map((_, j) => (
+                                                    <TableCell key={j}>
+                                                        <Skeleton className="h-6 w-full" />
+                                                    </TableCell>
+                                                ))}
+                                            </TableRow>
+                                        ))
                                     ) : users.length === 0 ? (
                                         <TableRow>
-                                            <TableCell
-                                                colSpan={9}
-                                                className="text-center text-muted-foreground"
-                                            >
+                                            <TableCell colSpan={9} className="text-center text-muted-foreground">
                                                 No users found.
                                             </TableCell>
                                         </TableRow>
                                     ) : (
                                         users.map((u) => (
                                             <TableRow key={u._id}>
-                                                <TableCell className="font-mono text-xs">
-                                                    {u._id}
-                                                </TableCell>
+                                                <TableCell className="font-mono text-xs">{u._id}</TableCell>
                                                 <TableCell>
                                                     <Button
                                                         variant="link"
                                                         size="sm"
                                                         className="px-0"
-                                                        onClick={() =>
-                                                            setViewUser(u)
-                                                        }
+                                                        onClick={() => setViewUser(u)}
                                                     >
                                                         {u.name}
                                                     </Button>
                                                 </TableCell>
                                                 <TableCell>{u.email}</TableCell>
                                                 <TableCell>
-                                                    <Badge
-                                                        variant={
-                                                            u.role === 'admin'
-                                                                ? 'default'
-                                                                : 'secondary'
-                                                        }
-                                                    >
+                                                    <Badge variant={u.role === 'admin' ? 'default' : 'secondary'}>
                                                         {u.role}
                                                     </Badge>
                                                 </TableCell>
                                                 <TableCell>
-                                                    <Badge
-                                                        variant={
-                                                            u.isActive
-                                                                ? 'default'
-                                                                : 'destructive'
-                                                        }
-                                                    >
-                                                        {u.isActive
-                                                            ? 'Active'
-                                                            : 'Inactive'}
+                                                    <Badge variant={u.isActive ? 'default' : 'destructive'}>
+                                                        {u.isActive ? 'Active' : 'Inactive'}
                                                     </Badge>
                                                 </TableCell>
                                                 <TableCell>
-                                                    {u.createdAt
-                                                        ? format(
-                                                              new Date(
-                                                                  u.createdAt
-                                                              ),
-                                                              'yyyy-MM-dd'
-                                                          )
-                                                        : '-'}
+                                                    {u.createdAt ? format(new Date(u.createdAt), 'yyyy-MM-dd') : '-'}
                                                 </TableCell>
                                                 <TableCell>
                                                     {u.lastLogin
-                                                        ? format(
-                                                              new Date(
-                                                                  u.lastLogin
-                                                              ),
-                                                              'yyyy-MM-dd HH:mm'
-                                                          )
+                                                        ? format(new Date(u.lastLogin), 'yyyy-MM-dd HH:mm')
                                                         : '-'}
                                                 </TableCell>
                                                 <TableCell>
-                                                    {Array.isArray(
-                                                        u.uploadHistory
-                                                    )
-                                                        ? u.uploadHistory.length
-                                                        : 0}
+                                                    {Array.isArray(u.uploadHistory) ? u.uploadHistory.length : 0}
                                                 </TableCell>
                                                 <TableCell>
                                                     <Button
                                                         size="sm"
                                                         variant="outline"
-                                                        onClick={() =>
-                                                            handleEdit(u)
-                                                        }
+                                                        onClick={() => handleEdit(u)}
                                                         className="mr-2"
                                                     >
                                                         <Edit className="w-4 h-4" />
                                                     </Button>
                                                     <AlertDialog>
-                                                        <AlertDialogTrigger
-                                                            asChild
-                                                        >
-                                                            <Button
-                                                                size="sm"
-                                                                variant="destructive"
-                                                            >
+                                                        <AlertDialogTrigger asChild>
+                                                            <Button size="sm" variant="destructive">
                                                                 <Trash2 className="w-4 h-4" />
                                                             </Button>
                                                         </AlertDialogTrigger>
                                                         <AlertDialogContent>
                                                             <AlertDialogHeader>
-                                                                <AlertDialogTitle>
-                                                                    Delete User?
-                                                                </AlertDialogTitle>
+                                                                <AlertDialogTitle>Delete User?</AlertDialogTitle>
                                                                 <AlertDialogDescription>
-                                                                    Are you sure
-                                                                    you want to
-                                                                    delete this
-                                                                    user? This
-                                                                    action
-                                                                    cannot be
-                                                                    undone.
+                                                                    Are you sure you want to delete this user? This
+                                                                    action cannot be undone.
                                                                 </AlertDialogDescription>
                                                             </AlertDialogHeader>
                                                             <AlertDialogFooter>
-                                                                <AlertDialogCancel>
-                                                                    Cancel
-                                                                </AlertDialogCancel>
+                                                                <AlertDialogCancel>Cancel</AlertDialogCancel>
                                                                 <AlertDialogAction
-                                                                    onClick={() =>
-                                                                        handleDelete(
-                                                                            u._id
-                                                                        )
-                                                                    }
-                                                                    disabled={
-                                                                        deleteLoading
-                                                                    }
+                                                                    onClick={() => handleDelete(u._id)}
+                                                                    disabled={deleteLoading}
                                                                 >
                                                                     Delete
                                                                 </AlertDialogAction>
@@ -424,9 +315,7 @@ const AdminPanel = () => {
                                                     <Button
                                                         size="sm"
                                                         variant="secondary"
-                                                        onClick={() =>
-                                                            setViewUser(u)
-                                                        }
+                                                        onClick={() => setViewUser(u)}
                                                         className="ml-2"
                                                     >
                                                         View
@@ -442,41 +331,21 @@ const AdminPanel = () => {
                             <Pagination>
                                 <PaginationContent>
                                     <PaginationItem>
-                                        <PaginationPrevious
-                                            onClick={() =>
-                                                setPage((p) =>
-                                                    Math.max(1, p - 1)
-                                                )
-                                            }
-                                        />
+                                        <PaginationPrevious onClick={() => setPage((p) => Math.max(1, p - 1))} />
                                     </PaginationItem>
-                                    {Array.from({ length: totalPages }).map(
-                                        (_, i) => (
-                                            <PaginationItem key={i}>
-                                                <Button
-                                                    size="sm"
-                                                    variant={
-                                                        page === i + 1
-                                                            ? 'default'
-                                                            : 'outline'
-                                                    }
-                                                    onClick={() =>
-                                                        setPage(i + 1)
-                                                    }
-                                                >
-                                                    {i + 1}
-                                                </Button>
-                                            </PaginationItem>
-                                        )
-                                    )}
+                                    {Array.from({ length: totalPages }).map((_, i) => (
+                                        <PaginationItem key={i}>
+                                            <Button
+                                                size="sm"
+                                                variant={page === i + 1 ? 'default' : 'outline'}
+                                                onClick={() => setPage(i + 1)}
+                                            >
+                                                {i + 1}
+                                            </Button>
+                                        </PaginationItem>
+                                    ))}
                                     <PaginationItem>
-                                        <PaginationNext
-                                            onClick={() =>
-                                                setPage((p) =>
-                                                    Math.min(totalPages, p + 1)
-                                                )
-                                            }
-                                        />
+                                        <PaginationNext onClick={() => setPage((p) => Math.min(totalPages, p + 1))} />
                                     </PaginationItem>
                                 </PaginationContent>
                             </Pagination>
@@ -486,23 +355,15 @@ const AdminPanel = () => {
 
                 {/* View User Dialog */}
                 {viewUser && (
-                    <Dialog
-                        open={!!viewUser}
-                        onOpenChange={(open) => !open && setViewUser(null)}
-                    >
+                    <Dialog open={!!viewUser} onOpenChange={(open) => !open && setViewUser(null)}>
                         <DialogContent className="max-w-2xl">
                             <DialogHeader>
                                 <DialogTitle>User Details</DialogTitle>
-                                <DialogDescription>
-                                    Full information for this user
-                                </DialogDescription>
+                                <DialogDescription>Full information for this user</DialogDescription>
                             </DialogHeader>
                             <div className="space-y-2">
                                 <div>
-                                    <strong>User ID:</strong>{' '}
-                                    <span className="font-mono text-xs">
-                                        {viewUser._id}
-                                    </span>
+                                    <strong>User ID:</strong> <span className="font-mono text-xs">{viewUser._id}</span>
                                 </div>
                                 <div>
                                     <strong>Name:</strong> {viewUser.name}
@@ -514,92 +375,62 @@ const AdminPanel = () => {
                                     <strong>Role:</strong> {viewUser.role}
                                 </div>
                                 <div>
-                                    <strong>Status:</strong>{' '}
-                                    {viewUser.isActive ? 'Active' : 'Inactive'}
+                                    <strong>Status:</strong> {viewUser.isActive ? 'Active' : 'Inactive'}
                                 </div>
                                 <div>
                                     <strong>Date Joined:</strong>{' '}
                                     {viewUser.createdAt
-                                        ? format(
-                                              new Date(viewUser.createdAt),
-                                              'yyyy-MM-dd HH:mm'
-                                          )
+                                        ? format(new Date(viewUser.createdAt), 'yyyy-MM-dd HH:mm')
                                         : '-'}
                                 </div>
                                 <div>
                                     <strong>Last Login:</strong>{' '}
                                     {viewUser.lastLogin
-                                        ? format(
-                                              new Date(viewUser.lastLogin),
-                                              'yyyy-MM-dd HH:mm'
-                                          )
+                                        ? format(new Date(viewUser.lastLogin), 'yyyy-MM-dd HH:mm')
                                         : '-'}
                                 </div>
                                 <div>
                                     <strong>Uploads:</strong>{' '}
-                                    {Array.isArray(viewUser.uploadHistory)
-                                        ? viewUser.uploadHistory.length
-                                        : 0}
+                                    {Array.isArray(viewUser.uploadHistory) ? viewUser.uploadHistory.length : 0}
                                 </div>
-                                {Array.isArray(viewUser.uploadHistory) &&
-                                    viewUser.uploadHistory.length > 0 && (
-                                        <div className="mt-4">
-                                            <strong>Upload History:</strong>
-                                            <div className="overflow-x-auto mt-2">
-                                                <Table>
-                                                    <TableHeader>
-                                                        <TableRow>
-                                                            <TableHead>
-                                                                File Name
-                                                            </TableHead>
-                                                            <TableHead>
-                                                                Date
-                                                            </TableHead>
-                                                            <TableHead>
-                                                                Size
-                                                            </TableHead>
-                                                            <TableHead>
-                                                                Charts
-                                                            </TableHead>
+                                {Array.isArray(viewUser.uploadHistory) && viewUser.uploadHistory.length > 0 && (
+                                    <div className="mt-4">
+                                        <strong>Upload History:</strong>
+                                        <div className="overflow-x-auto mt-2">
+                                            <Table>
+                                                <TableHeader>
+                                                    <TableRow>
+                                                        <TableHead>File Name</TableHead>
+                                                        <TableHead>Date</TableHead>
+                                                        <TableHead>Size</TableHead>
+                                                        <TableHead>Charts</TableHead>
+                                                    </TableRow>
+                                                </TableHeader>
+                                                <TableBody>
+                                                    {viewUser.uploadHistory.map((up, i) => (
+                                                        <TableRow key={i}>
+                                                            <TableCell>{up.fileName || '-'}</TableCell>
+                                                            <TableCell>
+                                                                {up.uploadDate
+                                                                    ? format(
+                                                                          new Date(up.uploadDate),
+                                                                          'yyyy-MM-dd HH:mm'
+                                                                      )
+                                                                    : '-'}
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                {up.fileSize
+                                                                    ? `${(up.fileSize / 1024).toFixed(1)} KB`
+                                                                    : '-'}
+                                                            </TableCell>
+                                                            <TableCell>{up.chartCount || 0}</TableCell>
                                                         </TableRow>
-                                                    </TableHeader>
-                                                    <TableBody>
-                                                        {viewUser.uploadHistory.map(
-                                                            (up, i) => (
-                                                                <TableRow
-                                                                    key={i}
-                                                                >
-                                                                    <TableCell>
-                                                                        {up.fileName ||
-                                                                            '-'}
-                                                                    </TableCell>
-                                                                    <TableCell>
-                                                                        {up.uploadDate
-                                                                            ? format(
-                                                                                  new Date(
-                                                                                      up.uploadDate
-                                                                                  ),
-                                                                                  'yyyy-MM-dd HH:mm'
-                                                                              )
-                                                                            : '-'}
-                                                                    </TableCell>
-                                                                    <TableCell>
-                                                                        {up.fileSize
-                                                                            ? `${(up.fileSize / 1024).toFixed(1)} KB`
-                                                                            : '-'}
-                                                                    </TableCell>
-                                                                    <TableCell>
-                                                                        {up.chartCount ||
-                                                                            0}
-                                                                    </TableCell>
-                                                                </TableRow>
-                                                            )
-                                                        )}
-                                                    </TableBody>
-                                                </Table>
-                                            </div>
+                                                    ))}
+                                                </TableBody>
+                                            </Table>
                                         </div>
-                                    )}
+                                    </div>
+                                )}
                             </div>
                         </DialogContent>
                     </Dialog>
@@ -607,110 +438,63 @@ const AdminPanel = () => {
 
                 {/* Edit User Dialog */}
                 {editUser && (
-                    <AlertDialog
-                        open={!!editUser}
-                        onOpenChange={(open) => !open && setEditUser(null)}
-                    >
+                    <AlertDialog open={!!editUser} onOpenChange={(open) => !open && setEditUser(null)}>
                         <AlertDialogContent>
                             <AlertDialogHeader>
                                 <AlertDialogTitle>Edit User</AlertDialogTitle>
-                                <AlertDialogDescription>
-                                    Update user role and status
-                                </AlertDialogDescription>
+                                <AlertDialogDescription>Update user role and status</AlertDialogDescription>
                             </AlertDialogHeader>
                             <div className="space-y-4">
                                 <div>
-                                    <label className="block mb-1 font-medium">
-                                        Name
-                                    </label>
+                                    <label className="block mb-1 font-medium">Name</label>
                                     <Input
                                         value={editUser.name}
-                                        onChange={(e) =>
-                                            handleEditChange(
-                                                'name',
-                                                e.target.value
-                                            )
-                                        }
+                                        onChange={(e) => handleEditChange('name', e.target.value)}
                                         disabled
                                     />
                                 </div>
                                 <div>
-                                    <label className="block mb-1 font-medium">
-                                        Email
-                                    </label>
+                                    <label className="block mb-1 font-medium">Email</label>
                                     <Input
                                         value={editUser.email}
-                                        onChange={(e) =>
-                                            handleEditChange(
-                                                'email',
-                                                e.target.value
-                                            )
-                                        }
+                                        onChange={(e) => handleEditChange('email', e.target.value)}
                                         disabled
                                     />
                                 </div>
                                 <div>
-                                    <label className="block mb-1 font-medium">
-                                        Role
-                                    </label>
+                                    <label className="block mb-1 font-medium">Role</label>
                                     <Select
                                         value={editUser.role}
-                                        onValueChange={(val) =>
-                                            handleEditChange('role', val)
-                                        }
+                                        onValueChange={(val) => handleEditChange('role', val)}
                                     >
                                         <SelectTrigger>
                                             <SelectValue />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="user">
-                                                User
-                                            </SelectItem>
-                                            <SelectItem value="admin">
-                                                Admin
-                                            </SelectItem>
+                                            <SelectItem value="user">User</SelectItem>
+                                            <SelectItem value="admin">Admin</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </div>
                                 <div>
-                                    <label className="block mb-1 font-medium">
-                                        Status
-                                    </label>
+                                    <label className="block mb-1 font-medium">Status</label>
                                     <Select
-                                        value={
-                                            editUser.isActive
-                                                ? 'active'
-                                                : 'inactive'
-                                        }
-                                        onValueChange={(val) =>
-                                            handleEditChange(
-                                                'isActive',
-                                                val === 'active'
-                                            )
-                                        }
+                                        value={editUser.isActive ? 'active' : 'inactive'}
+                                        onValueChange={(val) => handleEditChange('isActive', val === 'active')}
                                     >
                                         <SelectTrigger>
                                             <SelectValue />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="active">
-                                                Active
-                                            </SelectItem>
-                                            <SelectItem value="inactive">
-                                                Inactive
-                                            </SelectItem>
+                                            <SelectItem value="active">Active</SelectItem>
+                                            <SelectItem value="inactive">Inactive</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </div>
                             </div>
                             <AlertDialogFooter>
-                                <AlertDialogCancel disabled={editLoading}>
-                                    Cancel
-                                </AlertDialogCancel>
-                                <AlertDialogAction
-                                    onClick={handleEditSave}
-                                    disabled={editLoading}
-                                >
+                                <AlertDialogCancel disabled={editLoading}>Cancel</AlertDialogCancel>
+                                <AlertDialogAction onClick={handleEditSave} disabled={editLoading}>
                                     {editLoading ? 'Saving...' : 'Save Changes'}
                                 </AlertDialogAction>
                             </AlertDialogFooter>
@@ -720,28 +504,17 @@ const AdminPanel = () => {
 
                 {/* Delete User Confirm Dialog */}
                 {deleteUserId && (
-                    <AlertDialog
-                        open={!!deleteUserId}
-                        onOpenChange={(open) => !open && setDeleteUserId(null)}
-                    >
+                    <AlertDialog open={!!deleteUserId} onOpenChange={(open) => !open && setDeleteUserId(null)}>
                         <AlertDialogContent>
                             <AlertDialogHeader>
-                                <AlertDialogTitle>
-                                    Delete User?
-                                </AlertDialogTitle>
+                                <AlertDialogTitle>Delete User?</AlertDialogTitle>
                                 <AlertDialogDescription>
-                                    Are you sure you want to delete this user?
-                                    This action cannot be undone.
+                                    Are you sure you want to delete this user? This action cannot be undone.
                                 </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
-                                <AlertDialogCancel disabled={deleteLoading}>
-                                    Cancel
-                                </AlertDialogCancel>
-                                <AlertDialogAction
-                                    onClick={handleDeleteConfirm}
-                                    disabled={deleteLoading}
-                                >
+                                <AlertDialogCancel disabled={deleteLoading}>Cancel</AlertDialogCancel>
+                                <AlertDialogAction onClick={handleDeleteConfirm} disabled={deleteLoading}>
                                     {deleteLoading ? 'Deleting...' : 'Delete'}
                                 </AlertDialogAction>
                             </AlertDialogFooter>

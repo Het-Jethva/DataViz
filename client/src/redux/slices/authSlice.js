@@ -15,27 +15,24 @@ const authAPI = axios.create({
 })
 
 // Async thunks for API calls
-export const loginUser = createAsyncThunk(
-    'auth/loginUser',
-    async ({ email, password }, { rejectWithValue }) => {
-        try {
-            const response = await authAPI.post('/login', {
-                email,
-                password,
-            })
+export const loginUser = createAsyncThunk('auth/loginUser', async ({ email, password }, { rejectWithValue }) => {
+    try {
+        const response = await authAPI.post('/login', {
+            email,
+            password,
+        })
 
-            return response.data.data
-        } catch (error) {
-            let message = 'Login failed'
-            if (error.response?.data?.message) {
-                message = error.response.data.message
-            } else if (error.message) {
-                message = error.message
-            }
-            return rejectWithValue(message)
+        return response.data.data
+    } catch (error) {
+        let message = 'Login failed'
+        if (error.response?.data?.message) {
+            message = error.response.data.message
+        } else if (error.message) {
+            message = error.message
         }
+        return rejectWithValue(message)
     }
-)
+})
 
 export const registerUser = createAsyncThunk(
     'auth/registerUser',
@@ -70,23 +67,20 @@ export const logoutUser = createAsyncThunk('auth/logoutUser', async () => {
     }
 })
 
-export const getCurrentUser = createAsyncThunk(
-    'auth/getCurrentUser',
-    async (_, { rejectWithValue }) => {
-        try {
-            const response = await authAPI.get('/profile')
-            return response.data.data
-        } catch (error) {
-            let message = 'Authentication failed'
-            if (error.response?.data?.message) {
-                message = error.response.data.message
-            } else if (error.message) {
-                message = error.message
-            }
-            return rejectWithValue(message)
+export const getCurrentUser = createAsyncThunk('auth/getCurrentUser', async (_, { rejectWithValue }) => {
+    try {
+        const response = await authAPI.get('/profile')
+        return response.data.data
+    } catch (error) {
+        let message = 'Authentication failed'
+        if (error.response?.data?.message) {
+            message = error.response.data.message
+        } else if (error.message) {
+            message = error.message
         }
+        return rejectWithValue(message)
     }
-)
+})
 
 const initialState = {
     user: null,

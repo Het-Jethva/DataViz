@@ -81,9 +81,7 @@ const Profile = () => {
             toast.success('Password changed!')
             setPasswords({ current: '', new: '' })
         } catch (err) {
-            toast.error(
-                err?.response?.data?.message || 'Failed to change password.'
-            )
+            toast.error(err?.response?.data?.message || 'Failed to change password.')
         } finally {
             setPasswordSaving(false)
         }
@@ -105,41 +103,24 @@ const Profile = () => {
                                 .join('') || 'U'}
                         </AvatarFallback>
                     </Avatar>
-                    <div className="text-xl font-bold mb-1">
-                        {user?.name || 'Profile'}
-                    </div>
-                    <div className="text-muted-foreground mb-2">
-                        {user?.email}
-                    </div>
-                    <div className="text-sm text-muted-foreground mb-2">
-                        Total Uploads: {uploadCount}
-                    </div>
+                    <div className="text-xl font-bold mb-1">{user?.name || 'Profile'}</div>
+                    <div className="text-muted-foreground mb-2">{user?.email}</div>
+                    <div className="text-sm text-muted-foreground mb-2">Total Uploads: {uploadCount}</div>
                 </div>
                 {/* Right: Forms */}
                 <div className="md:col-span-2 space-y-8">
                     <Card>
                         <CardHeader>
-                            <CardTitle className="text-lg">
-                                Edit Profile
-                            </CardTitle>
+                            <CardTitle className="text-lg">Edit Profile</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <form onSubmit={handleSave} className="space-y-4">
                                 <div>
-                                    <label className="block mb-1 font-medium">
-                                        Name
-                                    </label>
-                                    <Input
-                                        name="name"
-                                        value={form.name}
-                                        onChange={handleChange}
-                                        required
-                                    />
+                                    <label className="block mb-1 font-medium">Name</label>
+                                    <Input name="name" value={form.name} onChange={handleChange} required />
                                 </div>
                                 <div>
-                                    <label className="block mb-1 font-medium">
-                                        Email
-                                    </label>
+                                    <label className="block mb-1 font-medium">Email</label>
                                     <Input
                                         name="email"
                                         value={form.email}
@@ -157,19 +138,12 @@ const Profile = () => {
                     </Card>
                     <Card>
                         <CardHeader>
-                            <CardTitle className="text-lg">
-                                Change Password
-                            </CardTitle>
+                            <CardTitle className="text-lg">Change Password</CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <form
-                                onSubmit={handlePasswordChange}
-                                className="space-y-4"
-                            >
+                            <form onSubmit={handlePasswordChange} className="space-y-4">
                                 <div>
-                                    <label className="block mb-1 font-medium">
-                                        Current Password
-                                    </label>
+                                    <label className="block mb-1 font-medium">Current Password</label>
                                     <Input
                                         name="current"
                                         value={passwords.current}
@@ -185,9 +159,7 @@ const Profile = () => {
                                     />
                                 </div>
                                 <div>
-                                    <label className="block mb-1 font-medium">
-                                        New Password
-                                    </label>
+                                    <label className="block mb-1 font-medium">New Password</label>
                                     <Input
                                         name="new"
                                         value={passwords.new}
@@ -203,9 +175,7 @@ const Profile = () => {
                                     />
                                 </div>
                                 <Button type="submit" disabled={passwordSaving}>
-                                    {passwordSaving
-                                        ? 'Saving...'
-                                        : 'Change Password'}
+                                    {passwordSaving ? 'Saving...' : 'Change Password'}
                                 </Button>
                             </form>
                         </CardContent>

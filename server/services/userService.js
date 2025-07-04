@@ -70,10 +70,7 @@ export async function updateUserService({ userId, updateData, currentUser }) {
     if (isActive !== undefined && typeof isActive !== 'boolean') {
         throw new Error('isActive must be a boolean value')
     }
-    if (
-        userId.toString() === currentUser._id.toString() &&
-        isActive === false
-    ) {
+    if (userId.toString() === currentUser._id.toString() && isActive === false) {
         throw new Error('Cannot deactivate your own account')
     }
     if (userId.toString() === currentUser._id.toString() && role === 'user') {
@@ -107,10 +104,7 @@ export async function getDashboardStatsService() {
     const totalUsers = await User.countDocuments()
     const activeUsers = await User.countDocuments({ isActive: true })
     const adminUsers = await User.countDocuments({ role: 'admin' })
-    const recentUsers = await User.find()
-        .sort({ createdAt: -1 })
-        .limit(5)
-        .select('name email createdAt')
+    const recentUsers = await User.find().sort({ createdAt: -1 }).limit(5).select('name email createdAt')
     return {
         stats: {
             totalUsers,

@@ -10,10 +10,7 @@ export function getInitials(name) {
     if (!name || typeof name !== 'string') return ''
     const words = name.trim().split(/\s+/)
     if (words.length === 1) return words[0][0]?.toUpperCase() || ''
-    return (
-        (words[0][0] || '').toUpperCase() +
-        (words[words.length - 1][0] || '').toUpperCase()
-    )
+    return (words[0][0] || '').toUpperCase() + (words[words.length - 1][0] || '').toUpperCase()
 }
 
 export function formatDate(date) {

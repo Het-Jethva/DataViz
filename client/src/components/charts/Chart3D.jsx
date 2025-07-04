@@ -17,13 +17,7 @@ const DataPoint = ({ position, size, color, label }) => {
                 <meshStandardMaterial color={color} />
             </Sphere>
             {label && (
-                <Text
-                    position={[0, size + 0.5, 0]}
-                    fontSize={0.3}
-                    color="white"
-                    anchorX="center"
-                    anchorY="middle"
-                >
+                <Text position={[0, size + 0.5, 0]} fontSize={0.3} color="white" anchorX="center" anchorY="middle">
                     {label}
                 </Text>
             )}
@@ -83,9 +77,7 @@ const ScreenshotCapture = ({ onScreenshotReady }) => {
 }
 
 const Chart3D = () => {
-    const { selectedData, xAxis, yAxis, zAxis } = useSelector(
-        (state) => state.chart
-    )
+    const { selectedData, xAxis, yAxis, zAxis } = useSelector((state) => state.chart)
     const canvasRef = useRef()
     const rendererRef = useRef()
     const sceneRef = useRef()
@@ -165,60 +157,34 @@ const Chart3D = () => {
                                     link.click()
 
                                     // Clean up
-                                    setTimeout(
-                                        () => URL.revokeObjectURL(url),
-                                        100
-                                    )
+                                    setTimeout(() => URL.revokeObjectURL(url), 100)
                                 } else {
                                     // Method 2: Try with different settings
                                     canvas.toBlob(
                                         (blob2) => {
                                             if (blob2 && blob2.size > 1000) {
-                                                const url =
-                                                    URL.createObjectURL(blob2)
-                                                const link =
-                                                    document.createElement('a')
+                                                const url = URL.createObjectURL(blob2)
+                                                const link = document.createElement('a')
                                                 link.download = `3d-chart-${xAxis}-${yAxis}-${zAxis}.png`
                                                 link.href = url
                                                 link.click()
 
                                                 // Clean up
-                                                setTimeout(
-                                                    () =>
-                                                        URL.revokeObjectURL(
-                                                            url
-                                                        ),
-                                                    100
-                                                )
+                                                setTimeout(() => URL.revokeObjectURL(url), 100)
                                             } else {
                                                 // Method 3: Try data URL
                                                 try {
-                                                    const dataURL =
-                                                        canvas.toDataURL(
-                                                            'image/png',
-                                                            1.0
-                                                        )
-                                                    if (
-                                                        dataURL &&
-                                                        dataURL.length > 100
-                                                    ) {
-                                                        const link =
-                                                            document.createElement(
-                                                                'a'
-                                                            )
+                                                    const dataURL = canvas.toDataURL('image/png', 1.0)
+                                                    if (dataURL && dataURL.length > 100) {
+                                                        const link = document.createElement('a')
                                                         link.download = `3d-chart-${xAxis}-${yAxis}-${zAxis}.png`
                                                         link.href = dataURL
                                                         link.click()
                                                     } else {
-                                                        throw new Error(
-                                                            'Data URL is empty'
-                                                        )
+                                                        throw new Error('Data URL is empty')
                                                     }
                                                 } catch (dataURLError) {
-                                                    console.error(
-                                                        'All capture methods failed:',
-                                                        dataURLError
-                                                    )
+                                                    console.error('All capture methods failed:', dataURLError)
                                                     // Last resort: Create a simple fallback
                                                     createFallbackImage()
                                                 }
@@ -243,9 +209,7 @@ const Chart3D = () => {
             }
         } else {
             console.error('Three.js references not available')
-            alert(
-                'Chart not ready for screenshot. Please wait a moment and try again.'
-            )
+            alert('Chart not ready for screenshot. Please wait a moment and try again.')
         }
     }
 
@@ -271,23 +235,11 @@ const Chart3D = () => {
         ctx.fillText(`X Axis: ${xAxis}`, canvas.width / 2, 150)
         ctx.fillText(`Y Axis: ${yAxis}`, canvas.width / 2, 180)
         ctx.fillText(`Z Axis: ${zAxis}`, canvas.width / 2, 210)
-        ctx.fillText(
-            `Data Points: ${data3D?.length || 0}`,
-            canvas.width / 2,
-            240
-        )
+        ctx.fillText(`Data Points: ${data3D?.length || 0}`, canvas.width / 2, 240)
 
         ctx.font = '14px Arial'
-        ctx.fillText(
-            'Note: WebGL capture not available in this browser',
-            canvas.width / 2,
-            300
-        )
-        ctx.fillText(
-            'Please use browser screenshot tools instead',
-            canvas.width / 2,
-            330
-        )
+        ctx.fillText('Note: WebGL capture not available in this browser', canvas.width / 2, 300)
+        ctx.fillText('Please use browser screenshot tools instead', canvas.width / 2, 330)
 
         // Download the fallback image
         canvas.toBlob(
@@ -321,14 +273,8 @@ const Chart3D = () => {
 
                 // Set higher resolution for export
                 const exportScale = 2
-                renderer.setSize(
-                    originalWidth * exportScale,
-                    originalHeight * exportScale,
-                    false
-                )
-                camera.aspect =
-                    (originalWidth * exportScale) /
-                    (originalHeight * exportScale)
+                renderer.setSize(originalWidth * exportScale, originalHeight * exportScale, false)
+                camera.aspect = (originalWidth * exportScale) / (originalHeight * exportScale)
                 camera.updateProjectionMatrix()
                 renderer.render(scene, camera)
 
@@ -340,14 +286,7 @@ const Chart3D = () => {
                         const pdf = new jsPDF({ orientation: 'landscape' })
                         const width = pdf.internal.pageSize.getWidth()
                         const height = pdf.internal.pageSize.getHeight()
-                        pdf.addImage(
-                            imgData,
-                            'PNG',
-                            10,
-                            10,
-                            width - 20,
-                            height - 20
-                        )
+                        pdf.addImage(imgData, 'PNG', 10, 10, width - 20, height - 20)
                         pdf.save(`3d-chart-${xAxis}-${yAxis}-${zAxis}.pdf`)
                     } else {
                         alert('Unable to capture chart for PDF export.')
@@ -363,9 +302,7 @@ const Chart3D = () => {
                 alert('Failed to export PDF. Please try again.')
             }
         } else {
-            alert(
-                'Chart not ready for PDF export. Please wait a moment and try again.'
-            )
+            alert('Chart not ready for PDF export. Please wait a moment and try again.')
         }
     }
 
@@ -378,9 +315,7 @@ const Chart3D = () => {
                 <CardContent>
                     <div className="text-center py-12 text-muted-foreground">
                         <Box className="mx-auto h-12 w-12 mb-4 opacity-50" />
-                        <p>
-                            Select X, Y, and Z axes to see the 3D visualization
-                        </p>
+                        <p>Select X, Y, and Z axes to see the 3D visualization</p>
                     </div>
                 </CardContent>
             </Card>
@@ -411,10 +346,7 @@ const Chart3D = () => {
                 </CardHeader>
                 <CardContent>
                     <Alert variant="destructive">
-                        <AlertDescription>
-                            Error processing 3D data. Please check your axis
-                            selection.
-                        </AlertDescription>
+                        <AlertDescription>Error processing 3D data. Please check your axis selection.</AlertDescription>
                     </Alert>
                 </CardContent>
             </Card>
@@ -426,11 +358,7 @@ const Chart3D = () => {
             <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle>3D Chart - Bubble Plot</CardTitle>
                 <div className="flex gap-2">
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={downloadScreenshot}
-                    >
+                    <Button variant="outline" size="sm" onClick={downloadScreenshot}>
                         <Download className="h-4 w-4 mr-2" />
                         Download
                     </Button>
@@ -441,26 +369,17 @@ const Chart3D = () => {
                 </div>
             </CardHeader>
             <CardContent>
-                <div
-                    ref={canvasRef}
-                    className="h-96 w-full border rounded-lg overflow-hidden"
-                >
+                <div ref={canvasRef} className="h-96 w-full border rounded-lg overflow-hidden">
                     <Canvas
                         camera={{ position: [15, 15, 15], fov: 60 }}
                         style={{
-                            background:
-                                'linear-gradient(to bottom right, #1e293b, #334155)',
+                            background: 'linear-gradient(to bottom right, #1e293b, #334155)',
                         }}
                     >
-                        <ScreenshotCapture
-                            onScreenshotReady={handleScreenshotReady}
-                        />
+                        <ScreenshotCapture onScreenshotReady={handleScreenshotReady} />
                         <ambientLight intensity={0.5} />
                         <pointLight position={[10, 10, 10]} intensity={1} />
-                        <pointLight
-                            position={[-10, -10, -10]}
-                            intensity={0.5}
-                        />
+                        <pointLight position={[-10, -10, -10]} intensity={0.5} />
 
                         {/* Render data points */}
                         {data3D.map((point, index) => (
@@ -471,10 +390,7 @@ const Chart3D = () => {
                                     point.y * chartBounds.scale,
                                     point.z * chartBounds.scale,
                                 ]}
-                                size={Math.max(
-                                    0.1,
-                                    (point.z / chartBounds.originalMax) * 0.5
-                                )}
+                                size={Math.max(0.1, (point.z / chartBounds.originalMax) * 0.5)}
                                 color={`hsl(${(index * 137.5) % 360}, 70%, 60%)`}
                                 label={point.label}
                             />
@@ -506,9 +422,7 @@ const Chart3D = () => {
                     <p>
                         <strong>Data Points:</strong> {data3D.length}
                     </p>
-                    <p className="text-xs mt-2">
-                        💡 Use mouse to rotate, scroll to zoom, and drag to pan
-                    </p>
+                    <p className="text-xs mt-2">💡 Use mouse to rotate, scroll to zoom, and drag to pan</p>
                 </div>
             </CardContent>
         </Card>
