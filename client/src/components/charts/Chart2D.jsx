@@ -25,6 +25,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Download, RefreshCw } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import jsPDF from 'jspdf'
+import html2canvas from 'html2canvas'
 
 // Register Chart.js components
 ChartJS.register(
@@ -226,31 +228,49 @@ const Chart2D = () => {
         }
     }
 
+    const downloadChartPDF = async () => {
+        if (chartRef.current) {
+            const chartContainer = chartRef.current
+            // Use html2canvas with a supported background color to avoid oklch issues
+            const chartImage = await html2canvas(chartContainer, {
+                useCORS: true,
+                backgroundColor: '#fff',
+                scale: 3, // Increase scale for higher resolution
+            })
+            const imgData = chartImage.toDataURL('image/png')
+            const pdf = new jsPDF({ orientation: 'landscape' })
+            const width = pdf.internal.pageSize.getWidth()
+            const height = pdf.internal.pageSize.getHeight()
+            pdf.addImage(imgData, 'PNG', 10, 10, width - 20, height - 20)
+            pdf.save(`${chartType}-chart.pdf`)
+        }
+    }
+
     const renderChart = () => {
         try {
+            const key = `${chartType}-${xAxis}-${yAxis}-${chartData?.datasets?.[0]?.data?.length || 0}` // Use data length for stable key
             const commonProps = {
                 data: chartData,
                 options: options,
                 redraw: true,
-                key: `${chartType}-${xAxis}-${yAxis}-${chartData?.datasets?.[0]?.data?.length || 0}`, // Use data length for stable key
             }
 
             switch (chartType) {
                 case 'line':
-                    return <Line {...commonProps} />
+                    return <Line key={key} {...commonProps} />
                 case 'bar':
-                    return <Bar {...commonProps} />
+                    return <Bar key={key} {...commonProps} />
                 case 'scatter':
-                    return <Scatter {...commonProps} />
+                    return <Scatter key={key} {...commonProps} />
                 case 'pie':
-                    return <Pie {...commonProps} />
+                    return <Pie key={key} {...commonProps} />
                 case 'doughnut':
-                    return <Doughnut {...commonProps} />
+                    return <Doughnut key={key} {...commonProps} />
                 case 'area':
                     // Area chart uses Line component with fill enabled
-                    return <Line {...commonProps} />
+                    return <Line key={key} {...commonProps} />
                 default:
-                    return <Line {...commonProps} />
+                    return <Line key={key} {...commonProps} />
             }
         } catch (error) {
             console.error('Error rendering chart:', error)
@@ -273,6 +293,14 @@ const Chart2D = () => {
                     <Button variant="outline" size="sm" onClick={downloadChart}>
                         <Download className="h-4 w-4 mr-2" />
                         Download
+                    </Button>
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={downloadChartPDF}
+                    >
+                        <Download className="h-4 w-4 mr-2" />
+                        PDF
                     </Button>
                 </div>
             </CardHeader>
