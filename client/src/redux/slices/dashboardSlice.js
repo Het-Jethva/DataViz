@@ -3,25 +3,19 @@ import axios from 'axios'
 
 const API_BASE_URL = 'http://localhost:5000/api/dashboard'
 
-export const getDashboardData = createAsyncThunk(
-    'dashboard/getDashboardData',
-    async (_, { rejectWithValue }) => {
-        try {
-            // No need to get token from localStorage; authentication is via httpOnly cookies
-            const response = await axios.get(`${API_BASE_URL}/user`, {
-                // No Authorization header needed
-                withCredentials: true,
-            })
+export const getDashboardData = createAsyncThunk('dashboard/getDashboardData', async (_, { rejectWithValue }) => {
+    try {
+        // No need to get token from localStorage; authentication is via httpOnly cookies
+        const response = await axios.get(`${API_BASE_URL}/user`, {
+            // No Authorization header needed
+            withCredentials: true,
+        })
 
-            return response.data.data
-        } catch (error) {
-            return rejectWithValue(
-                error.response?.data?.message ||
-                    'Failed to fetch dashboard data'
-            )
-        }
+        return response.data.data
+    } catch (error) {
+        return rejectWithValue(error.response?.data?.message || 'Failed to fetch dashboard data')
     }
-)
+})
 
 const initialState = {
     profile: null,

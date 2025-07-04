@@ -9,11 +9,7 @@ export const getColumnTypes = (data) => {
     columns.forEach((column) => {
         const sampleValues = data.slice(0, 10).map((row) => row[column])
         const isNumeric = sampleValues.every(
-            (value) =>
-                !isNaN(value) &&
-                value !== null &&
-                value !== undefined &&
-                value !== ''
+            (value) => !isNaN(value) && value !== null && value !== undefined && value !== ''
         )
 
         if (isNumeric) {
@@ -63,10 +59,7 @@ export const processChartData = (data, xAxis, yAxis, chartType = 'line') => {
                 const label = String(row[xAxis])
                 // Improved Y-axis value parsing
                 const rawValue = row[yAxis]
-                const value =
-                    typeof rawValue === 'number'
-                        ? rawValue
-                        : parseFloat(rawValue)
+                const value = typeof rawValue === 'number' ? rawValue : parseFloat(rawValue)
 
                 if (!isNaN(value) && value !== null && value !== undefined) {
                     if (aggregatedData[label]) {
@@ -81,12 +74,10 @@ export const processChartData = (data, xAxis, yAxis, chartType = 'line') => {
             processedData.datasets = [
                 {
                     data: Object.values(aggregatedData),
-                    backgroundColor: generateColors(
-                        Object.keys(aggregatedData).length
+                    backgroundColor: generateColors(Object.keys(aggregatedData).length),
+                    borderColor: generateColors(Object.keys(aggregatedData).length).map((color) =>
+                        color.replace('0.8', '1')
                     ),
-                    borderColor: generateColors(
-                        Object.keys(aggregatedData).length
-                    ).map((color) => color.replace('0.8', '1')),
                     borderWidth: 1,
                 },
             ]
@@ -95,10 +86,7 @@ export const processChartData = (data, xAxis, yAxis, chartType = 'line') => {
             const labels = data.map((row) => String(row[xAxis]))
             const values = data.map((row) => {
                 const rawValue = row[yAxis]
-                const value =
-                    typeof rawValue === 'number'
-                        ? rawValue
-                        : parseFloat(rawValue)
+                const value = typeof rawValue === 'number' ? rawValue : parseFloat(rawValue)
                 return isNaN(value) ? 0 : value
             })
 
@@ -107,14 +95,8 @@ export const processChartData = (data, xAxis, yAxis, chartType = 'line') => {
                 {
                     label: yAxis,
                     data: values,
-                    backgroundColor:
-                        chartType === 'bar'
-                            ? generateColors(1)[0]
-                            : 'rgba(59, 130, 246, 0.5)',
-                    borderColor:
-                        chartType === 'bar'
-                            ? generateColors(1)[0]
-                            : 'rgba(59, 130, 246, 1)',
+                    backgroundColor: chartType === 'bar' ? generateColors(1)[0] : 'rgba(59, 130, 246, 0.5)',
+                    borderColor: chartType === 'bar' ? generateColors(1)[0] : 'rgba(59, 130, 246, 1)',
                     borderWidth: 2,
                     fill: chartType === 'area',
                     tension: 0.4,
@@ -148,12 +130,7 @@ const isNumericColumn = (data, column) => {
     return sampleValues.every((value) => {
         if (typeof value === 'number') return true
         const parsed = parseFloat(value)
-        return (
-            !isNaN(parsed) &&
-            value !== null &&
-            value !== undefined &&
-            value !== ''
-        )
+        return !isNaN(parsed) && value !== null && value !== undefined && value !== ''
     })
 }
 
@@ -161,9 +138,7 @@ const isNumericColumn = (data, column) => {
 const isNumericValue = (value) => {
     if (typeof value === 'number') return true
     const parsed = parseFloat(value)
-    return (
-        !isNaN(parsed) && value !== null && value !== undefined && value !== ''
-    )
+    return !isNaN(parsed) && value !== null && value !== undefined && value !== ''
 }
 
 export const process3DData = (data, xAxis, yAxis, zAxis) => {
@@ -180,11 +155,7 @@ export const process3DData = (data, xAxis, yAxis, zAxis) => {
 
     // Check if axes exist in the data
     const columns = Object.keys(data[0] || {})
-    if (
-        !columns.includes(xAxis) ||
-        !columns.includes(yAxis) ||
-        !columns.includes(zAxis)
-    ) {
+    if (!columns.includes(xAxis) || !columns.includes(yAxis) || !columns.includes(zAxis)) {
         console.log('process3DData: Invalid axes provided, returning null', {
             xAxis,
             yAxis,
@@ -197,18 +168,9 @@ export const process3DData = (data, xAxis, yAxis, zAxis) => {
     try {
         const processedData = data
             .map((row, index) => {
-                const x =
-                    typeof row[xAxis] === 'number'
-                        ? row[xAxis]
-                        : parseFloat(row[xAxis]) || 0
-                const y =
-                    typeof row[yAxis] === 'number'
-                        ? row[yAxis]
-                        : parseFloat(row[yAxis]) || 0
-                const z =
-                    typeof row[zAxis] === 'number'
-                        ? row[zAxis]
-                        : parseFloat(row[zAxis]) || 0
+                const x = typeof row[xAxis] === 'number' ? row[xAxis] : parseFloat(row[xAxis]) || 0
+                const y = typeof row[yAxis] === 'number' ? row[yAxis] : parseFloat(row[yAxis]) || 0
+                const z = typeof row[zAxis] === 'number' ? row[zAxis] : parseFloat(row[zAxis]) || 0
 
                 return {
                     x,
@@ -218,9 +180,7 @@ export const process3DData = (data, xAxis, yAxis, zAxis) => {
                     index,
                 }
             })
-            .filter(
-                (point) => !isNaN(point.x) && !isNaN(point.y) && !isNaN(point.z)
-            )
+            .filter((point) => !isNaN(point.x) && !isNaN(point.y) && !isNaN(point.z))
 
         console.log('Processed 3D data:', {
             xAxis,
@@ -374,14 +334,8 @@ export const getChartOptions = (
                             label: function (context) {
                                 const label = context.label || ''
                                 const value = context.parsed
-                                const total = context.dataset.data.reduce(
-                                    (a, b) => a + b,
-                                    0
-                                )
-                                const percentage =
-                                    total > 0
-                                        ? ((value / total) * 100).toFixed(1)
-                                        : '0.0'
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0)
+                                const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : '0.0'
                                 return `${label}: ${value} (${percentage}%)`
                             },
                         },
@@ -481,11 +435,7 @@ export const validate3DAxisSelection = (data, xAxis, yAxis, zAxis) => {
     }
 
     const columns = Object.keys(data[0])
-    if (
-        !columns.includes(xAxis) ||
-        !columns.includes(yAxis) ||
-        !columns.includes(zAxis)
-    ) {
+    if (!columns.includes(xAxis) || !columns.includes(yAxis) || !columns.includes(zAxis)) {
         return { isValid: false, error: 'Selected axes not found in data' }
     }
 
@@ -495,25 +445,13 @@ export const validate3DAxisSelection = (data, xAxis, yAxis, zAxis) => {
     const sampleValuesZ = data.slice(0, 10).map((row) => row[zAxis])
 
     const isNumericX = sampleValuesX.every(
-        (value) =>
-            !isNaN(value) &&
-            value !== null &&
-            value !== undefined &&
-            value !== ''
+        (value) => !isNaN(value) && value !== null && value !== undefined && value !== ''
     )
     const isNumericY = sampleValuesY.every(
-        (value) =>
-            !isNaN(value) &&
-            value !== null &&
-            value !== undefined &&
-            value !== ''
+        (value) => !isNaN(value) && value !== null && value !== undefined && value !== ''
     )
     const isNumericZ = sampleValuesZ.every(
-        (value) =>
-            !isNaN(value) &&
-            value !== null &&
-            value !== undefined &&
-            value !== ''
+        (value) => !isNaN(value) && value !== null && value !== undefined && value !== ''
     )
 
     if (!isNumericX || !isNumericY || !isNumericZ) {
@@ -582,10 +520,8 @@ export const validateYAxisData = (data, yAxis, chartType = 'line') => {
     const numericValuesArray = yValues.filter(isNumericValue)
 
     const totalValues = yValues.length
-    const minValue =
-        numericValuesArray.length > 0 ? Math.min(...numericValuesArray) : 0
-    const maxValue =
-        numericValuesArray.length > 0 ? Math.max(...numericValuesArray) : 0
+    const minValue = numericValuesArray.length > 0 ? Math.min(...numericValuesArray) : 0
+    const maxValue = numericValuesArray.length > 0 ? Math.max(...numericValuesArray) : 0
 
     // For line, scatter, and area charts, we need numeric Y-axis
     if (['line', 'scatter', 'area'].includes(chartType)) {

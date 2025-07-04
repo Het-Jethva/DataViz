@@ -1,9 +1,5 @@
 import * as React from 'react'
-import {
-    ChevronLeftIcon,
-    ChevronRightIcon,
-    MoreHorizontalIcon,
-} from 'lucide-react'
+import { ChevronLeftIcon, ChevronRightIcon, MoreHorizontalIcon } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
 import { buttonVariants } from '@/components/ui/button'
@@ -22,11 +18,7 @@ function Pagination({ className, ...props }) {
 
 function PaginationContent({ className, ...props }) {
     return (
-        <ul
-            data-slot="pagination-content"
-            className={cn('flex flex-row items-center gap-1', className)}
-            {...props}
-        />
+        <ul data-slot="pagination-content" className={cn('flex flex-row items-center gap-1', className)} {...props} />
     )
 }
 

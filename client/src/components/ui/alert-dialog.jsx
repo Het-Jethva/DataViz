@@ -11,21 +11,11 @@ function AlertDialog({ ...props }) {
 }
 
 function AlertDialogTrigger({ ...props }) {
-    return (
-        <AlertDialogPrimitive.Trigger
-            data-slot="alert-dialog-trigger"
-            {...props}
-        />
-    )
+    return <AlertDialogPrimitive.Trigger data-slot="alert-dialog-trigger" {...props} />
 }
 
 function AlertDialogPortal({ ...props }) {
-    return (
-        <AlertDialogPrimitive.Portal
-            data-slot="alert-dialog-portal"
-            {...props}
-        />
-    )
+    return <AlertDialogPrimitive.Portal data-slot="alert-dialog-portal" {...props} />
 }
 
 function AlertDialogOverlay({ className, ...props }) {
@@ -61,10 +51,7 @@ function AlertDialogHeader({ className, ...props }) {
     return (
         <div
             data-slot="alert-dialog-header"
-            className={cn(
-                'flex flex-col gap-2 text-center sm:text-left',
-                className
-            )}
+            className={cn('flex flex-col gap-2 text-center sm:text-left', className)}
             {...props}
         />
     )
@@ -74,10 +61,7 @@ function AlertDialogFooter({ className, ...props }) {
     return (
         <div
             data-slot="alert-dialog-footer"
-            className={cn(
-                'flex flex-col-reverse gap-2 sm:flex-row sm:justify-end',
-                className
-            )}
+            className={cn('flex flex-col-reverse gap-2 sm:flex-row sm:justify-end', className)}
             {...props}
         />
     )
@@ -104,21 +88,11 @@ function AlertDialogDescription({ className, ...props }) {
 }
 
 function AlertDialogAction({ className, ...props }) {
-    return (
-        <AlertDialogPrimitive.Action
-            className={cn(buttonVariants(), className)}
-            {...props}
-        />
-    )
+    return <AlertDialogPrimitive.Action className={cn(buttonVariants(), className)} {...props} />
 }
 
 function AlertDialogCancel({ className, ...props }) {
-    return (
-        <AlertDialogPrimitive.Cancel
-            className={cn(buttonVariants({ variant: 'outline' }), className)}
-            {...props}
-        />
-    )
+    return <AlertDialogPrimitive.Cancel className={cn(buttonVariants({ variant: 'outline' }), className)} {...props} />
 }
 
 export {

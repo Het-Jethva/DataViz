@@ -31,11 +31,9 @@ apiClient.interceptors.response.use(
 
 export default apiClient
 
-export const fetchUserUploads = () =>
-    apiClient.get('/dashboard/uploads', { withCredentials: true })
+export const fetchUserUploads = () => apiClient.get('/dashboard/uploads', { withCredentials: true })
 
-export const deleteUserUpload = (id) =>
-    apiClient.delete(`/dashboard/uploads/${id}`, { withCredentials: true })
+export const deleteUserUpload = (id) => apiClient.delete(`/dashboard/uploads/${id}`, { withCredentials: true })
 
 export const saveAnalysisHistory = (uploadId, data) =>
     apiClient.post(`/dashboard/analysis/${uploadId}`, data, {
@@ -46,17 +44,11 @@ export const fetchAnalysisHistory = (uploadId) =>
     apiClient.get(`/dashboard/analysis/${uploadId}`, { withCredentials: true })
 
 export const fetchGeminiSummary = (uploadId, chartConfig, dataSample) =>
-    apiClient.post(
-        `/dashboard/summary/${uploadId}`,
-        { chartConfig, dataSample },
-        { withCredentials: true }
-    )
+    apiClient.post(`/dashboard/summary/${uploadId}`, { chartConfig, dataSample }, { withCredentials: true })
 
 // Admin API
-export const fetchAdminUsers = (params = {}) =>
-    apiClient.get('/admin/users', { params })
+export const fetchAdminUsers = (params = {}) => apiClient.get('/admin/users', { params })
 export const fetchAdminUserById = (id) => apiClient.get(`/admin/users/${id}`)
-export const updateAdminUser = (id, data) =>
-    apiClient.put(`/admin/users/${id}`, data)
+export const updateAdminUser = (id, data) => apiClient.put(`/admin/users/${id}`, data)
 export const deleteAdminUser = (id) => apiClient.delete(`/admin/users/${id}`)
 export const fetchAdminStats = () => apiClient.get('/admin/stats')

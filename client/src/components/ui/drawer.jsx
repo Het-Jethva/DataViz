@@ -69,13 +69,7 @@ function DrawerHeader({ className, ...props }) {
 }
 
 function DrawerFooter({ className, ...props }) {
-    return (
-        <div
-            data-slot="drawer-footer"
-            className={cn('mt-auto flex flex-col gap-2 p-4', className)}
-            {...props}
-        />
-    )
+    return <div data-slot="drawer-footer" className={cn('mt-auto flex flex-col gap-2 p-4', className)} {...props} />
 }
 
 function DrawerTitle({ className, ...props }) {

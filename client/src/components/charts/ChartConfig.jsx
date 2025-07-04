@@ -1,26 +1,10 @@
 import { useSelector, useDispatch } from 'react-redux'
-import {
-    setChartType,
-    setXAxis,
-    setYAxis,
-    setZAxis,
-    setChartTitle,
-} from '../../redux/slices/chartSlice'
-import {
-    getColumnTypes,
-    validateAxisSelection,
-    validate3DAxisSelection,
-} from '../../lib/chartUtils'
+import { setChartType, setXAxis, setYAxis, setZAxis, setChartTitle } from '../../redux/slices/chartSlice'
+import { getColumnTypes, validateAxisSelection, validate3DAxisSelection } from '../../lib/chartUtils'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
@@ -28,15 +12,7 @@ import { BarChart3, LineChart, PieChart, ScatterChart, Box } from 'lucide-react'
 
 const ChartConfig = () => {
     const dispatch = useDispatch()
-    const {
-        selectedData,
-        chartType,
-        xAxis,
-        yAxis,
-        zAxis,
-        chartOptions,
-        error,
-    } = useSelector((state) => state.chart)
+    const { selectedData, chartType, xAxis, yAxis, zAxis, chartOptions, error } = useSelector((state) => state.chart)
 
     if (!selectedData || selectedData.length === 0) {
         return (
@@ -118,18 +94,10 @@ const ChartConfig = () => {
                 <div className="space-y-2">
                     <Label>Data Preview</Label>
                     <div className="flex gap-2 flex-wrap">
-                        <Badge variant="outline">
-                            {selectedData.length} rows
-                        </Badge>
-                        <Badge variant="outline">
-                            {columns.length} columns
-                        </Badge>
-                        <Badge variant="secondary">
-                            {columnTypes.numeric.length} numeric
-                        </Badge>
-                        <Badge variant="secondary">
-                            {columnTypes.categorical.length} categorical
-                        </Badge>
+                        <Badge variant="outline">{selectedData.length} rows</Badge>
+                        <Badge variant="outline">{columns.length} columns</Badge>
+                        <Badge variant="secondary">{columnTypes.numeric.length} numeric</Badge>
+                        <Badge variant="secondary">{columnTypes.categorical.length} categorical</Badge>
                     </div>
                 </div>
 
@@ -142,23 +110,13 @@ const ChartConfig = () => {
                             return (
                                 <Button
                                     key={type.value}
-                                    variant={
-                                        chartType === type.value
-                                            ? 'default'
-                                            : 'outline'
-                                    }
+                                    variant={chartType === type.value ? 'default' : 'outline'}
                                     className="h-auto p-3 flex flex-col gap-2"
-                                    onClick={() =>
-                                        dispatch(setChartType(type.value))
-                                    }
+                                    onClick={() => dispatch(setChartType(type.value))}
                                 >
                                     <Icon className="h-5 w-5" />
-                                    <div className="text-xs font-medium">
-                                        {type.label}
-                                    </div>
-                                    <div className="text-xs text-muted-foreground">
-                                        {type.description}
-                                    </div>
+                                    <div className="text-xs font-medium">{type.label}</div>
+                                    <div className="text-xs text-muted-foreground">{type.description}</div>
                                 </Button>
                             )
                         })}
@@ -169,10 +127,7 @@ const ChartConfig = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-3">
                         <Label>X Axis</Label>
-                        <Select
-                            value={xAxis || ''}
-                            onValueChange={(value) => dispatch(setXAxis(value))}
-                        >
+                        <Select value={xAxis || ''} onValueChange={(value) => dispatch(setXAxis(value))}>
                             <SelectTrigger>
                                 <SelectValue placeholder="Select X axis" />
                             </SelectTrigger>
@@ -181,13 +136,8 @@ const ChartConfig = () => {
                                     <SelectItem key={column} value={column}>
                                         <div className="flex items-center gap-2">
                                             <span>{column}</span>
-                                            {columnTypes.numeric.includes(
-                                                column
-                                            ) && (
-                                                <Badge
-                                                    variant="outline"
-                                                    className="text-xs"
-                                                >
+                                            {columnTypes.numeric.includes(column) && (
+                                                <Badge variant="outline" className="text-xs">
                                                     Numeric
                                                 </Badge>
                                             )}
@@ -197,9 +147,7 @@ const ChartConfig = () => {
                             </SelectContent>
                         </Select>
                         <p className="text-xs text-muted-foreground">
-                            {chartType === 'scatter'
-                                ? 'Choose a numeric column for X-axis'
-                                : 'Any column type works'}
+                            {chartType === 'scatter' ? 'Choose a numeric column for X-axis' : 'Any column type works'}
                         </p>
                     </div>
 
@@ -208,10 +156,7 @@ const ChartConfig = () => {
                         <Select
                             value={yAxis || ''}
                             onValueChange={(value) => {
-                                console.log(
-                                    'ChartConfig: Y-axis selection changed to:',
-                                    value
-                                )
+                                console.log('ChartConfig: Y-axis selection changed to:', value)
                                 dispatch(setYAxis(value))
                             }}
                         >
@@ -223,13 +168,8 @@ const ChartConfig = () => {
                                     <SelectItem key={column} value={column}>
                                         <div className="flex items-center gap-2">
                                             <span>{column}</span>
-                                            {columnTypes.numeric.includes(
-                                                column
-                                            ) && (
-                                                <Badge
-                                                    variant="outline"
-                                                    className="text-xs"
-                                                >
+                                            {columnTypes.numeric.includes(column) && (
+                                                <Badge variant="outline" className="text-xs">
                                                     Numeric
                                                 </Badge>
                                             )}
@@ -252,10 +192,7 @@ const ChartConfig = () => {
                 {is3DChart && (
                     <div className="space-y-3">
                         <Label>Z Axis (Bubble Size)</Label>
-                        <Select
-                            value={zAxis || ''}
-                            onValueChange={(value) => dispatch(setZAxis(value))}
-                        >
+                        <Select value={zAxis || ''} onValueChange={(value) => dispatch(setZAxis(value))}>
                             <SelectTrigger>
                                 <SelectValue placeholder="Select Z axis" />
                             </SelectTrigger>
@@ -264,10 +201,7 @@ const ChartConfig = () => {
                                     <SelectItem key={column} value={column}>
                                         <div className="flex items-center gap-2">
                                             <span>{column}</span>
-                                            <Badge
-                                                variant="outline"
-                                                className="text-xs"
-                                            >
+                                            <Badge variant="outline" className="text-xs">
                                                 Numeric
                                             </Badge>
                                         </div>
@@ -283,13 +217,8 @@ const ChartConfig = () => {
                     <Label>Chart Title</Label>
                     <Input
                         placeholder="Enter chart title"
-                        value={
-                            chartOptions?.plugins?.title?.text ||
-                            'Data Visualization'
-                        }
-                        onChange={(e) =>
-                            dispatch(setChartTitle(e.target.value))
-                        }
+                        value={chartOptions?.plugins?.title?.text || 'Data Visualization'}
+                        onChange={(e) => dispatch(setChartTitle(e.target.value))}
                     />
                 </div>
 
@@ -304,8 +233,7 @@ const ChartConfig = () => {
                 {validation.isValid && (
                     <Alert>
                         <AlertDescription>
-                            Chart configuration is valid! Your chart is ready to
-                            render.
+                            Chart configuration is valid! Your chart is ready to render.
                         </AlertDescription>
                     </Alert>
                 )}

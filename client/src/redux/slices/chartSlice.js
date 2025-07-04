@@ -1,9 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import {
-    saveAnalysisHistory,
-    fetchAnalysisHistory,
-    fetchGeminiSummary,
-} from '@/services/api'
+import { saveAnalysisHistory, fetchAnalysisHistory, fetchGeminiSummary } from '@/services/api'
 
 const initialState = {
     selectedData: null,
@@ -63,11 +59,7 @@ export const fetchGeminiSummaryThunk = createAsyncThunk(
     'chart/fetchGeminiSummary',
     async ({ uploadId, chartConfig, dataSample }, { rejectWithValue }) => {
         try {
-            const res = await fetchGeminiSummary(
-                uploadId,
-                chartConfig,
-                dataSample
-            )
+            const res = await fetchGeminiSummary(uploadId, chartConfig, dataSample)
             return res.data.summary
         } catch (err) {
             return rejectWithValue(err.response?.data?.error || err.message)

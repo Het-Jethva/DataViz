@@ -7,12 +7,7 @@ import {
     generateToken,
 } from '../services/authService.js'
 import User from '../models/User.js'
-import {
-    isValidEmail,
-    isValidPassword,
-    isValidName,
-    isValidRole,
-} from '../utils/validation.js'
+import { isValidEmail, isValidPassword, isValidName, isValidRole } from '../utils/validation.js'
 
 // Set cookie with JWT token
 const setTokenCookie = (res, token) => {
@@ -59,8 +54,7 @@ export const register = async (req, res) => {
         })
     } catch (error) {
         let status = 400
-        if (error.message === 'User already exists with this email')
-            status = 400
+        if (error.message === 'User already exists with this email') status = 400
         res.status(status).json({
             success: false,
             message: error.message,
@@ -95,11 +89,7 @@ export const login = async (req, res) => {
     } catch (error) {
         let status = 401
         if (error.message === 'Please enter a valid email address') status = 400
-        if (
-            error.message ===
-            'Account is deactivated. Please contact administrator.'
-        )
-            status = 401
+        if (error.message === 'Account is deactivated. Please contact administrator.') status = 401
         res.status(status).json({
             success: false,
             message: error.message,

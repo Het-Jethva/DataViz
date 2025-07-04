@@ -10,12 +10,7 @@ import UploadSection from './UploadSection'
 import UploadHistory from './UploadHistory'
 import ChartDashboard from '../charts/ChartDashboard'
 import { Card, CardContent } from '@/components/ui/card'
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-} from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { fetchUserUploads } from '@/services/api'
 
@@ -83,9 +78,7 @@ const Dashboard = () => {
                 <Card className="w-full max-w-md">
                     <CardContent className="flex flex-col items-center justify-center py-12">
                         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary mb-6" />
-                        <h3 className="text-lg font-semibold text-center mb-2">
-                            Loading Dashboard
-                        </h3>
+                        <h3 className="text-lg font-semibold text-center mb-2">Loading Dashboard</h3>
                         <p className="text-muted-foreground text-center">
                             Please wait while we prepare your workspace...
                         </p>
@@ -102,9 +95,7 @@ const Dashboard = () => {
                 <Tabs defaultValue="overview" className="space-y-8">
                     <TabsList className="grid w-full grid-cols-3">
                         <TabsTrigger value="overview">Overview</TabsTrigger>
-                        <TabsTrigger value="charts">
-                            Charts & Analytics
-                        </TabsTrigger>
+                        <TabsTrigger value="charts">Charts & Analytics</TabsTrigger>
                         <TabsTrigger value="uploads">Uploads</TabsTrigger>
                     </TabsList>
 
@@ -119,9 +110,7 @@ const Dashboard = () => {
                                 />
                             </div>
                             <div className="lg:col-span-2 space-y-8">
-                                <UploadSection
-                                    onUploadSuccess={handleUploadSuccess}
-                                />
+                                <UploadSection onUploadSuccess={handleUploadSuccess} />
                                 <UploadHistory
                                     history={history}
                                     loading={historyLoading}
@@ -140,9 +129,7 @@ const Dashboard = () => {
 
                     <TabsContent value="uploads" className="space-y-8">
                         <div className="space-y-8">
-                            <UploadSection
-                                onUploadSuccess={handleUploadSuccess}
-                            />
+                            <UploadSection onUploadSuccess={handleUploadSuccess} />
                             <UploadHistory
                                 history={history}
                                 loading={historyLoading}
@@ -161,13 +148,10 @@ const Dashboard = () => {
                             <DialogHeader>
                                 <DialogTitle>Uploaded Data</DialogTitle>
                             </DialogHeader>
-                            {Array.isArray(viewData?.data) &&
-                            viewData.data.length > 0 ? (
+                            {Array.isArray(viewData?.data) && viewData.data.length > 0 ? (
                                 <div className="overflow-x-auto max-h-96">
                                     {(() => {
-                                        const columns = Object.keys(
-                                            viewData.data[0]
-                                        )
+                                        const columns = Object.keys(viewData.data[0])
                                         return (
                                             <table className="min-w-full text-xs border bg-background rounded">
                                                 <thead>
@@ -183,51 +167,27 @@ const Dashboard = () => {
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    {viewData.data
-                                                        .slice(
-                                                            0,
-                                                            DATA_PREVIEW_ROW_LIMIT
-                                                        )
-                                                        .map((row, i) => (
-                                                            <tr
-                                                                key={i}
-                                                                className="even:bg-muted/50"
-                                                            >
-                                                                {columns.map(
-                                                                    (col) => (
-                                                                        <td
-                                                                            key={
-                                                                                col
-                                                                            }
-                                                                            className="px-2 py-1 border-b"
-                                                                        >
-                                                                            {
-                                                                                row[
-                                                                                    col
-                                                                                ]
-                                                                            }
-                                                                        </td>
-                                                                    )
-                                                                )}
-                                                            </tr>
-                                                        ))}
+                                                    {viewData.data.slice(0, DATA_PREVIEW_ROW_LIMIT).map((row, i) => (
+                                                        <tr key={i} className="even:bg-muted/50">
+                                                            {columns.map((col) => (
+                                                                <td key={col} className="px-2 py-1 border-b">
+                                                                    {row[col]}
+                                                                </td>
+                                                            ))}
+                                                        </tr>
+                                                    ))}
                                                 </tbody>
                                             </table>
                                         )
                                     })()}
-                                    {viewData.data.length >
-                                        DATA_PREVIEW_ROW_LIMIT && (
+                                    {viewData.data.length > DATA_PREVIEW_ROW_LIMIT && (
                                         <div className="text-xs text-muted-foreground mt-2">
-                                            Showing first{' '}
-                                            {DATA_PREVIEW_ROW_LIMIT} of{' '}
-                                            {viewData.data.length} rows
+                                            Showing first {DATA_PREVIEW_ROW_LIMIT} of {viewData.data.length} rows
                                         </div>
                                     )}
                                 </div>
                             ) : (
-                                <div className="text-muted-foreground text-sm">
-                                    No data to display.
-                                </div>
+                                <div className="text-muted-foreground text-sm">No data to display.</div>
                             )}
                         </DialogContent>
                     </Dialog>

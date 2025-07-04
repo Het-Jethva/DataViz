@@ -13,11 +13,7 @@ export function isValidPassword(password) {
 
 // Name validation (2-50 chars)
 export function isValidName(name) {
-    return (
-        typeof name === 'string' &&
-        name.trim().length >= 2 &&
-        name.trim().length <= 50
-    )
+    return typeof name === 'string' && name.trim().length >= 2 && name.trim().length <= 50
 }
 
 // Role validation

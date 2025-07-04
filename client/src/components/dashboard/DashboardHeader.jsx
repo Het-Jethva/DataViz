@@ -20,27 +20,18 @@ const DashboardHeader = ({ user, onLogout }) => {
                     {/* Logo */}
                     <div className="flex items-center gap-3">
                         <div className="flex items-center justify-center size-10 rounded-xl bg-primary">
-                            <span className="text-primary-foreground font-bold text-lg">
-                                DV
-                            </span>
+                            <span className="text-primary-foreground font-bold text-lg">DV</span>
                         </div>
-                        <span className="text-xl font-bold text-foreground">
-                            DataViz
-                        </span>
+                        <span className="text-xl font-bold text-foreground">DataViz</span>
                     </div>
                     {/* Theme Toggle and User Menu */}
                     <div className="flex items-center gap-3">
                         <ModeToggle />
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <Button
-                                    variant="ghost"
-                                    className="h-10 gap-3 px-3 rounded-xl"
-                                >
+                                <Button variant="ghost" className="h-10 gap-3 px-3 rounded-xl">
                                     <Avatar className="size-8">
-                                        <AvatarFallback>
-                                            {getInitials(user?.name)}
-                                        </AvatarFallback>
+                                        <AvatarFallback>{getInitials(user?.name)}</AvatarFallback>
                                     </Avatar>
                                     <span className="hidden sm:block font-semibold text-foreground">
                                         {user?.name || 'User'}
@@ -50,28 +41,20 @@ const DashboardHeader = ({ user, onLogout }) => {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
                                 <div className="px-3 py-2">
-                                    <p className="text-sm font-medium text-foreground">
-                                        {user?.name || 'User'}
-                                    </p>
+                                    <p className="text-sm font-medium text-foreground">{user?.name || 'User'}</p>
                                     <p className="text-xs text-muted-foreground truncate">
                                         {user?.email || 'user@example.com'}
                                     </p>
                                 </div>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem>
-                                    <Link
-                                        to="/profile"
-                                        className="text-sm font-medium hover:underline"
-                                    >
+                                    <Link to="/profile" className="text-sm font-medium hover:underline">
                                         Profile
                                     </Link>
                                 </DropdownMenuItem>
                                 {user?.role === 'admin' && (
                                     <DropdownMenuItem>
-                                        <Link
-                                            to="/admin"
-                                            className="text-sm font-medium hover:underline"
-                                        >
+                                        <Link to="/admin" className="text-sm font-medium hover:underline">
                                             Admin Panel
                                         </Link>
                                     </DropdownMenuItem>
@@ -81,10 +64,7 @@ const DashboardHeader = ({ user, onLogout }) => {
                                     Settings
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />
-                                <DropdownMenuItem
-                                    onClick={onLogout}
-                                    className="text-red-600"
-                                >
+                                <DropdownMenuItem onClick={onLogout} className="text-red-600">
                                     <LogOut className="size-4 mr-2" />
                                     Sign out
                                 </DropdownMenuItem>

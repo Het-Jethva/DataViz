@@ -147,9 +147,7 @@ const ChartDashboard = () => {
                 <CardContent>
                     <div className="text-center py-12 text-muted-foreground">
                         <BarChart3 className="mx-auto h-12 w-12 mb-4 opacity-50" />
-                        <p>
-                            Upload Excel files to start creating visualizations
-                        </p>
+                        <p>Upload Excel files to start creating visualizations</p>
                     </div>
                 </CardContent>
             </Card>
@@ -177,39 +175,22 @@ const ChartDashboard = () => {
                             >
                                 <div className="flex items-center justify-between mb-2">
                                     <h4 className="font-semibold text-sm truncate">
-                                        {upload.fileName ||
-                                            `Upload ${index + 1}`}
+                                        {upload.fileName || `Upload ${index + 1}`}
                                     </h4>
                                     <div className="flex items-center gap-1">
                                         {selectedData === upload.data && (
-                                            <Badge
-                                                variant="default"
-                                                className="text-xs"
-                                            >
+                                            <Badge variant="default" className="text-xs">
                                                 Selected
                                             </Badge>
                                         )}
                                     </div>
                                 </div>
                                 <div className="text-xs text-muted-foreground space-y-1">
-                                    <p>
-                                        {upload.rowCount ||
-                                            upload.data?.length ||
-                                            0}{' '}
-                                        rows
-                                    </p>
-                                    <p>
-                                        {
-                                            Object.keys(upload.data?.[0] || {})
-                                                .length
-                                        }{' '}
-                                        columns
-                                    </p>
+                                    <p>{upload.rowCount || upload.data?.length || 0} rows</p>
+                                    <p>{Object.keys(upload.data?.[0] || {}).length} columns</p>
                                     <p className="truncate">
                                         {upload.uploadDate
-                                            ? new Date(
-                                                  upload.uploadDate
-                                              ).toLocaleDateString()
+                                            ? new Date(upload.uploadDate).toLocaleDateString()
                                             : 'Recently uploaded'}
                                     </p>
                                 </div>
@@ -237,31 +218,19 @@ const ChartDashboard = () => {
             {selectedData && (
                 <Tabs defaultValue="config" className="space-y-4">
                     <TabsList className="grid w-full grid-cols-4">
-                        <TabsTrigger
-                            value="config"
-                            className="flex items-center gap-2"
-                        >
+                        <TabsTrigger value="config" className="flex items-center gap-2">
                             <Settings className="h-4 w-4" />
                             Configuration
                         </TabsTrigger>
-                        <TabsTrigger
-                            value="2d"
-                            className="flex items-center gap-2"
-                        >
+                        <TabsTrigger value="2d" className="flex items-center gap-2">
                             <BarChart3 className="h-4 w-4" />
                             2D Chart
                         </TabsTrigger>
-                        <TabsTrigger
-                            value="3d"
-                            className="flex items-center gap-2"
-                        >
+                        <TabsTrigger value="3d" className="flex items-center gap-2">
                             <Box className="h-4 w-4" />
                             3D Chart
                         </TabsTrigger>
-                        <TabsTrigger
-                            value="preview"
-                            className="flex items-center gap-2"
-                        >
+                        <TabsTrigger value="preview" className="flex items-center gap-2">
                             <Eye className="h-4 w-4" />
                             Data Preview
                         </TabsTrigger>
@@ -289,9 +258,7 @@ const ChartDashboard = () => {
                                     <table className="min-w-full text-xs border bg-background rounded">
                                         <thead>
                                             <tr>
-                                                {Object.keys(
-                                                    selectedData[0] || {}
-                                                ).map((col) => (
+                                                {Object.keys(selectedData[0] || {}).map((col) => (
                                                     <th
                                                         key={col}
                                                         className="px-2 py-1 border-b bg-muted text-left font-semibold"
@@ -302,31 +269,20 @@ const ChartDashboard = () => {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {selectedData
-                                                .slice(0, 20)
-                                                .map((row, i) => (
-                                                    <tr
-                                                        key={i}
-                                                        className="even:bg-muted/50"
-                                                    >
-                                                        {Object.keys(row).map(
-                                                            (col) => (
-                                                                <td
-                                                                    key={col}
-                                                                    className="px-2 py-1 border-b"
-                                                                >
-                                                                    {row[col]}
-                                                                </td>
-                                                            )
-                                                        )}
-                                                    </tr>
-                                                ))}
+                                            {selectedData.slice(0, 20).map((row, i) => (
+                                                <tr key={i} className="even:bg-muted/50">
+                                                    {Object.keys(row).map((col) => (
+                                                        <td key={col} className="px-2 py-1 border-b">
+                                                            {row[col]}
+                                                        </td>
+                                                    ))}
+                                                </tr>
+                                            ))}
                                         </tbody>
                                     </table>
                                     {selectedData.length > 20 && (
                                         <div className="text-xs text-muted-foreground mt-2">
-                                            Showing first 20 of{' '}
-                                            {selectedData.length} rows
+                                            Showing first 20 of {selectedData.length} rows
                                         </div>
                                     )}
                                 </div>
@@ -340,10 +296,9 @@ const ChartDashboard = () => {
             {!selectedData && (
                 <Alert>
                     <AlertDescription>
-                        <strong>Getting Started:</strong> Select a dataset from
-                        your uploads above to begin creating charts. You can
-                        choose from line charts, bar charts, scatter plots, pie
-                        charts, and 3D visualizations.
+                        <strong>Getting Started:</strong> Select a dataset from your uploads above to begin creating
+                        charts. You can choose from line charts, bar charts, scatter plots, pie charts, and 3D
+                        visualizations.
                     </AlertDescription>
                 </Alert>
             )}
@@ -357,14 +312,8 @@ const ChartDashboard = () => {
                     >
                         {analysisLoading ? 'Saving...' : 'Save Analysis'}
                     </Button>
-                    <Button
-                        onClick={handleGeminiSummary}
-                        disabled={geminiLoading || !activeUploadId}
-                        variant="outline"
-                    >
-                        {geminiLoading
-                            ? 'Getting AI Summary...'
-                            : 'Get AI Summary'}
+                    <Button onClick={handleGeminiSummary} disabled={geminiLoading || !activeUploadId} variant="outline">
+                        {geminiLoading ? 'Getting AI Summary...' : 'Get AI Summary'}
                     </Button>
                 </div>
             )}
@@ -382,19 +331,11 @@ const ChartDashboard = () => {
                     <ul className="list-disc ml-6 text-sm">
                         {analysisHistory.map((item, idx) => (
                             <li key={idx} className="mb-2">
-                                <span className="font-medium">
-                                    {item.chartType}
-                                </span>{' '}
-                                | X: {item.xAxis} | Y: {item.yAxis}{' '}
-                                {item.zAxis ? `| Z: ${item.zAxis}` : ''} |{' '}
-                                {item.createdAt &&
-                                    new Date(item.createdAt).toLocaleString()}
+                                <span className="font-medium">{item.chartType}</span> | X: {item.xAxis} | Y:{' '}
+                                {item.yAxis} {item.zAxis ? `| Z: ${item.zAxis}` : ''} |{' '}
+                                {item.createdAt && new Date(item.createdAt).toLocaleString()}
                                 <br />
-                                {item.summary && (
-                                    <span className="text-muted-foreground">
-                                        AI: {item.summary}
-                                    </span>
-                                )}
+                                {item.summary && <span className="text-muted-foreground">AI: {item.summary}</span>}
                             </li>
                         ))}
                     </ul>

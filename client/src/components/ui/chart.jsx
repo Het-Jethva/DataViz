@@ -35,9 +35,7 @@ function ChartContainer({ id, className, children, config = {}, ...props }) {
                 {...props}
             >
                 <ChartStyle id={chartId} config={config} />
-                <RechartsPrimitive.ResponsiveContainer>
-                    {children}
-                </RechartsPrimitive.ResponsiveContainer>
+                <RechartsPrimitive.ResponsiveContainer>{children}</RechartsPrimitive.ResponsiveContainer>
             </div>
         </ChartContext.Provider>
     )
@@ -45,9 +43,7 @@ function ChartContainer({ id, className, children, config = {}, ...props }) {
 
 const ChartStyle = ({ id, config = {} }) => {
     if (!config || typeof config !== 'object') return null
-    const colorConfig = Object.entries(config).filter(
-        ([, config]) => config && (config.theme || config.color)
-    )
+    const colorConfig = Object.entries(config).filter(([, config]) => config && (config.theme || config.color))
     if (!colorConfig.length) {
         return null
     }
@@ -101,17 +97,10 @@ function ChartTooltipContent({
         const [item] = payload
         const key = `${labelKey || item?.dataKey || item?.name || 'value'}`
         const itemConfig = getPayloadConfigFromPayload(config, item, key)
-        const value =
-            !labelKey && typeof label === 'string'
-                ? config[label]?.label || label
-                : itemConfig?.label
+        const value = !labelKey && typeof label === 'string' ? config[label]?.label || label : itemConfig?.label
 
         if (labelFormatter) {
-            return (
-                <div className={cn('font-medium', labelClassName)}>
-                    {labelFormatter(value, payload)}
-                </div>
-            )
+            return <div className={cn('font-medium', labelClassName)}>{labelFormatter(value, payload)}</div>
         }
 
         if (!value) {
@@ -119,15 +108,7 @@ function ChartTooltipContent({
         }
 
         return <div className={cn('font-medium', labelClassName)}>{value}</div>
-    }, [
-        label,
-        labelFormatter,
-        payload,
-        hideLabel,
-        labelClassName,
-        config,
-        labelKey,
-    ])
+    }, [label, labelFormatter, payload, hideLabel, labelClassName, config, labelKey])
 
     if (!active || !payload?.length) {
         return null
@@ -146,13 +127,8 @@ function ChartTooltipContent({
             <div className="grid gap-1.5">
                 {payload.map((item, index) => {
                     const key = `${nameKey || item.name || item.dataKey || 'value'}`
-                    const itemConfig = getPayloadConfigFromPayload(
-                        config,
-                        item,
-                        key
-                    )
-                    const indicatorColor =
-                        color || item.payload.fill || item.color
+                    const itemConfig = getPayloadConfigFromPayload(config, item, key)
+                    const indicatorColor = color || item.payload.fill || item.color
 
                     return (
                         <div
@@ -162,16 +138,8 @@ function ChartTooltipContent({
                                 indicator === 'dot' && 'items-center'
                             )}
                         >
-                            {formatter &&
-                            item?.value !== undefined &&
-                            item.name ? (
-                                formatter(
-                                    item.value,
-                                    item.name,
-                                    item,
-                                    index,
-                                    item.payload
-                                )
+                            {formatter && item?.value !== undefined && item.name ? (
+                                formatter(item.value, item.name, item, index, item.payload)
                             ) : (
                                 <>
                                     {itemConfig?.icon ? (
@@ -182,25 +150,16 @@ function ChartTooltipContent({
                                                 className={cn(
                                                     'shrink-0 rounded-[2px] border-(--color-border) bg-(--color-bg)',
                                                     {
-                                                        'h-2.5 w-2.5':
-                                                            indicator === 'dot',
-                                                        'w-1':
-                                                            indicator ===
-                                                            'line',
+                                                        'h-2.5 w-2.5': indicator === 'dot',
+                                                        'w-1': indicator === 'line',
                                                         'w-0 border-[1.5px] border-dashed bg-transparent':
-                                                            indicator ===
-                                                            'dashed',
-                                                        'my-0.5':
-                                                            nestLabel &&
-                                                            indicator ===
-                                                                'dashed',
+                                                            indicator === 'dashed',
+                                                        'my-0.5': nestLabel && indicator === 'dashed',
                                                     }
                                                 )}
                                                 style={{
-                                                    '--color-bg':
-                                                        indicatorColor,
-                                                    '--color-border':
-                                                        indicatorColor,
+                                                    '--color-bg': indicatorColor,
+                                                    '--color-border': indicatorColor,
                                                 }}
                                             />
                                         )
@@ -208,9 +167,7 @@ function ChartTooltipContent({
                                     <div
                                         className={cn(
                                             'flex flex-1 justify-between leading-none',
-                                            nestLabel
-                                                ? 'items-end'
-                                                : 'items-center'
+                                            nestLabel ? 'items-end' : 'items-center'
                                         )}
                                     >
                                         <div className="grid gap-1.5">
@@ -237,13 +194,7 @@ function ChartTooltipContent({
 
 const ChartLegend = RechartsPrimitive.Legend
 
-function ChartLegendContent({
-    className,
-    hideIcon = false,
-    payload,
-    verticalAlign = 'bottom',
-    nameKey,
-}) {
+function ChartLegendContent({ className, hideIcon = false, payload, verticalAlign = 'bottom', nameKey }) {
     const { config } = useChart()
 
     if (!payload?.length) {
@@ -260,11 +211,7 @@ function ChartLegendContent({
         >
             {payload.map((item) => {
                 const key = `${nameKey || item.dataKey || 'value'}`
-                const itemConfig = getPayloadConfigFromPayload(
-                    config,
-                    item,
-                    key
-                )
+                const itemConfig = getPayloadConfigFromPayload(config, item, key)
 
                 return (
                     <div
@@ -298,9 +245,7 @@ function getPayloadConfigFromPayload(config, payload, key) {
     }
 
     const payloadPayload =
-        'payload' in payload &&
-        typeof payload.payload === 'object' &&
-        payload.payload !== null
+        'payload' in payload && typeof payload.payload === 'object' && payload.payload !== null
             ? payload.payload
             : undefined
 
@@ -308,22 +253,11 @@ function getPayloadConfigFromPayload(config, payload, key) {
 
     if (key in payload && typeof payload[key] === 'string') {
         configLabelKey = payload[key]
-    } else if (
-        payloadPayload &&
-        key in payloadPayload &&
-        typeof payloadPayload[key] === 'string'
-    ) {
+    } else if (payloadPayload && key in payloadPayload && typeof payloadPayload[key] === 'string') {
         configLabelKey = payloadPayload[key]
     }
 
     return configLabelKey in config ? config[configLabelKey] : config[key]
 }
 
-export {
-    ChartContainer,
-    ChartTooltip,
-    ChartTooltipContent,
-    ChartLegend,
-    ChartLegendContent,
-    ChartStyle,
-}
+export { ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent, ChartStyle }

@@ -1,9 +1,4 @@
-import {
-    isValidName,
-    isValidEmail,
-    isValidPassword,
-    isValidRole,
-} from '../utils/validation.js'
+import { isValidName, isValidEmail, isValidPassword, isValidRole } from '../utils/validation.js'
 
 export function validateName(req, res, next) {
     const { name } = req.body

@@ -1,11 +1,6 @@
 import * as React from 'react'
 import { Slot } from '@radix-ui/react-slot'
-import {
-    Controller,
-    FormProvider,
-    useFormContext,
-    useFormState,
-} from 'react-hook-form'
+import { Controller, FormProvider, useFormContext, useFormState } from 'react-hook-form'
 
 import { cn } from '@/lib/utils'
 import { Label } from '@/components/ui/label'
@@ -27,9 +22,7 @@ const useFormField = () => {
     const fieldContext = React.useContext(FormFieldContext)
     const itemContext = React.useContext(FormItemContext)
     if (!fieldContext || typeof fieldContext.name !== 'string') {
-        throw new Error(
-            'useFormField should be used within <FormField> and must have a valid name'
-        )
+        throw new Error('useFormField should be used within <FormField> and must have a valid name')
     }
     const { getFieldState } = useFormContext()
     const formState = useFormState({ name: fieldContext.name })
@@ -50,11 +43,7 @@ function FormItem({ className, ...props }) {
 
     return (
         <FormItemContext.Provider value={{ id }}>
-            <div
-                data-slot="form-item"
-                className={cn('grid gap-2', className)}
-                {...props}
-            />
+            <div data-slot="form-item" className={cn('grid gap-2', className)} {...props} />
         </FormItemContext.Provider>
     )
 }
@@ -74,18 +63,13 @@ function FormLabel({ className, ...props }) {
 }
 
 function FormControl({ ...props }) {
-    const { error, formItemId, formDescriptionId, formMessageId } =
-        useFormField()
+    const { error, formItemId, formDescriptionId, formMessageId } = useFormField()
 
     return (
         <Slot
             data-slot="form-control"
             id={formItemId}
-            aria-describedby={
-                !error
-                    ? `${formDescriptionId}`
-                    : `${formDescriptionId} ${formMessageId}`
-            }
+            aria-describedby={!error ? `${formDescriptionId}` : `${formDescriptionId} ${formMessageId}`}
             aria-invalid={!!error}
             {...props}
         />
@@ -114,24 +98,10 @@ function FormMessage({ className, ...props }) {
     }
 
     return (
-        <p
-            data-slot="form-message"
-            id={formMessageId}
-            className={cn('text-destructive text-sm', className)}
-            {...props}
-        >
+        <p data-slot="form-message" id={formMessageId} className={cn('text-destructive text-sm', className)} {...props}>
             {body}
         </p>
     )
 }
 
-export {
-    useFormField,
-    Form,
-    FormItem,
-    FormLabel,
-    FormControl,
-    FormDescription,
-    FormMessage,
-    FormField,
-}
+export { useFormField, Form, FormItem, FormLabel, FormControl, FormDescription, FormMessage, FormField }

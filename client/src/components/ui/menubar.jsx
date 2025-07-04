@@ -8,10 +8,7 @@ function Menubar({ className, ...props }) {
     return (
         <MenubarPrimitive.Root
             data-slot="menubar"
-            className={cn(
-                'bg-background flex h-9 items-center gap-1 rounded-md border p-1 shadow-xs',
-                className
-            )}
+            className={cn('bg-background flex h-9 items-center gap-1 rounded-md border p-1 shadow-xs', className)}
             {...props}
         />
     )
@@ -30,12 +27,7 @@ function MenubarPortal({ ...props }) {
 }
 
 function MenubarRadioGroup({ ...props }) {
-    return (
-        <MenubarPrimitive.RadioGroup
-            data-slot="menubar-radio-group"
-            {...props}
-        />
-    )
+    return <MenubarPrimitive.RadioGroup data-slot="menubar-radio-group" {...props} />
 }
 
 function MenubarTrigger({ className, ...props }) {
@@ -51,13 +43,7 @@ function MenubarTrigger({ className, ...props }) {
     )
 }
 
-function MenubarContent({
-    className,
-    align = 'start',
-    alignOffset = -4,
-    sideOffset = 8,
-    ...props
-}) {
+function MenubarContent({ className, align = 'start', alignOffset = -4, sideOffset = 8, ...props }) {
     return (
         <MenubarPortal>
             <MenubarPrimitive.Content
@@ -136,10 +122,7 @@ function MenubarLabel({ className, inset, ...props }) {
         <MenubarPrimitive.Label
             data-slot="menubar-label"
             data-inset={inset}
-            className={cn(
-                'px-2 py-1.5 text-sm font-medium data-[inset]:pl-8',
-                className
-            )}
+            className={cn('px-2 py-1.5 text-sm font-medium data-[inset]:pl-8', className)}
             {...props}
         />
     )
@@ -159,10 +142,7 @@ function MenubarShortcut({ className, ...props }) {
     return (
         <span
             data-slot="menubar-shortcut"
-            className={cn(
-                'text-muted-foreground ml-auto text-xs tracking-widest',
-                className
-            )}
+            className={cn('text-muted-foreground ml-auto text-xs tracking-widest', className)}
             {...props}
         />
     )

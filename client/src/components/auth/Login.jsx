@@ -7,21 +7,8 @@ import * as z from 'zod'
 import { loginUser } from '../../redux/slices/authSlice'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import {
-    Card,
-    CardContent,
-    CardHeader,
-    CardTitle,
-    CardDescription,
-} from '@/components/ui/card'
-import {
-    Form,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormControl,
-    FormMessage,
-} from '@/components/ui/form'
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 
 const formSchema = z.object({
@@ -32,9 +19,7 @@ const formSchema = z.object({
 const Login = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const { isLoading, error, isAuthenticated } = useSelector(
-        (state) => state.auth
-    )
+    const { isLoading, error, isAuthenticated } = useSelector((state) => state.auth)
 
     useEffect(() => {
         if (isAuthenticated) {
@@ -65,19 +50,14 @@ const Login = () => {
         <div className="min-h-screen flex items-center justify-center bg-background px-4">
             <Card className="w-full max-w-md">
                 <CardHeader>
-                    <CardTitle className="text-2xl text-center">
-                        Sign In
-                    </CardTitle>
+                    <CardTitle className="text-2xl text-center">Sign In</CardTitle>
                     <CardDescription className="text-center">
                         Enter your credentials to access your dashboard
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
                     <Form {...form}>
-                        <form
-                            onSubmit={form.handleSubmit(onSubmit)}
-                            className="space-y-4"
-                        >
+                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                             {error && (
                                 <Alert variant="destructive">
                                     <AlertDescription>{error}</AlertDescription>
@@ -90,11 +70,7 @@ const Login = () => {
                                     <FormItem>
                                         <FormLabel>Email</FormLabel>
                                         <FormControl>
-                                            <Input
-                                                type="email"
-                                                placeholder="Enter your email"
-                                                {...field}
-                                            />
+                                            <Input type="email" placeholder="Enter your email" {...field} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -107,21 +83,13 @@ const Login = () => {
                                     <FormItem>
                                         <FormLabel>Password</FormLabel>
                                         <FormControl>
-                                            <Input
-                                                type="password"
-                                                placeholder="Enter your password"
-                                                {...field}
-                                            />
+                                            <Input type="password" placeholder="Enter your password" {...field} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
                                 )}
                             />
-                            <Button
-                                type="submit"
-                                className="w-full"
-                                disabled={isLoading}
-                            >
+                            <Button type="submit" className="w-full" disabled={isLoading}>
                                 {isLoading ? 'Signing in...' : 'Sign In'}
                             </Button>
                         </form>

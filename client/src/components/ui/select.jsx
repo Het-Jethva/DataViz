@@ -69,10 +69,7 @@ function SelectLabel({ className, ...props }) {
     return (
         <SelectPrimitive.Label
             data-slot="select-label"
-            className={cn(
-                'text-muted-foreground px-2 py-1.5 text-xs',
-                className
-            )}
+            className={cn('text-muted-foreground px-2 py-1.5 text-xs', className)}
             {...props}
         />
     )
@@ -102,10 +99,7 @@ function SelectSeparator({ className, ...props }) {
     return (
         <SelectPrimitive.Separator
             data-slot="select-separator"
-            className={cn(
-                'bg-border pointer-events-none -mx-1 my-1 h-px',
-                className
-            )}
+            className={cn('bg-border pointer-events-none -mx-1 my-1 h-px', className)}
             {...props}
         />
     )
@@ -115,10 +109,7 @@ function SelectScrollUpButton({ className, ...props }) {
     return (
         <SelectPrimitive.ScrollUpButton
             data-slot="select-scroll-up-button"
-            className={cn(
-                'flex cursor-default items-center justify-center py-1',
-                className
-            )}
+            className={cn('flex cursor-default items-center justify-center py-1', className)}
             {...props}
         >
             <ChevronUpIcon className="size-4" />
@@ -130,10 +121,7 @@ function SelectScrollDownButton({ className, ...props }) {
     return (
         <SelectPrimitive.ScrollDownButton
             data-slot="select-scroll-down-button"
-            className={cn(
-                'flex cursor-default items-center justify-center py-1',
-                className
-            )}
+            className={cn('flex cursor-default items-center justify-center py-1', className)}
             {...props}
         >
             <ChevronDownIcon className="size-4" />
