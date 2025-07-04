@@ -59,10 +59,7 @@ const DashboardHeader = ({ user, onLogout }) => {
                                         </Link>
                                     </DropdownMenuItem>
                                 )}
-                                <DropdownMenuItem>
-                                    <Settings className="size-4 mr-2" />
-                                    Settings
-                                </DropdownMenuItem>
+
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem onClick={onLogout} className="text-red-600">
                                     <LogOut className="size-4 mr-2" />
