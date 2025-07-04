@@ -7,6 +7,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Download, Box } from 'lucide-react'
+import jsPDF from 'jspdf'
+import html2canvas from 'html2canvas'
 
 const DataPoint = ({ position, size, color, label }) => {
     return (
@@ -306,6 +308,67 @@ const Chart3D = () => {
         )
     }
 
+    const downloadPDF = async () => {
+        if (rendererRef.current && sceneRef.current && cameraRef.current) {
+            try {
+                const renderer = rendererRef.current
+                const scene = sceneRef.current
+                const camera = cameraRef.current
+
+                // Save original size
+                const originalWidth = renderer.domElement.width
+                const originalHeight = renderer.domElement.height
+
+                // Set higher resolution for export
+                const exportScale = 2
+                renderer.setSize(
+                    originalWidth * exportScale,
+                    originalHeight * exportScale,
+                    false
+                )
+                camera.aspect =
+                    (originalWidth * exportScale) /
+                    (originalHeight * exportScale)
+                camera.updateProjectionMatrix()
+                renderer.render(scene, camera)
+
+                setTimeout(() => {
+                    renderer.render(scene, camera)
+                    const canvas = renderer.domElement
+                    if (canvas && canvas.toDataURL) {
+                        const imgData = canvas.toDataURL('image/png', 1.0)
+                        const pdf = new jsPDF({ orientation: 'landscape' })
+                        const width = pdf.internal.pageSize.getWidth()
+                        const height = pdf.internal.pageSize.getHeight()
+                        pdf.addImage(
+                            imgData,
+                            'PNG',
+                            10,
+                            10,
+                            width - 20,
+                            height - 20
+                        )
+                        pdf.save(`3d-chart-${xAxis}-${yAxis}-${zAxis}.pdf`)
+                    } else {
+                        alert('Unable to capture chart for PDF export.')
+                    }
+                    // Restore original size
+                    renderer.setSize(originalWidth, originalHeight, false)
+                    camera.aspect = originalWidth / originalHeight
+                    camera.updateProjectionMatrix()
+                    renderer.render(scene, camera)
+                }, 200)
+            } catch (error) {
+                console.error('Error capturing PDF:', error)
+                alert('Failed to export PDF. Please try again.')
+            }
+        } else {
+            alert(
+                'Chart not ready for PDF export. Please wait a moment and try again.'
+            )
+        }
+    }
+
     if (!selectedData || !xAxis || !yAxis || !zAxis) {
         return (
             <Card>
@@ -370,6 +433,10 @@ const Chart3D = () => {
                     >
                         <Download className="h-4 w-4 mr-2" />
                         Download
+                    </Button>
+                    <Button variant="outline" size="sm" onClick={downloadPDF}>
+                        <Download className="h-4 w-4 mr-2" />
+                        PDF
                     </Button>
                 </div>
             </CardHeader>
